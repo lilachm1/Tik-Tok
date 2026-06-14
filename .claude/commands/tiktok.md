@@ -226,46 +226,93 @@ If it fails safety check, go back to Step 1 and pick next product.
 STEP 3B — PRODUCT VALIDATION CHECK (MANDATORY)
 
 Run before generating tracking IDs, assets, or videos.
-You MUST use WebFetch on the exact final product URL from Step 2 to verify the live page.
-Validation based on search results, redirect behavior, or category-level availability is NOT sufficient.
 The check is per-URL — not per-product-type.
 
-PROCEDURE:
+⚠️ KNOWN LIMITATION: AliExpress renders all product pages with JavaScript.
+WebFetch will return only footer/navigation HTML for both valid AND removed listings.
+Do NOT use WebFetch alone to validate AliExpress URLs. Use the two-path procedure below.
+
+---
+
+PROCEDURE — TWO PATHS:
+
+PATH A — WebFetch returns real product content
 1. Call WebFetch on the exact product URL from Step 2.
 2. If WebFetch returns a redirect, follow it and call WebFetch again on the redirect URL.
-3. Inspect the returned page content for all 5 checks below.
+3. If the fetched content contains a recognizable product title AND a price → run checks below.
+4. REJECT immediately if the content contains any of:
+   - "page you requested can not be found"
+   - "Sorry, the page"
+   - "no longer available"
+   - "item is removed"
+   - "404" or any equivalent not-found / removed message
 
-CHECK 1 — Page loads and product title is present
-The fetched content must contain a recognizable product title.
-REJECT immediately if the fetched content contains any of:
-- "page you requested can not be found"
-- "Sorry, the page"
-- "no longer available"
-- "item is removed"
-- "404"
-- Any equivalent not-found, removed, or error message
-ALSO REJECT if WebFetch returns only navigation/footer links with no product title or price visible —
-this indicates a dead or invalid product URL.
+PATH B — WebFetch returns only footer/navigation (AliExpress JS wall)
+When WebFetch returns a page with only footer/navigation and no product title or price,
+do NOT assume valid or invalid. Run FALLBACK SEARCH VALIDATION instead.
 
-CHECK 2 — Price is present
-The fetched content must contain a visible price (a number followed by a currency symbol, or equivalent).
-REJECT if no price appears in the fetched content.
+---
 
-CHECK 3 — Affiliate eligible
-The page does NOT show any affiliate-ineligibility warning.
+FALLBACK SEARCH VALIDATION (Path B only):
+
+1. Search the exact item ID and exact AliExpress URL using WebSearch.
+   Recommended query: "aliexpress.com/item/[ITEM_ID]" [product keyword]
+
+2. The item PASSES fallback if the search returns:
+   - The AliExpress product URL appearing directly as a search result
+   - A product title visible in the search snippet (e.g. "360° Magnetic Car Phone Holder — AliExpress")
+   - Optionally: price, rating, or sold count in the snippet
+
+3. REJECT the item if it appears ONLY in:
+   - AliExpress wiki or article pages (aliexpress.com/s/wiki-ssr/...)
+   - Blog posts, review articles, or comparison guides citing the item
+   - Unrelated pages with no product listing context
+   - No search results at all
+   These patterns indicate a removed, discontinued, or invalid product URL.
+
+4. PREFER (stronger pass signal) if the item appears across multiple AliExpress regional
+   domains (e.g. aliexpress.com + aliexpress.de + aliexpress.com.tr).
+   A listing indexed in multiple regions is highly unlikely to be removed.
+
+5. Report the fallback result:
+   > Validation method: WebFetch footer-only → fallback search applied
+   > Google-indexed as product listing: YES / NO
+   > Regions confirmed: [list domains where found, e.g. .com, .de]
+
+---
+
+CHECKS (apply after Path A or fallback search confirms the listing is real):
+
+CHECK 1 — Listing is active (not removed or unavailable)
+Path A: REJECT if fetched content contains any not-found / removed message (see Path A above).
+Path B: REJECT if fallback search shows item only in wiki/article/guide pages or no results.
+
+CHECK 2 — Product title confirmed
+Path A: Title visible in fetched content. ✅
+Path B: Title visible in Google search snippet for the product URL. ✅
+
+CHECK 3 — Price confirmed (best effort)
+Path A: Price visible in fetched content. ✅
+Path B: Price from search snippet or Step 2 research is acceptable.
+        Note in output: "price confirmed via Step 2 research — live page not readable."
 
 CHECK 4 — Ships to Israel
-The page does NOT display "This product can't be shipped to your address" or equivalent.
+Confirmed ✅ if the product URL redirects to he.aliexpress.com (Israeli localized domain).
+Flag ⚠️ UNCONFIRMED if no redirect to Israeli domain was detected.
 
-CHECK 5 — No blocking warnings
-None of the following are present:
-- Out of stock / sold out / discontinued
-- Any brand/trademark flag not already caught in Step 3
+CHECK 5 — Affiliate eligible / No blocking warnings
+Cannot be verified when page is JS-rendered.
+Default: assume eligible for generic product categories (Mobile Phone Accessories, Interior
+Accessories, Garden Supplies, Clothing, etc.).
+Flag ⚠️ UNCONFIRMED if product is in a category known to restrict affiliate promotion.
 
-PASS — all 5 checks clear:
-> ✅ VALIDATION PASSED — [product name] at [price] — proceeding to Step 4.
+---
 
-FAIL — any check fails:
+PASS — all critical checks clear, unconfirmed items flagged:
+> ✅ VALIDATION PASSED — [product name] — [price] — proceeding to Step 4.
+> ⚠️ Unconfirmed: [list any unconfirmed checks, e.g. "affiliate eligibility not verified live"]
+
+FAIL — any critical check fails:
 > ❌ VALIDATION FAILED — [product name] — [check that failed]. Rejecting.
 Automatically return to Step 1. Select the next highest-scoring product and repeat Steps 2, 3, and 3B.
 If all 5 candidate products fail validation: stop the run and report to the user.

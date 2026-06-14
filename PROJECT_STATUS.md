@@ -42,7 +42,7 @@
 ✅ Validation checks: page active, affiliate eligible, ships to Israel, purchasable now, no blocking warnings
 ✅ Auto-reject on any failed check — moves to next candidate automatically; stops run if all 5 candidates fail
 
-— 2026-06-14 STEP 3B validation bug fix —
+— 2026-06-14 STEP 3B validation bug fix (round 1) —
 ✅ Bug: STEP 3B passed item 1005009207029480 which returns "page not found" when opened manually
 ✅ Root cause: validation was based on search evidence and redirect presence, not live page content
 ✅ Fix: STEP 3B now requires WebFetch on the exact product URL — search evidence is no longer sufficient
@@ -50,6 +50,17 @@
 ✅ CHECK 2 added: price must be present in fetched content
 ✅ Immediate reject if fetched content contains "page not found", "can not be found", "item is removed", or equivalent
 ✅ Immediate reject if WebFetch returns only navigation/footer with no product title or price visible
+
+— 2026-06-14 STEP 3B fallback validation (round 2) —
+✅ Bug: WebFetch returns footer-only HTML for ALL AliExpress pages (JS-rendered) — both valid and removed listings — making WebFetch-only validation impossible to distinguish live vs dead listings
+✅ Fix: STEP 3B now uses a two-path procedure
+✅ Path A: WebFetch returns real content → check title + price + no error messages (unchanged from round 1)
+✅ Path B: WebFetch returns footer-only (AliExpress JS wall) → run fallback search validation
+✅ Fallback rule: search exact item ID / URL; item must appear as a Google-indexed product listing with a title in the snippet
+✅ Reject rule: item appearing only in wiki-ssr articles, blog posts, guides, or no results → REJECT (signals removed/invalid listing)
+✅ Prefer rule: item confirmed in multiple AliExpress regional domains (.com + .de etc.) = stronger pass signal
+✅ CHECK 4 (ships to Israel): confirmed by redirect to he.aliexpress.com; flagged UNCONFIRMED if no Israeli redirect
+✅ CHECK 5 (affiliate eligible): flagged UNCONFIRMED when JS-rendered; defaults to eligible for generic categories
 
 — 2026-06-14 tracking ID upgrade —
 ✅ Per-variant tracking IDs added — format: product[ID]_A / _B / _C / _D
