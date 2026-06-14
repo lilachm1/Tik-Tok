@@ -7,8 +7,6 @@ Rules:
 - Always prioritize products from 9% commission categories. Use 7% if needed. Avoid 3% commission categories unless no good 7%–9% product exists.
 - Each product package must include a PRODUCT ID in format 001, 002, 003... The user sets the starting number at the top of this file (CURRENT_PRODUCT_ID). Use that number for the run and remind the user to increment it for next time.
 
-CURRENT_PRODUCT_ID: 001
-
 ---
 
 COMMISSION PRIORITY REFERENCE
@@ -36,6 +34,27 @@ COMMISSION PRIORITY REFERENCE
 
 ---
 
+STEP 0A — AUTO-ASSIGN PRODUCT ID
+
+Before doing anything else, determine the PRODUCT ID for this run.
+
+Scan these directories for existing product IDs:
+- C:\Automation\TikTok\output\   → filenames matching *-product-NNN*.md
+- C:\Automation\TikTok\data\     → filenames matching NNN-video-config.json
+- C:\Automation\TikTok\videos\   → filenames matching *-product-NNN-*.mp4
+
+Extract all numeric IDs found. Take the highest. Add 1. Zero-pad to 3 digits.
+
+  Highest found: 001 → this run: 002
+  Highest found: 009 → this run: 010
+  Highest found: 099 → this run: 100
+  No files found    → this run: 001
+
+Use this PRODUCT ID for every step in this run.
+Show: > PRODUCT ID for this run: [NNN]
+
+---
+
 STEP 0 — READ HISTORICAL PERFORMANCE
 
 Before finding products, read: C:\Automation\TikTok\data\video_results.csv
@@ -43,13 +62,18 @@ Before finding products, read: C:\Automation\TikTok\data\video_results.csv
 If the file does not exist, skip this step and note:
 > "No historical data yet — day 1 baseline run."
 
-If the file exists, calculate:
+If the file exists, calculate using CONFIRMED rows only (variant_status = CONFIRMED):
 
-1. BEST HOOK TYPE: Which hook type (Price Shock / Curiosity / Problem/Solution / TikTok Discovery) has the highest average saves + views across all rows? This is the winning hook.
+⚠️ 72-HOUR RULE: Only rows where variant_status = CONFIRMED (72+ hours since upload) may influence
+Best Hook Type, Best Category, Best Price Range, and scoring bonuses.
+Rows with variant_status = NEW or TESTING are ignored for long-term learning.
+If all rows are NEW or TESTING, treat as day 1 baseline and note: "No confirmed data yet."
 
-2. BEST CATEGORY: Which product category has the best average engagement (views + saves) across all rows?
+1. BEST HOOK TYPE: Which hook type (Price Shock / Curiosity / Problem/Solution / TikTok Discovery) has the highest average saves + views across all CONFIRMED rows? This is the winning hook.
 
-3. BEST PRICE RANGE: What price range (in ₪) of past winning products got the best results?
+2. BEST CATEGORY: Which product category has the best average engagement (views + saves) across all CONFIRMED rows?
+
+3. BEST PRICE RANGE: What price range (in ₪) of past winning CONFIRMED products got the best results?
 
 Apply these findings to the scoring in STEP 1:
 - +2 bonus points if a product's category matches the best performing category
@@ -57,11 +81,52 @@ Apply these findings to the scoring in STEP 1:
 
 Apply to STEP 6:
 - Assign the historically winning hook type to VARIANT A (the lead variant)
-- If no history exists, keep the default order: A = Price Shock, B = Curiosity, C = Problem/Solution, D = TikTok Discovery
+- If no CONFIRMED history exists, keep the default order: A = Price Shock, B = Curiosity, C = Problem/Solution, D = TikTok Discovery
 
 Show a one-line summary before proceeding:
-> Historical insights: Best hook: [type] | Best category: [category] | Best price range: [range]
-> (or: "No history yet — treating as day 1")
+> Historical insights (CONFIRMED data): Best hook: [type] | Best category: [category] | Best price range: [range]
+> (or: "No confirmed history yet — treating as day 1")
+
+---
+
+STEP 0B — WINNER SCALING CHECK
+
+Before searching for a new product, check if any WINNING PRODUCT exists in video_results.csv.
+
+A product qualifies as WINNING PRODUCT if:
+- It has at least 2 CONFIRMED variants (variant_status = CONFIRMED)
+- Its aggregate average views + saves across CONFIRMED variants is at least 20% above the account average
+  (account average = mean views + saves across ALL CONFIRMED rows in the CSV)
+
+If NO WINNING PRODUCT exists:
+> No winning product found — proceeding to new product search.
+Then continue directly to STEP 1.
+
+If a WINNING PRODUCT exists:
+> 🏆 WINNING PRODUCT: [product_id] — Avg views: [X] | Avg saves: [Y] | [+Z%] above account average
+> Recommendation: SCALE this product before testing a new one.
+
+Generate 3–5 scaling variant ideas for the winning product. Each idea should offer a fresh angle:
+- A variation on the best-performing hook (different opening line, same hook type)
+- A different benefit emphasis (a use case not yet shown)
+- A seasonal or contextual angle relevant to the Israeli market
+- A different price framing (e.g. "costs less than a coffee" vs raw price)
+- A social proof angle (user reaction, comparison)
+
+Present them as:
+
+SCALING OPTIONS FOR PRODUCT [ID]:
+Option 1: [hook type] — [one-line concept in Hebrew + English note]
+Option 2: [hook type] — [one-line concept]
+Option 3: [hook type] — [one-line concept]
+(Option 4 / 5 if relevant)
+
+After presenting the scaling options, always continue to STEP 1 to find a new product.
+The scaling recommendation is advisory — the user decides whether to act on it.
+
+Priority reminder (shown to user, not enforced automatically):
+> ⚠️ Scaling a WINNING PRODUCT is recommended before testing a new one.
+> To run scaling variants only, tell me "scale [product_id]" instead of running /tiktok.
 
 ---
 
@@ -158,6 +223,55 @@ If it fails safety check, go back to Step 1 and pick next product.
 
 ---
 
+STEP 3B — PRODUCT VALIDATION CHECK (MANDATORY)
+
+Run before generating tracking IDs, assets, or videos.
+You MUST use WebFetch on the exact final product URL from Step 2 to verify the live page.
+Validation based on search results, redirect behavior, or category-level availability is NOT sufficient.
+The check is per-URL — not per-product-type.
+
+PROCEDURE:
+1. Call WebFetch on the exact product URL from Step 2.
+2. If WebFetch returns a redirect, follow it and call WebFetch again on the redirect URL.
+3. Inspect the returned page content for all 5 checks below.
+
+CHECK 1 — Page loads and product title is present
+The fetched content must contain a recognizable product title.
+REJECT immediately if the fetched content contains any of:
+- "page you requested can not be found"
+- "Sorry, the page"
+- "no longer available"
+- "item is removed"
+- "404"
+- Any equivalent not-found, removed, or error message
+ALSO REJECT if WebFetch returns only navigation/footer links with no product title or price visible —
+this indicates a dead or invalid product URL.
+
+CHECK 2 — Price is present
+The fetched content must contain a visible price (a number followed by a currency symbol, or equivalent).
+REJECT if no price appears in the fetched content.
+
+CHECK 3 — Affiliate eligible
+The page does NOT show any affiliate-ineligibility warning.
+
+CHECK 4 — Ships to Israel
+The page does NOT display "This product can't be shipped to your address" or equivalent.
+
+CHECK 5 — No blocking warnings
+None of the following are present:
+- Out of stock / sold out / discontinued
+- Any brand/trademark flag not already caught in Step 3
+
+PASS — all 5 checks clear:
+> ✅ VALIDATION PASSED — [product name] at [price] — proceeding to Step 4.
+
+FAIL — any check fails:
+> ❌ VALIDATION FAILED — [product name] — [check that failed]. Rejecting.
+Automatically return to Step 1. Select the next highest-scoring product and repeat Steps 2, 3, and 3B.
+If all 5 candidate products fail validation: stop the run and report to the user.
+
+---
+
 STEP 4 — MANUAL AFFILIATE LINK STEP
 
 Do NOT call any API. Do NOT generate an affiliate link automatically.
@@ -167,7 +281,16 @@ Provide:
 - The product category
 - The expected commission rate based on that category
 
-The user will manually paste this URL into the AliExpress Link Generator to create their affiliate link.
+Generate the 4 tracking IDs for this run:
+
+  product[PRODUCT_ID]_A
+  product[PRODUCT_ID]_B
+  product[PRODUCT_ID]_C
+  product[PRODUCT_ID]_D
+
+The user will manually create 4 affiliate links in the AliExpress Link Generator — one per tracking ID.
+Each link uses the same product URL but a different tracking ID field.
+This lets you see exactly which video variant drove each click and sale.
 
 Output a Comment CTA Strategy using the PRODUCT ID assigned for this run:
 
@@ -175,15 +298,15 @@ Output a Comment CTA Strategy using the PRODUCT ID assigned for this run:
 or
 "שלחי הודעה עם [PRODUCT ID] ואשלח לך את הקישור"
 
-This lets the user manage many products without confusion.
-
 ---
 
-STEP 5 — FIND REVIEW VIDEOS
+STEP 5 — FIND REVIEW VIDEOS (Research Input Only)
 
-Search for existing videos of this product to use for screen recording.
+⚠️ PURPOSE: These videos are for product research ONLY.
+They are NOT used as final footage in the MP4 output.
+Final video assets come exclusively from AliExpress product images, page screenshots, and scroll captures (Step 8).
 
-Search on:
+Search for existing videos of this product on:
 - TikTok (search the product name)
 - YouTube Shorts
 - AliExpress product page videos
@@ -197,8 +320,9 @@ For each video found, check:
 
 Show the top 3 best videos with:
 - Link to the video
-- Why it is good for screen recording
-- Best moment to capture (e.g. "0:05–0:12 shows the product clearly")
+- What it reveals about the product (key use case, angle, or presentation style)
+- Specific angles or moments to replicate using AliExpress product images
+  (e.g. "shows the product opened flat — replicate with listing image #3")
 
 ---
 
@@ -231,13 +355,13 @@ Angle: Social proof — others are already using or talking about it.
 For EACH variant generate:
 
 STORYBOARD:
-| Seconds | What to record | Text on screen (Hebrew) | Color | Position |
-|---------|---------------|------------------------|-------|----------|
-| 0–2     | Best review video clip or first product photo | [variant hook] | White | Top center |
-| 2–5     | Price photo or product close-up | "רק [price]₪ בעלי אקספרס" | Yellow | Center |
-| 5–9     | Product in use / detail shots | "[main benefit in Hebrew]" | White | Center |
-| 9–13    | Sales count or review snippet | "[number] אנשים כבר הזמינו!" | White | Center |
-| 13–15   | First image again | "כתבי [PRODUCT ID] בתגובות 💬" | Red | Bottom |
+| Seconds | Asset to use                              | Text on screen (Hebrew)              | Color  | Position   |
+|---------|-------------------------------------------|--------------------------------------|--------|------------|
+| 0–2     | Main product image (image #1 from listing) | [variant hook]                       | White  | Top center |
+| 2–5     | Price screenshot or close-up product image | "רק [price]₪ בעלי אקספרס"           | Yellow | Center     |
+| 5–9     | In-use or detail product image             | "[main benefit in Hebrew]"           | White  | Center     |
+| 9–13    | Rating/review count screenshot             | "[number] אנשים כבר הזמינו!"         | White  | Center     |
+| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות 💬"       | Red    | Bottom     |
 
 CAPTION (one line):
 "מצאתי [product name] בעלי אקספרס ב-[price]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
@@ -248,12 +372,180 @@ Add 5–7 hashtags specific to this product category.
 
 ---
 
-STEP 7 — SAVE OUTPUT FILE
+AFTER GENERATING ALL 4 STORYBOARDS — WRITE VIDEO CONFIG FILE
+
+Write the following file to disk:
+C:\Automation\TikTok\data\[PRODUCT_ID]-video-config.json
+
+This file is the interface between the agent and the video generation scripts.
+It must be valid JSON and contain exactly this structure:
+
+{
+  "product_id": "[PRODUCT_ID]",
+  "date": "[YYYY-MM-DD]",
+  "price_ils": [number],
+  "sales_count": "[number as string, e.g. 5000]",
+  "cta_id": "[PRODUCT_ID]",
+  "aliexpress_url": "[standard product URL]",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "[Price Shock / Curiosity / Problem/Solution / TikTok Discovery]",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "[hook in Hebrew]",               "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק [price]₪ בעלי אקספרס",       "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "[main benefit in Hebrew]",       "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "[number] אנשים כבר הזמינו!",    "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבי [PRODUCT_ID] בתגובות 💬",  "color": "red",    "position": "bottom"     }
+      ]
+    },
+    { "id": "B", ... },
+    { "id": "C", ... },
+    { "id": "D", ... }
+  ]
+}
+
+After writing, confirm: "✅ Video config saved to data/[PRODUCT_ID]-video-config.json"
+
+---
+
+STEP 7 — PRE-GENERATION QA
+
+Run the following checks before triggering asset or video generation.
+Retry logic: if a check fails, fix the specific issue and recheck (up to 3 retries per check).
+After 3 failed retries on any check: mark it FAILED — REQUIRES HUMAN REVIEW and stop the run.
+
+CHECK 1 — AliExpress image count
+Confirm the AliExpress listing identified in Step 2 has at least 5 product images.
+If fewer than 5: attempt to find an alternative listing for the same product with 5+ images.
+Retry up to 3 times. If no valid listing found → FAILED — REQUIRES HUMAN REVIEW
+
+CHECK 2 — Storyboard completeness
+For each of the 4 variants, verify:
+- Hook text is present and written in Hebrew
+- All 5 segment rows are fully filled (no blank text cells)
+- Total duration is 13–15 seconds (sum of segment end times)
+- CTA text in segment 5 includes the correct PRODUCT ID
+If any variant fails: regenerate only that variant's storyboard.
+Retry up to 3 times per variant. If still incomplete → mark that variant FAILED — REQUIRES HUMAN REVIEW.
+
+CHECK 3 — Hook distinctiveness
+Confirm all 4 hooks open with a different first word and use a different angle.
+If two hooks are too similar: rewrite the weaker one.
+Retry up to 3 times.
+
+CHECK 4 — Video config file integrity
+Confirm data/[PRODUCT_ID]-video-config.json exists, is valid JSON, and contains all 4 variants with all 5 segments each.
+If missing or malformed: rewrite the file.
+Retry up to 3 times.
+
+Show QA summary before proceeding:
+> QA PASS — all 4 checks passed. Proceeding to asset generation.
+> or:
+> QA PARTIAL — [check name] marked FAILED — REQUIRES HUMAN REVIEW. Other checks passed. Proceeding.
+> or:
+> QA FAILED — [check name] failed after 3 retries. Stopping run. Manual review required.
+
+---
+
+STEP 8 — UNIQUE ASSET GENERATION
+
+⚠️ Assets must come from AliExpress product pages only.
+No review video footage. No third-party site screenshots.
+
+Run:
+python C:\Automation\TikTok\scripts\generate_assets.py --product-id [PRODUCT_ID] --url "[ALIEXPRESS_URL]"
+
+This script will:
+1. Open the AliExpress product page using Playwright (headless Chromium)
+2. Download all product images (min 5, max 12) → assets/[PRODUCT_ID]/images/
+3. Screenshot key page sections:
+   - Main product image area         → assets/[PRODUCT_ID]/screenshots/main.png
+   - Price section                   → assets/[PRODUCT_ID]/screenshots/price.png
+   - Star rating + review count      → assets/[PRODUCT_ID]/screenshots/rating.png
+   - Top 2 written reviews (if shown) → assets/[PRODUCT_ID]/screenshots/review1.png, review2.png
+4. Capture a slow page scroll (3–4 second recording) → assets/[PRODUCT_ID]/scroll/scroll.mp4
+5. Write asset manifest → assets/[PRODUCT_ID]/manifest.json
+
+After running, verify:
+- assets/[PRODUCT_ID]/manifest.json exists
+- Manifest contains at least 5 image entries
+- At least 1 screenshot exists
+
+If verification fails: retry the script up to 3 times.
+If still failing after 3 retries → FAILED — REQUIRES HUMAN REVIEW. Stop run.
+
+⚠️ If scripts/generate_assets.py does not yet exist, output:
+PENDING IMPLEMENTATION — Asset generation script not yet installed.
+Run is paused at Step 8. See TIKTOK_AGENT_PLAN.md — Scripts Setup section.
+
+Confirm on success: "✅ Assets collected — [N] images, [M] screenshots saved to assets/[PRODUCT_ID]/"
+
+---
+
+STEP 9 — SILENT VIDEO GENERATION
+
+Generate 4 silent MP4 files — one per variant.
+No voiceover. No AI-generated video. No CapCut. No automated TikTok upload.
+Final MP4 is composed from AliExpress assets + text overlays only.
+
+Run:
+python C:\Automation\TikTok\scripts\generate_videos.py --product-id [PRODUCT_ID] --date [YYYY-MM-DD]
+
+This script reads:
+- C:\Automation\TikTok\data\[PRODUCT_ID]-video-config.json   (text overlay specs per variant)
+- C:\Automation\TikTok\assets\[PRODUCT_ID]\manifest.json     (available asset files + dimensions)
+
+For each variant (A / B / C / D), the script:
+- Assembles 5 segments per the storyboard timing using MoviePy
+- Selects the best-matching asset per segment from the manifest
+- Applies Hebrew text overlays with the color and position specified in the config
+- Encodes with no audio track
+- Output format: 1080×1920 px, H.264, 30 fps, .mp4
+
+Output files:
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4
+
+⚠️ If scripts/generate_videos.py does not yet exist, output:
+PENDING IMPLEMENTATION — Video generation script not yet installed.
+Run is paused at Step 9. See TIKTOK_AGENT_PLAN.md — Scripts Setup section.
+
+---
+
+STEP 10 — POST-GENERATION QA
+
+After video generation, verify each of the 4 MP4 files.
+Retry logic: if a file fails, re-run generate_videos.py for that variant only (up to 3 retries per variant).
+After 3 failed retries on a variant: mark that variant FAILED — REQUIRES HUMAN REVIEW.
+
+For each MP4, check:
+- File exists at the expected path
+- Duration is between 13 and 17 seconds
+- File size is between 500 KB and 50 MB
+- Resolution is 1080×1920
+
+PASS THRESHOLD:
+- 4/4 pass → Full run success
+- 3/4 pass → Partial success — flag the failed variant and continue
+- Fewer than 3 pass → Mark entire run FAILED — REQUIRES HUMAN REVIEW
+
+Show QA result:
+> VIDEO QA — [N]/4 variants passed
+> ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4 — PASS ([duration]s, [size] MB)
+> ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4 — PASS ([duration]s, [size] MB)
+> ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4 — PASS ([duration]s, [size] MB)
+> ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4 — PASS ([duration]s, [size] MB)
+> (or: ⚠️ variant D — FAILED — REQUIRES HUMAN REVIEW)
+
+---
+
+STEP 11 — SAVE OUTPUT FILE
 
 Save the complete package to:
 C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID].md
-
-Example filename: 2026-06-03-product-002.md
 
 The file must contain:
 - Product ID
@@ -262,18 +554,90 @@ The file must contain:
 - Trend evidence: Source 1 + Source 2 (with specifics)
 - AliExpress product URL
 - Category and commission rate
-- Review video links (all 3, with timestamps)
+- Research videos (labeled "Research Reference — not used as footage"): all 3 links with notes
 - Variant A: hook type label + hook + full storyboard table + caption
 - Variant B: hook type label + hook + full storyboard table + caption
 - Variant C: hook type label + hook + full storyboard table + caption
 - Variant D: hook type label + hook + full storyboard table + caption
 - Hashtags
+- MP4 output paths (all 4 file paths with PASS/FAIL status from Step 10)
+- QA summary (Step 7 + Step 10 results)
 
 After saving, confirm: "✅ Package saved to output/[filename]"
 
+Also save a ready-to-copy upload package to:
+C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md
+
+This file is for manual TikTok uploading only — open it, copy, paste. Use this exact format:
+
+```
+# Upload Package — [PRODUCT_ID] — [YYYY-MM-DD]
+
+PRODUCT: [product name]
+ALIEXPRESS URL: [standard product URL]
+
 ---
 
-STEP 8 — SHOW FINAL PACKAGE
+## VARIANT A — [Hook Type]
+VIDEO: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4
+
+TRACKING ID:
+product[PRODUCT_ID]_A
+
+AFFILIATE LINK:
+[paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_A]
+
+CAPTION: [caption in Hebrew]
+HASHTAGS: [hashtags]
+
+---
+
+## VARIANT B — Curiosity
+VIDEO: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4
+
+TRACKING ID:
+product[PRODUCT_ID]_B
+
+AFFILIATE LINK:
+[paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_B]
+
+CAPTION: [caption in Hebrew]
+HASHTAGS: [hashtags]
+
+---
+
+## VARIANT C — Problem/Solution
+VIDEO: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4
+
+TRACKING ID:
+product[PRODUCT_ID]_C
+
+AFFILIATE LINK:
+[paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_C]
+
+CAPTION: [caption in Hebrew]
+HASHTAGS: [hashtags]
+
+---
+
+## VARIANT D — TikTok Discovery
+VIDEO: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4
+
+TRACKING ID:
+product[PRODUCT_ID]_D
+
+AFFILIATE LINK:
+[paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_D]
+
+CAPTION: [caption in Hebrew]
+HASHTAGS: [hashtags]
+```
+
+After saving, confirm: "✅ Upload package saved to output/[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md"
+
+---
+
+STEP 12 — SHOW FINAL PACKAGE
 
 Present everything in one clean block:
 
@@ -300,12 +664,10 @@ or
 
 ---
 
-REVIEW VIDEOS TO SCREEN RECORD:
-1. [link] — [why it's good] — Best moment: [timestamp]
-2. [link] — [why it's good] — Best moment: [timestamp]
-3. [link] — [why it's good] — Best moment: [timestamp]
-
-Or record the AliExpress product page directly (scroll slowly, 2–3 sec per photo).
+RESEARCH VIDEOS (reference only — not used as footage):
+1. [link] — [what it reveals] — [angle to replicate with AliExpress images]
+2. [link] — [what it reveals] — [angle to replicate with AliExpress images]
+3. [link] — [what it reveals] — [angle to replicate with AliExpress images]
 
 ---
 
@@ -342,17 +704,27 @@ HASHTAGS (use for all variants):
 
 ---
 
-UPLOAD CHECKLIST:
-[ ] Paste the AliExpress product URL into AliExpress Link Generator → copy your affiliate link
-[ ] Record 4 versions — one per variant hook (or start with 2 and test)
-[ ] Open TikTok → tap + → Upload → pick your recording
-[ ] Add a trending sound (tap Sounds → Trending)
-[ ] Add the storyboard texts at the right timestamps
-[ ] Paste caption + hashtags in the description
-[ ] Upload between 19:00–21:00 Israel time
-[ ] Note which variant is which (002A, 002B...) so you can track in the evening
+MP4 FILES READY:
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4 ✅
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4 ✅
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4 ✅
+C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4 ✅
+(⚠️ variant D — FAILED — REQUIRES HUMAN REVIEW — if applicable)
 
-⚠️ After this run: update CURRENT_PRODUCT_ID in this file to the next number.
-⚠️ Package saved to: C:\Automation\TikTok\output\[filename]
+---
+
+UPLOAD CHECKLIST:
+[ ] Open AliExpress Link Generator — create 4 affiliate links using tracking IDs product[ID]_A / _B / _C / _D (same product URL, different tracking ID each time)
+[ ] Open C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md — paste each affiliate link into the matching variant's AFFILIATE LINK field
+[ ] Open TikTok → tap + → Upload → select the MP4 for Variant A (path is in the upload package)
+[ ] Add a trending sound (tap Sounds → Trending)
+[ ] Copy the caption + hashtags for Variant A from the upload package → paste into TikTok description
+[ ] Repeat for Variants B, C, D — each has its own VIDEO / CAPTION / HASHTAGS block in the upload package
+[ ] Upload between 19:00–21:00 Israel time
+[ ] Note which variant is which (001A, 001B...) so you can track performance in the evening
+
+⚠️ Next run will auto-assign the next PRODUCT ID — no manual update needed.
+⚠️ Full package saved to: C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID].md
+⚠️ Upload package saved to: C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md
 
 ================================================

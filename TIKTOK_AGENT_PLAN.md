@@ -11,32 +11,81 @@
 
 ## How It Works — Simple Version
 
-**Morning:** Type `/tiktok` — agent does everything and gives you one ready package.  
-**You:** Record screen + upload to TikTok.  
+**Morning:** Type `/tiktok` — agent researches the product, scores it, generates storyboards, collects AliExpress assets, and outputs 4 silent ready-to-upload MP4 files.  
+**You:** Generate your affiliate link (1 min) → open the `videos\` folder → upload the MP4s to TikTok manually.  
 **Evening:** Type `/tiktok analyze` + paste your stats — agent tells you what to scale.
+
+**What the agent outputs every morning:**
+- 4 silent MP4 files ready to upload (1080×1920, text overlays baked in, no voiceover)
+- 4 captions in Hebrew
+- Hashtag set
+- Your affiliate link instructions
+- Full research package saved to `output\`
+
+**What you do manually:**
+1. Paste the AliExpress product URL into the AliExpress Link Generator → copy affiliate link
+2. Open `C:\Automation\TikTok\videos\` — 4 MP4 files are waiting
+3. Upload each to TikTok, add a trending sound, paste the caption + hashtags
+
+---
+
+## MVP Constraints
+
+These apply to the current build. Do not work around them.
+
+| Constraint | Status |
+|---|---|
+| Voiceover | ❌ Not in MVP |
+| AI video generation | ❌ Not in MVP |
+| CapCut automation | ❌ Not in MVP |
+| Automated TikTok upload | ❌ Not in MVP — TikTok detects bots and bans accounts |
+| Review videos as final footage | ❌ Not allowed — research reference only |
+| Unique product footage (AliExpress images + screenshots) | ✅ Required |
+| Silent MP4 output (4 per run) | ✅ Required |
 
 ---
 
 ## Output Structure
 
-All files are saved to `C:\Automation\TikTok\` (create this folder once during setup).
+All files saved to `C:\Automation\TikTok\` (create once during setup).
 
 ```
 C:\Automation\TikTok\
-├── output\
-│   ├── 2026-06-03-product-002.md      ← full daily package (created by /tiktok)
-│   ├── 2026-06-04-product-003.md
-├── analysis\
-│   ├── 2026-06-03-product-002-analysis.md   ← evening analysis (created by /tiktok analyze)
-├── data\
-│   └── video_results.csv               ← persistent learning data
+├── output\                         ← daily research package MD (created by /tiktok)
+│   ├── 2026-06-10-product-003.md
+│   └── 2026-06-11-product-004.md
+├── analysis\                       ← evening analysis MD (created by /tiktok analyze)
+│   └── 2026-06-10-product-003-analysis.md
+├── data\                           ← persistent data files
+│   ├── video_results.csv           ← learning database (appended by /tiktok analyze)
+│   └── [PRODUCT_ID]-video-config.json  ← video overlay spec (written by /tiktok Step 6)
+├── assets\                         ← collected product assets per run
+│   └── [product-id]\
+│       ├── images\                 ← downloaded AliExpress product images (min 5)
+│       ├── screenshots\            ← price, rating, review count screenshots
+│       ├── scroll\                 ← slow page scroll capture (3–4 sec video)
+│       └── manifest.json           ← asset index with file list + dimensions
+├── videos\                         ← generated silent MP4 files (4 per run)
+│   ├── 2026-06-10-product-003-A.mp4
+│   ├── 2026-06-10-product-003-B.mp4
+│   ├── 2026-06-10-product-003-C.mp4
+│   └── 2026-06-10-product-003-D.mp4
+├── qa\                             ← QA reports per run
+│   └── 2026-06-10-product-003-qa.md
+└── scripts\                        ← Python automation scripts
+    ├── generate_assets.py          ← Playwright: collect AliExpress assets
+    └── generate_videos.py          ← MoviePy/FFmpeg: compose silent MP4s
 ```
 
-**output/** — Created by `/tiktok` after each run. Contains the full package: product ID, product details, AliExpress URL, commission rate, review video links, and all 4 variants (storyboard + caption + hashtags). Review the next morning after an overnight run.
+**output/** — Created by `/tiktok`. Contains the full research package: product ID, trend evidence, AliExpress URL, commission rate, research video references, all 4 storyboards, captions, hashtags, and MP4 output paths with QA status.
 
-**analysis/** — Created by `/tiktok analyze` after each evening session. Contains the performance analysis, winner/loser breakdown, and tomorrow's recommendation.
+**assets/** — Created by `/tiktok` Step 8. All footage comes from here. Never from third-party review videos.
 
-**data/video_results.csv** — Appended by `/tiktok analyze` after every run. Read by `/tiktok` each morning to learn from past performance.
+**videos/** — Created by `/tiktok` Step 9. The 4 files the user uploads to TikTok.
+
+**qa/** — Created by pre-generation and post-generation QA steps. Contains check results, retry counts, and any FAILED flags.
+
+**data/** — `video_results.csv` is the learning database. `[PRODUCT_ID]-video-config.json` is the interface between the agent and the video scripts.
 
 ---
 
@@ -46,22 +95,32 @@ The agent builds a performance database over time instead of treating each day a
 
 **After each `/tiktok analyze`:** All variant statistics are appended to `data/video_results.csv`.
 
-**Before each `/tiktok` product selection:** The agent reads the CSV and calculates:
+**Before each `/tiktok` product selection:** The agent reads the CSV and calculates — using CONFIRMED rows only (72h+):
 - Best performing hook type → bonus for matching products; winning hook moved to Variant A
 - Best performing category → +2 bonus on scoring
 - Best performing price range → +1 bonus on scoring
 
+**72-hour rule:** Only rows where `variant_status = CONFIRMED` (uploaded 72+ hours ago) influence long-term learning. NEW and TESTING rows are saved and shown as early signals but do not affect recommendations or confidence scores.
+
 **CSV columns:**
 ```
-product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner
+product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission
 ```
+
+`cta_style`, `asset_source`, `best_segment`, `affiliate_clicks`, `affiliate_sales`, and `affiliate_commission` are optional. `upload_date` and `upload_time` are required at analysis time. `age_hours`, `variant_status`, and `tracking_id` are computed/generated automatically.
+
+`variant_status` values: `NEW` (0–23h) / `TESTING` (24–71h) / `CONFIRMED` (72h+)
+
+`tracking_id` format: `product[product_id]_[variant letter]` — always filled, never blank.
+
+**Winner override rule:** If `affiliate_sales` data exists for any variant, sales override engagement metrics when choosing the winner. If no sales data, engagement (views + saves + comments) decides as normal.
 
 Example rows:
 ```
-product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner
-002,002A,Price Shock,Mobile Phone Accessories,45,1200,89,34,67,false
-002,002B,Curiosity,Mobile Phone Accessories,45,3400,234,89,145,true
-003,003C,Problem/Solution,Interior Accessories,35,5100,412,167,290,true
+product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission
+002,002A,Price Shock,Mobile Phone Accessories,45,1200,89,34,67,false,comment,,,2026-06-10,19:30,96,CONFIRMED,product002_A,45,0,0
+002,002B,Curiosity,Mobile Phone Accessories,45,3400,234,89,145,true,comment,main product image,0-2s hook,2026-06-10,19:30,96,CONFIRMED,product002_B,120,3,12.5
+003,003C,Problem/Solution,Interior Accessories,35,5100,412,167,290,true,dm,,,2026-06-13,20:00,18,NEW,product003_C,,,
 ```
 
 ---
@@ -122,553 +181,212 @@ For each product, the agent must show:
 ### `/tiktok` — Morning Command
 
 | Step | What the Agent Does | You Do |
-|------|-------------------|--------|
-| 0 | Reads video_results.csv — calculates best hook type, category, price range from history | Nothing |
-| 1 | Finds 5 trending products (must have 2+ trend sources each), scores using new price model + history bonus | Nothing |
-| 2 | Picks the highest-scoring product automatically (tie = cheaper wins) | Nothing |
-| 3 | Finds the best AliExpress listing | Nothing |
+|------|---------------------|--------|
+| 0A | **Auto-assign PRODUCT ID** — scans output/, data/, videos/ for highest existing ID, sets next run to highest + 1 (zero-padded to 3 digits). No manual update needed. | Nothing |
+| 0 | Reads `video_results.csv` — calculates best hook type, category, price range from CONFIRMED rows only (72h+ rule) | Nothing |
+| 0B | **Winner Scaling Check** — if a WINNING PRODUCT exists (2+ CONFIRMED variants, 20%+ above account average), shows 3–5 scaling variant ideas before proceeding to new product search | Nothing |
+| 1 | Finds 5 trending products (must have 2+ trend sources each), scores using price model + history bonuses | Nothing |
+| 2 | Picks highest-scoring product automatically (tie = cheaper wins) | Nothing |
+| 3 | Finds best AliExpress listing (1,000+ sales, 4.5★+, 5+ images, ships to Israel) | Nothing |
 | 4 | Safety check — no fake brands, no copyright risk | Nothing |
+| 3B | **Product Validation Check (mandatory)** — uses WebFetch on the exact product URL: verifies page loads with product title and price present in fetched content, no "page not found" or removal message, affiliate eligible, ships to Israel, purchasable now. Search evidence alone is not sufficient. Auto-rejects and retries next candidate if any check fails. | Nothing |
 | 5 | Prepares AliExpress product URL + category + commission rate for manual link generation | Nothing |
-| 6 | Finds review videos to screen record (TikTok, YouTube Shorts, AliExpress) | Nothing |
-| 7 | Generates 4 video variants — historically winning hook type assigned to Variant A | Nothing |
-| 8 | Writes storyboard for each of the 4 variants | Nothing |
-| 9 | Writes caption for each of the 4 variants | Nothing |
-| 10 | Saves full package to `C:\Automation\TikTok\output\YYYY-MM-DD-product-XXX.md` | Nothing |
-| 11 | Shows the full ready-to-use package in chat | Nothing |
-| — | Paste product URL into AliExpress Link Generator to create affiliate link | **You (1 min)** |
-| — | Record screen | **You (1–2 min)** |
-| — | Paste texts + upload to TikTok | **You (5–10 min)** |
+| 6 | Finds review videos for **research reference only** — not used as footage | Nothing |
+| 7 | Generates 4 video variants — winning hook assigned to Variant A | Nothing |
+| 7b | Writes storyboard + caption + hashtags for each of the 4 variants (Hebrew) | Nothing |
+| 7c | Writes `data/[PRODUCT_ID]-video-config.json` (text overlay interface for scripts) | Nothing |
+| 8 | **Pre-generation QA** — 4 checks (image count, storyboard completeness, hook distinctiveness, config integrity), up to 3 retries each | Nothing |
+| 9 | **Unique asset generation** — runs `generate_assets.py`: downloads AliExpress product images, price/rating screenshots, slow scroll capture → `assets/[PRODUCT_ID]/` | Nothing |
+| 10 | **Silent video generation** — runs `generate_videos.py`: composes 4 MP4s from assets + text overlays via MoviePy/FFmpeg | Nothing |
+| 11 | **Post-generation QA** — verifies all 4 MP4s (existence, duration 13–17s, file size, resolution), up to 3 retries per variant | Nothing |
+| 12 | Saves full package to `output/YYYY-MM-DD-product-XXX.md` | Nothing |
+| 13 | Shows complete ready-to-use package in chat with MP4 file paths and QA status | Nothing |
+| — | Paste AliExpress product URL into AliExpress Link Generator → copy affiliate link | **You (1 min)** |
+| — | Open `C:\Automation\TikTok\videos\` — 4 MP4 files ready | **You (30 sec)** |
+| — | Upload each MP4 to TikTok, add trending sound, paste caption + hashtags | **You (5–10 min)** |
 
 ### `/tiktok analyze` — Evening Command
 
 | Step | What the Agent Does | You Do |
-|------|-------------------|--------|
-| 1 | Asks for your video stats | Paste: views, likes, comments, saves, clicks |
-| 2 | Analyzes which hook style worked best | Nothing |
+|------|---------------------|--------|
+| 1 | Asks for your video stats + upload date/time + optional affiliate data | Paste: views, likes, comments, saves, upload date, upload time (per variant). Optionally: affiliate clicks, sales, commission per variant. |
+| 2 | Analyzes performance — uses affiliate sales as winner if available, otherwise engagement | Nothing |
 | 3 | Analyzes which product category is performing | Nothing |
 | 4 | Tells you what to repeat tomorrow | Nothing |
 | 5 | Tells you what to drop | Nothing |
-| 6 | Appends all variant results to `data/video_results.csv` | Nothing |
-| 7 | Saves analysis to `analysis/YYYY-MM-DD-product-XXX-analysis.md` | Nothing |
-| 8 | Updates strategy for tomorrow's `/tiktok` run | Nothing |
+| A | Appends all variant results to `data/video_results.csv` — auto-fills tracking_id; computes age_hours + variant_status | Nothing |
+| B | Saves analysis to `analysis/YYYY-MM-DD-product-XXX-analysis.md` | Nothing |
+| C | **Quality & Learning Agent** — runs CONFIRMED-only pattern analysis, asset/segment learning, product status table, confidence score | Nothing |
+| C.E | **Product Status** — classifies each product as NEW / TESTING / WINNING / RETIRED based on CONFIRMED data vs account average | Nothing |
+| D | **Weekly Audit** — if 7+ CONFIRMED rows exist and 7 days since last audit: saves `analysis/weekly-audit-YYYY-MM-DD.md` with top products, variants, patterns, and what to scale/stop | Nothing |
+
+---
+
+## Agent Components
+
+### Unique Asset Generation Agent (Step 9)
+
+**Purpose:** Collect all product visuals from AliExpress so every video uses original footage — never borrowed from review clips.
+
+**Tool:** `scripts/generate_assets.py` (Python + Playwright + headless Chromium)
+
+**What it collects:**
+- All product images from the listing (min 5, max 12) → `assets/[PRODUCT_ID]/images/`
+- Screenshot of main product image area → `screenshots/main.png`
+- Screenshot of price section → `screenshots/price.png`
+- Screenshot of star rating + review count → `screenshots/rating.png`
+- Top 2 written reviews if visible → `screenshots/review1.png`, `review2.png`
+- Slow page scroll capture (3–4 sec) → `scroll/scroll.mp4`
+- Asset manifest → `manifest.json`
+
+**Failure threshold:** If fewer than 5 images are collected after 3 retries → `FAILED — REQUIRES HUMAN REVIEW`
+
+---
+
+### Silent Video Generator Agent (Step 10)
+
+**Purpose:** Compose 4 silent MP4 files from collected assets and storyboard text specs.
+
+**Tool:** `scripts/generate_videos.py` (Python + MoviePy + FFmpeg)
+
+**Inputs:**
+- `data/[PRODUCT_ID]-video-config.json` — text overlay spec (segment timing, Hebrew text, color, position)
+- `assets/[PRODUCT_ID]/manifest.json` — available asset files and dimensions
+
+**Output per variant:**
+- 5 segments assembled per storyboard timing
+- Hebrew text overlays baked into video (color + position from config)
+- No audio track
+- Format: 1080×1920 px, H.264, 30fps, `.mp4`
+
+**Output files:** `videos/[YYYY-MM-DD]-product-[PRODUCT_ID]-A/B/C/D.mp4`
+
+**Font requirement (one-time setup):** A Hebrew-compatible `.ttf` font must be installed and its path set in `generate_videos.py` (see Setup section below).
+
+---
+
+### Quality & Learning Agent (Step C in `/tiktok analyze`)
+
+**Purpose:** Close the feedback loop between video generation approach and TikTok performance over time.
+
+**What it does:** After performance stats are entered, optionally asks:
+- "Which asset type felt most engaging? (main product image / in-use shot / close-up detail / price screenshot)"
+- "Which segment do you think drove the most saves? (0–2s hook / 2–5s price / 5–9s benefit / 9–13s social proof / 13–15s CTA)"
+
+**Both questions are optional.** The user can skip them. If answered, the agent writes the values to the `asset_source` and `best_segment` columns in `video_results.csv`.
+
+**Over time:** The agent reads these columns and can recommend which image type and segment style to lead with for similar products.
+
+---
+
+## Retry Logic
+
+All QA checks and script-based steps follow the same retry pattern:
+
+1. Run the check or script
+2. If it fails: note the specific failure, attempt a fix, and rerun
+3. Retry up to **3 times total** per individual check
+4. If still failing after 3 attempts: mark as **FAILED — REQUIRES HUMAN REVIEW** and:
+   - If it is a single variant: flag it, continue with remaining variants
+   - If it is a blocking step (asset generation, fewer than 3 videos generated): stop the entire run
+
+**Pass thresholds for post-generation QA:**
+- 4/4 variants pass → full run success
+- 3/4 variants pass → partial success, flag the failed variant
+- Fewer than 3 pass → entire run marked FAILED — REQUIRES HUMAN REVIEW
 
 ---
 
 ## Before You Start — One-Time Setup
 
-### Setup — Create Folders and Slash Commands (5 minutes)
+### Folder and Command Setup (5 minutes)
 
-Since you're an automation developer this will take you 2 minutes.
-
-1. Create the TikTok project folder and subfolders:
+1. Create the project folder structure:
    ```
    C:\Automation\TikTok\
    C:\Automation\TikTok\output\
    C:\Automation\TikTok\analysis\
    C:\Automation\TikTok\data\
+   C:\Automation\TikTok\assets\
+   C:\Automation\TikTok\videos\
+   C:\Automation\TikTok\qa\
+   C:\Automation\TikTok\scripts\
    ```
 
-2. In your Claude Code project folder, create this file:  
-   `.claude/commands/tiktok.md`
-3. Paste the **Morning Agent Prompt** below into that file
-4. Create a second file:  
-   `.claude/commands/tiktok-analyze.md`
-5. Paste the **Evening Agent Prompt** below into that file
+2. Verify both slash commands exist:
+   - `.claude/commands/tiktok.md` ← Morning agent prompt
+   - `.claude/commands/tiktok-analyze.md` ← Evening agent prompt
 
----
+### Technical Setup for Video Generation (15–20 minutes)
 
-## Morning Agent Prompt — paste into `.claude/commands/tiktok.md`
+These are required before Steps 9–10 of `/tiktok` will work.
 
 ```
-You are a fully automatic TikTok Affiliate Agent for the Israeli market.
-
-Rules:
-- Run all steps automatically. Do not ask the user to make choices.
-- All video content (hooks, storyboard, captions, hashtags) must be in Hebrew.
-- Only show the final ready-to-use package at the end.
-- Always prioritize products from 9% commission categories. Use 7% if needed. Avoid 3% commission categories unless no good 7%–9% product exists.
-- Each product package must include a PRODUCT ID in format 001, 002, 003... The user sets the starting number at the top of this file (CURRENT_PRODUCT_ID). Use that number for the run and remind the user to increment it for next time.
-
-CURRENT_PRODUCT_ID: 001
-
----
-
-COMMISSION PRIORITY REFERENCE
-
-9% commission categories (prioritize these first):
-- Mobile Phone Accessories
-- Interior Accessories
-- Garden Supplies
-- Children's Clothing
-- Women's Clothing
-- Men's Clothing
-
-7% commission category (use if no strong 9% product found):
-- Other Categories
-
-3% commission categories (avoid unless no 7%–9% option exists):
-- Mobile Phones
-- Computer Peripherals
-- Tablets
-- Desktops & AIO
-- Laptops
-- Home Audio & Video
-- Storage Device
-- Internal Storage
-
----
-
-STEP 0 — READ HISTORICAL PERFORMANCE
-
-Before finding products, read: C:\Automation\TikTok\data\video_results.csv
-
-If the file does not exist, skip this step and note:
-> "No historical data yet — day 1 baseline run."
-
-If the file exists, calculate:
-
-1. BEST HOOK TYPE: Which hook type (Price Shock / Curiosity / Problem/Solution / TikTok Discovery) has the highest average saves + views across all rows? This is the winning hook.
-
-2. BEST CATEGORY: Which product category has the best average engagement (views + saves) across all rows?
-
-3. BEST PRICE RANGE: What price range (in ₪) of past winning products got the best results?
-
-Apply these findings to the scoring in STEP 1:
-- +2 bonus points if a product's category matches the best performing category
-- +1 bonus point if a product's price is in the best performing price range
-
-Apply to STEP 6:
-- Assign the historically winning hook type to VARIANT A (the lead variant)
-- If no history exists, keep the default order: A = Price Shock, B = Curiosity, C = Problem/Solution, D = TikTok Discovery
-
-Show a one-line summary before proceeding:
-> Historical insights: Best hook: [type] | Best category: [category] | Best price range: [range]
-> (or: "No history yet — treating as day 1")
-
----
-
-STEP 1 — FIND TRENDING PRODUCTS
-
-Search for 5 products trending on TikTok Israel right now.
-
-Use ONLY these sources to find trends — do not invent or guess:
-- TikTok Creative Center (trending products and ads)
-- TikTok Search (search by category keywords)
-- AliExpress Best Sellers
-- AliExpress Trending Products
-- Google Trends Israel
-
-TREND VALIDATION RULE — MANDATORY:
-A product is only valid if it appears in at least 2 of the above sources.
-Do NOT shortlist any product that appears in only 1 source.
-
-For each of the 5 products, show:
-- Source 1: [source name + specific evidence]
-- Source 2: [source name + specific evidence]
-- AliExpress demand proof: orders count, rating, reviews count
-- TikTok content proof: videos found, comment themes, repeated appearances
-
-If you cannot confirm a product in 2 sources, skip it and search for another.
-
-Search FIRST inside the 9% commission categories (Mobile Phone Accessories, Interior Accessories, Garden Supplies, Children's Clothing, Women's Clothing, Men's Clothing).
-If no strong trending product is found in 9% categories, search the 7% (Other Categories).
-Only search 3% categories as a last resort, and note the lower commission in the final package.
-
-SCORING — score each product on all criteria:
-
-PRICE SCORE (Israeli impulse-buy market):
-- Under 30₪ = 10 points + 3 bonus = 13 total
-- 30–50₪ = 9 points + 2 bonus = 11 total
-- 50–75₪ = 7 points
-- 75–100₪ = 5 points
-- Over 100₪ = 2 points
-
-PRICE RULES:
-- Preferred range: 20₪–50₪
-- Acceptable range: 50₪–79₪
-- Avoid products over 80₪ unless exceptional trend evidence AND strong problem/solution angle
-- When comparing two similar products within 1 point of each other, always choose the cheaper one
-- Goal: maximum conversions and impulse purchases — not maximum commission per sale
-
-OTHER SCORING CRITERIA:
-- Visual appeal (1–10): looks great in a 2-second video
-- AliExpress availability (1–10): easy to find, many sellers, fast ship
-- Safety (1–10): no fake brand logos, no copyright risk
-- Israeli audience fit (1–10): practical, relatable, solves a real problem
-
-BONUSES:
-- Commission tier: 9% = +2, 7% = +1, 3% = -2
-- Impulse-buy category (small home gadgets, mobile accessories, organization, pet, beauty, children's accessories) = +1
-- Historical best category match (from STEP 0) = +2
-- Historical best price range match (from STEP 0) = +1
-
-PREFERRED PRODUCT TYPES (impulse-buy friendly):
-- Small home gadgets
-- Mobile accessories
-- Organization products
-- Pet accessories
-- Beauty accessories
-- Children's accessories
-
-Pick the product with the highest total score automatically.
-If two products are tied or within 1 point, pick the cheaper one.
-
----
-
-STEP 2 — FIND BEST ALIEXPRESS LISTING
-
-For the chosen product find the best listing:
-- Over 1,000 sales
-- Rating above 4.5 stars
-- Good photos (at least 5 images)
-- Ships to Israel
-- Lowest price
-- No fake brand logos
-
-If no safe listing exists, pick the second-highest scored product and repeat.
-
----
-
-STEP 3 — SAFETY CHECK
-
-Confirm:
-- No recognizable brand logo on the product
-- No trademark names in the listing title
-- Product is a generic item safe to promote
-
-If it fails safety check, go back to Step 1 and pick next product.
-
----
-
-STEP 4 — MANUAL AFFILIATE LINK STEP
-
-Do NOT call any API. Do NOT generate an affiliate link automatically.
-
-Provide:
-- The standard AliExpress product URL (the regular product page URL)
-- The product category
-- The expected commission rate based on that category
-
-The user will manually paste this URL into the AliExpress Link Generator to create their affiliate link.
-
-Output a Comment CTA Strategy using the PRODUCT ID assigned for this run:
-
-"כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור"
-or
-"שלחי הודעה עם [PRODUCT ID] ואשלח לך את הקישור"
-
-This lets the user manage many products without confusion.
-
----
-
-STEP 5 — FIND REVIEW VIDEOS
-
-Search for existing videos of this product to use for screen recording.
-
-Search on:
-- TikTok (search the product name)
-- YouTube Shorts
-- AliExpress product page videos
-- Amazon reviews
-
-For each video found, check:
-- No large watermark covering the product
-- No fake brand logos visible
-- Video looks natural and authentic
-- Product is clearly visible
-
-Show the top 3 best videos with:
-- Link to the video
-- Why it is good for screen recording
-- Best moment to capture (e.g. "0:05–0:12 shows the product clearly")
-
----
-
-STEP 6 — GENERATE 4 VIDEO VARIANTS
-
-For the selected product, generate 4 video variants. Each variant has a unique hook, a full storyboard, and a caption. All text must be in Hebrew.
-
-IMPORTANT: If historical data exists and there is a winning hook type (from STEP 0), assign that hook type to VARIANT A — the first and lead variant. Reorder the remaining variants accordingly. If no history, use the default order below.
-
----
-
-VARIANT A — [Historically winning hook, or Price Shock if no history]
-Default hook: "לא תאמיני כמה זה עולה בעלי אקספרס... 😱"
-Angle: Lead with the price. Shock with the value.
-
-VARIANT B — Curiosity Hook
-Hook: "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים..."
-Angle: Tease the product without revealing it immediately.
-
-VARIANT C — Problem/Solution Hook
-Hook: "מצאתי את הפתרון לבעיה שכולנו מכירות 🔥"
-Angle: Open with a pain point the product solves.
-
-VARIANT D — TikTok Discovery Hook
-Hook: "כולן מדברות על זה ואני סוף סוף הזמנתי..."
-Angle: Social proof — others are already using or talking about it.
-
----
-
-For EACH variant generate:
-
-STORYBOARD:
-| Seconds | What to record | Text on screen (Hebrew) | Color | Position |
-|---------|---------------|------------------------|-------|----------|
-| 0–2     | Best review video clip or first product photo | [variant hook] | White | Top center |
-| 2–5     | Price photo or product close-up | "רק [price]₪ בעלי אקספרס" | Yellow | Center |
-| 5–9     | Product in use / detail shots | "[main benefit in Hebrew]" | White | Center |
-| 9–13    | Sales count or review snippet | "[number] אנשים כבר הזמינו!" | White | Center |
-| 13–15   | First image again | "כתבי [PRODUCT ID] בתגובות 💬" | Red | Bottom |
-
-CAPTION (one line):
-"מצאתי [product name] בעלי אקספרס ב-[price]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
-
-HASHTAGS (same for all variants):
-Always include: #מציאות #אליאקספרס #טיקטוקישראל
-Add 5–7 hashtags specific to this product category.
-
----
-
-STEP 7 — SAVE OUTPUT FILE
-
-Save the complete package to:
-C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID].md
-
-Example filename: 2026-06-03-product-002.md
-
-The file must contain:
-- Product ID
-- Product name and description
-- Why chosen (one sentence)
-- Trend evidence: Source 1 + Source 2 (with specifics)
-- AliExpress product URL
-- Category and commission rate
-- Review video links (all 3, with timestamps)
-- Variant A: hook type label + hook + full storyboard table + caption
-- Variant B: hook type label + hook + full storyboard table + caption
-- Variant C: hook type label + hook + full storyboard table + caption
-- Variant D: hook type label + hook + full storyboard table + caption
-- Hashtags
-
-After saving, confirm: "✅ Package saved to output/[filename]"
-
----
-
-STEP 8 — SHOW FINAL PACKAGE
-
-Present everything in one clean block:
-
-================================================
-TODAY'S TIKTOK PACKAGE
-================================================
-
-PRODUCT ID: [e.g. 002]
-PRODUCT: [name]
-WHY CHOSEN: [one sentence — what makes it trend-worthy]
-TREND SOURCES: [Source 1] + [Source 2]
-ALIEXPRESS DEMAND: [orders] orders | [rating]★ | [reviews] reviews
-TIKTOK PROOF: [videos found] videos found | [comment theme]
-
-ALIEXPRESS PRODUCT URL: [standard product URL]
-CATEGORY: [category name]
-EXPECTED COMMISSION: [7% or 9% — based on category]
-→ Paste into AliExpress Link Generator manually to create your affiliate link.
-
-CTA:
-"כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור"
-or
-"שלחי הודעה עם [PRODUCT ID] ואשלח לך את הקישור"
-
----
-
-REVIEW VIDEOS TO SCREEN RECORD:
-1. [link] — [why it's good] — Best moment: [timestamp]
-2. [link] — [why it's good] — Best moment: [timestamp]
-3. [link] — [why it's good] — Best moment: [timestamp]
-
-Or record the AliExpress product page directly (scroll slowly, 2–3 sec per photo).
-
----
-
-VIDEO VARIANT [PRODUCT ID]A — [Hook Type]
-HOOK: [hook in Hebrew]
-STORYBOARD: [full table]
-CAPTION: [caption in Hebrew]
-
----
-
-VIDEO VARIANT [PRODUCT ID]B — Curiosity
-HOOK: [hook in Hebrew]
-STORYBOARD: [full table]
-CAPTION: [caption in Hebrew]
-
----
-
-VIDEO VARIANT [PRODUCT ID]C — Problem/Solution
-HOOK: [hook in Hebrew]
-STORYBOARD: [full table]
-CAPTION: [caption in Hebrew]
-
----
-
-VIDEO VARIANT [PRODUCT ID]D — TikTok Discovery
-HOOK: [hook in Hebrew]
-STORYBOARD: [full table]
-CAPTION: [caption in Hebrew]
-
----
-
-HASHTAGS (use for all variants):
-[hashtags from Step 6]
-
----
-
-UPLOAD CHECKLIST:
-[ ] Paste the AliExpress product URL into AliExpress Link Generator → copy your affiliate link
-[ ] Record 4 versions — one per variant hook (or start with 2 and test)
-[ ] Open TikTok → tap + → Upload → pick your recording
-[ ] Add a trending sound (tap Sounds → Trending)
-[ ] Add the storyboard texts at the right timestamps
-[ ] Paste caption + hashtags in the description
-[ ] Upload between 19:00–21:00 Israel time
-[ ] Note which variant is which (002A, 002B...) so you can track in the evening
-
-⚠️ After this run: update CURRENT_PRODUCT_ID in the prompt file to the next number.
-⚠️ Package saved to: C:\Automation\TikTok\output\[filename]
-
-================================================
+# Python dependencies
+pip install moviepy playwright requests
+
+# Playwright browser (headless Chromium)
+playwright install chromium
+
+# FFmpeg — download from ffmpeg.org and add to PATH
+# Verify with: ffmpeg -version
+
+# Hebrew font — needed for text overlays
+# Option A: Use a system font that supports Hebrew (e.g. Arial, David, Tahoma)
+# Option B: Download a free Hebrew TTF (e.g. Noto Sans Hebrew from Google Fonts)
+# Set the font path inside scripts/generate_videos.py after it is created
 ```
 
----
-
-## Evening Agent Prompt — paste into `.claude/commands/tiktok-analyze.md`
-
+**Verify the setup works:**
 ```
-You are a TikTok Performance Analyzer for the Israeli market.
-
-Ask the user to paste their stats for each video variant they uploaded.
-
-Format to request (repeat for each variant):
-
-PRODUCT VARIANT: [e.g. 002A]
-Views:
-Likes:
-Comments:
-Saves:
-
-Also ask for (needed to save to CSV):
-- Product category: [e.g. Mobile Phone Accessories]
-- Product price in ₪: [e.g. 45]
-
-After receiving all variant stats, analyze:
-
-1. WINNING VARIANT
-   - Compare all variants by views, saves, and comments.
-   - Identify the single winning variant (e.g. 002B).
-   - State clearly: Winner: [variant ID]
-
-2. WINNING HOOK TYPE
-   - A = Price Shock (or historically reassigned hook)
-   - B = Curiosity
-   - C = Problem/Solution
-   - D = TikTok Discovery
-   - Name the winning hook type and explain in one sentence why it likely worked for this product.
-
-3. LOSING VARIANTS
-   - List the losing variant IDs.
-   - For each, give one specific reason it underperformed (low views = hook didn't stop scroll / low saves = product didn't feel valuable / etc.)
-
-4. RECOMMENDATION FOR TOMORROW
-   - Be specific. Reference exact variant IDs.
-   - Example: "002B won with Curiosity hook. For tomorrow's product, lead with Curiosity as Variant A."
-
-5. VERDICT
-
-   ✅ WINNER: [variant ID] — [hook type] — [why it worked]
-   ❌ LOSERS: [variant IDs] — [why]
-   🔄 TOMORROW: [exact instruction for the /tiktok agent]
-
-Do not give generic advice. Always reference exact PRODUCT VARIANT IDs (002A, 002B, etc.).
-
----
-
-STEP A — SAVE TO video_results.csv
-
-After analysis, append results to: C:\Automation\TikTok\data\video_results.csv
-
-If the file does not exist, create it with this header first:
-product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner
-
-Then append one row per variant submitted by the user:
-[product_id],[variant_id],[hook_type],[category],[price_ils],[views],[likes],[comments],[saves],[true/false]
-
-Hook type values to use (exact, for consistency):
-- Price Shock
-- Curiosity
-- Problem/Solution
-- TikTok Discovery
-
-Winner column: true only for the single winning variant. All others: false.
-
-Example rows:
-002,002A,Price Shock,Mobile Phone Accessories,45,1200,89,34,67,false
-002,002B,Curiosity,Mobile Phone Accessories,45,3400,234,89,145,true
-
-After saving, confirm: "✅ Results saved to data/video_results.csv ([X] total rows now)"
-
----
-
-STEP B — SAVE ANALYSIS FILE
-
-Save the full analysis to:
-C:\Automation\TikTok\analysis\[YYYY-MM-DD]-product-[PRODUCT_ID]-analysis.md
-
-The file must contain:
-- Product ID and date
-- All variant stats submitted by the user (in a table)
-- Winning variant and hook type — with explanation
-- Losing variants — with reason per variant
-- Recommendation for tomorrow (exact instruction)
-- Full verdict block
-
-After saving, confirm: "✅ Analysis saved to analysis/[filename]"
-
----
-
-FINAL OUTPUT FORMAT:
-
-Show the full analysis in chat, then close with:
-
----
-📁 Files saved:
-- data/video_results.csv — updated ([X] total rows)
-- analysis/[YYYY-MM-DD]-product-[PRODUCT_ID]-analysis.md — created
+python -c "import moviepy; print('MoviePy OK')"
+python -c "from playwright.sync_api import sync_playwright; print('Playwright OK')"
+ffmpeg -version
 ```
+
+### Script Status
+
+| Script | Status |
+|--------|--------|
+| `scripts/generate_assets.py` | ✅ Implemented and tested (2026-06-11) |
+| `scripts/generate_videos.py` | ✅ Implemented and tested (2026-06-11) |
+
+Both scripts are operational. Full end-to-end `/tiktok` pipeline (Steps 0–12) tested successfully on 2026-06-11 (product 001 — Astronaut Galaxy Projector). 4/4 MP4 variants generated, 1080×1920 H.264, 15s, no audio.
+
+---
+
+## Command Reference
+
+The full agent prompts live in the slash command files. Do not maintain a second copy here.
+
+| Command | File | Steps |
+|---------|------|-------|
+| `/tiktok` | `.claude/commands/tiktok.md` | Steps 0–12 (research → QA → asset gen → video gen → output) |
+| `/tiktok analyze` | `.claude/commands/tiktok-analyze.md` | Steps 1–5 + A–C (analysis → CSV → learning) |
 
 ---
 
 ## Your Daily Routine
 
 ```
-MORNING (~15 minutes):
+MORNING (~15 minutes total):
   1. Open Claude Code
   2. Type /tiktok
-  3. Wait 2–3 minutes for the agent to finish
+  3. Wait 3–5 minutes for the agent to finish all steps
   4. Read the package in chat (also saved to output\ folder)
   5. Paste the AliExpress product URL into AliExpress Link Generator → copy affiliate link
-  6. Screen record the review video OR scroll through AliExpress photos (1–2 min)
-  7. Paste all texts into TikTok (5 min)
-  8. Schedule upload for 19:00–21:00
+  6. Open C:\Automation\TikTok\videos\ — 4 MP4 files are waiting
+  7. Upload each MP4 to TikTok → add trending sound → paste caption + hashtags
+  8. Schedule uploads between 19:00–21:00 Israel time
 
 EVENING (~5 minutes):
   1. Open TikTok analytics
-  2. Copy your stats (views, likes, comments, saves, clicks)
+  2. Copy your stats (views, likes, comments, saves) for each variant
   3. Open Claude Code
   4. Type /tiktok analyze
   5. Paste your stats + product category + price
-  6. Read what to do tomorrow
-  7. Check analysis\ folder the next morning to review any overnight output
+  6. Optionally answer the asset/segment observation questions (or skip)
+  7. Read what to do tomorrow
 ```
 
 ---
@@ -679,22 +397,25 @@ EVENING (~5 minutes):
 
 | Day | Goal |
 |-----|------|
-| Day 1 | Create `C:\Automation\TikTok\` + subfolders. Create both slash commands. Do one test run. |
-| Day 2 | First real `/tiktok` run. Record and upload your first video. |
-| Day 3 | First `/tiktok analyze`. First rows written to video_results.csv. |
-| Day 4–7 | One video per day. Agent starts accumulating history. |
+| Day 1 | Create folder structure. Verify slash commands exist. Complete technical setup (Python, FFmpeg, Playwright, font). |
+| Day 2 | First real `/tiktok` run. Scripts may not be ready — agent outputs research + storyboards. Upload manually using AliExpress images. |
+| Day 3 | First `/tiktok analyze`. First rows written to `video_results.csv`. |
+| Day 4 | Implement `generate_assets.py`. Test asset collection on a live AliExpress listing. |
+| Day 5 | Implement `generate_videos.py`. Test MP4 output for one variant. |
+| Day 6–7 | Full pipeline end-to-end. Agent outputs 4 MP4s per run. |
 
 ### Week 2 — Learn What Works
 
-- Agent reads video_results.csv each morning — patterns emerge after 5–7 data points
+- Agent reads `video_results.csv` each morning — patterns emerge after 5–7 data points
 - You know which hook style works for your audience
 - You know which product categories get engagement
 - Price scoring is calibrated to Israeli impulse-buy behavior
+- Optional asset/segment observations from `/tiktok analyze` start surfacing visual patterns
 
 ### Week 3+ — Start Scaling
 
 - Agent's recommendations are history-informed, not generic
-- Consider 2 products per day if the 15-minute routine feels easy
+- Consider 2 products per day if the routine feels easy
 - Agent starts recommending similar products to historical winners
 - Prepare for English version
 
@@ -708,11 +429,13 @@ EVENING (~5 minutes):
 - Prioritize 9% commission categories — more earnings per sale
 - Prioritize products under 50₪ — impulse-buy zone
 - Validate trend in 2+ sources before selecting any product
+- Final videos must use unique product assets (AliExpress images, screenshots, scroll capture) — do not use third-party review footage as the main video footage
 - Do the evening analysis every day — this is how the agent learns
 - Upload every day — consistency beats perfection
 
 **Never:**
 - Fake brand logos (ALO, Nike, etc.) → ban + legal risk
+- Use review video footage as final video content → use AliExpress product images instead
 - Automate the TikTok upload → TikTok detects bots and bans accounts
 - Skip the evening analysis — without it the agent cannot learn
 - Suggest 3% commission products when a good 7%–9% option exists
@@ -728,7 +451,7 @@ Only after you have in Israel:
 - [ ] Comments asking "מאיפה קונים?" or "שלחי לינק"
 - [ ] At least one confirmed affiliate click
 - [ ] One hook style that worked more than once
-- [ ] At least 10 rows in video_results.csv showing a clear pattern
+- [ ] At least 10 rows in `video_results.csv` showing a clear pattern
 - [ ] The agent's analysis pointing clearly at a winning hook + category combo
 
 Then duplicate the same system in English.
@@ -742,10 +465,14 @@ Then duplicate the same system in English.
 
 The agent gives you one strong experiment every morning.  
 The analyzer tells you each evening what to double down on.  
-You record and upload. The system learns. Results compound.
+You upload. The system learns. Results compound.
 
 ---
 
 *Created: 2026-05-27*  
-*Updated: 2026-06-03 — Added output file structure (output\ + analysis\ + data\ folders under C:\Automation\TikTok\), persistent learning via video_results.csv, updated price scoring for Israeli impulse-buy market (preferred 20₪–50₪, bonuses for cheap products), trend validation rule (2+ sources required per product), history-informed hook ordering, and scoring bonuses for impulse-buy categories.*  
-*Based on: sumery.txt, מוצרים טרנדיים בטיקטוק.txt, מוצרי טרנדים בטיקטוק 2.txt, פרסום_מוצר_יוגה_טיקטוק.md*
+*Updated: 2026-06-10 — MVP video generation upgrade. Added: Unique Asset Generation Agent, Silent Video Generator Agent, Quality & Learning Agent. Added new folders: assets\, videos\, qa\, scripts\. Review videos repurposed as research reference only — final footage now comes from AliExpress product images, page screenshots, and scroll captures. Agent outputs 4 silent MP4 files per run (1080×1920, H.264, text overlays baked in, no voiceover). Added pre-generation QA (4 checks) and post-generation QA with 3-retry logic and FAILED — REQUIRES HUMAN REVIEW escalation path. Updated daily routine: screen recording removed, user only generates affiliate link and uploads ready MP4s. Updated video_results.csv schema: added optional asset_source and best_segment columns. Replaced inline agent prompts with command file references.*  
+*Updated: 2026-06-14 — Performance intelligence upgrade. Added 72-hour rule: only CONFIRMED variants (72h+ since upload) influence long-term learning (hook type, category, price range, confidence score). Added variant_status field (NEW/TESTING/CONFIRMED) and 4 new CSV columns (upload_date, upload_time, age_hours, variant_status). Added product status system (NEW/TESTING/WINNING/RETIRED PRODUCT). Added STEP 0B Winner Scaling Check to /tiktok. Added Weekly Audit Report to /tiktok analyze. CURRENT_PRODUCT_ID updated to 003.*
+*Updated: 2026-06-14 — Auto product ID. CURRENT_PRODUCT_ID removed. PRODUCT ID now auto-assigned each run by scanning output/, data/, videos/ for the highest existing ID and adding 1 (zero-padded to 3 digits). Manual update reminders removed from both commands.*
+*Updated: 2026-06-14 — Product validation upgrade. Added mandatory STEP 3B: 5-check product validation (page active, affiliate eligible, ships to Israel, purchasable now, no blocking warnings) before tracking IDs, assets, or video generation. Auto-rejects failed products and retries next candidate automatically.*
+*Updated: 2026-06-14 — STEP 3B validation bug fix. Bug: STEP 3B passed a URL (item 1005009207029480) that returns "page not found" when opened manually. Root cause: validation relied on search evidence and redirect presence instead of live page content. Fix: STEP 3B now requires WebFetch on the exact product URL; product title and price must be present in the fetched content; immediate reject on any "page not found", "can not be found", "item is removed", or equivalent message; immediate reject if WebFetch returns only navigation/footer with no product content.*
+*Updated: 2026-06-14 — Tracking ID upgrade. Added per-variant tracking IDs (product[ID]_A/B/C/D). Upload package format updated: AFFILIATE LINK moved from global header into each variant block. STEP 4 in /tiktok now generates 4 tracking IDs and instructs user to create 4 affiliate links. Added 4 new CSV columns: tracking_id (always filled), affiliate_clicks, affiliate_sales, affiliate_commission (optional). Affiliate sales override engagement metrics when choosing the winner in /tiktok analyze.*
