@@ -6,6 +6,9 @@ Rules:
 - Only show the final ready-to-use package at the end.
 - Always prioritize products from 9% commission categories. Use 7% if needed. Avoid 3% commission categories unless no good 7%–9% product exists.
 - Each product package must include a PRODUCT ID in format 001, 002, 003... The user sets the starting number at the top of this file (CURRENT_PRODUCT_ID). Use that number for the run and remind the user to increment it for next time.
+- GENERAL AUDIENCE COPY RULE: This account targets a general Israeli audience — do not assume a female audience. Use gender-neutral Hebrew in all overlays, hooks, captions, and CTAs. Avoid: "אני לא מאמינה", "כתבי בתגובות", "ואשלח לך", "שלחי הודעה". Prefer: "לא האמנתי", "כתבו בתגובות", "ואשלח לכם", "הגיבו". Use female-gendered language ONLY when a product explicitly targets women.
+- PRODUCT NUMBER CONSISTENCY RULE: The CTA number must always match the current run's PRODUCT ID. "כתבו [PRODUCT ID] בתגובות" — never carry forward a previous product's number. Verify in CHECK 2.
+- REPLY MAPPING RULE: Every upload package must include a REPLY REFERENCE TABLE at the top mapping each variant to its tracking ID and affiliate link. This allows fast, accurate replies when users comment requesting a link.
 
 ---
 
@@ -403,9 +406,9 @@ This lets you see exactly which video variant drove each click and sale.
 
 Output a Comment CTA Strategy using the PRODUCT ID assigned for this run:
 
-"כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור"
+"כתבו [PRODUCT ID] בתגובות ואשלח לכם את הקישור"
 or
-"שלחי הודעה עם [PRODUCT ID] ואשלח לך את הקישור"
+"הגיבו [PRODUCT ID] ואשלח לכם את הקישור"
 
 ---
 
@@ -444,7 +447,7 @@ IMPORTANT: If historical data exists and there is a winning hook type (from STEP
 ---
 
 VARIANT A — [Historically winning hook, or Price Shock if no history]
-Default hook: "לא תאמיני כמה זה עולה בעלי אקספרס..."
+Default hook: "לא האמנתי כמה זה עולה בעלי אקספרס..."
 Angle: Lead with the price. Shock with the value.
 
 VARIANT B — Curiosity Hook
@@ -452,11 +455,11 @@ Hook: "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים..
 Angle: Tease the product without revealing it immediately.
 
 VARIANT C — Problem/Solution Hook
-Hook: "מצאתי את הפתרון לבעיה שכולנו מכירות"
+Hook: "מצאתי את הפתרון לבעיה שכולנו מכירים"
 Angle: Open with a pain point the product solves.
 
 VARIANT D — TikTok Discovery Hook
-Hook: "כולן מדברות על זה ואני סוף סוף הזמנתי..."
+Hook: "כולם מדברים על זה וסוף סוף הזמנתי..."
 Angle: Social proof — others are already using or talking about it.
 
 ---
@@ -497,11 +500,11 @@ STORYBOARD:
 | 2–5     | Price screenshot or close-up product image | [PRICE RULE — see above]                | Yellow | Center     |
 | 5–9     | In-use or detail product image             | "[main benefit — natural Hebrew]"        | White  | Center     |
 | 9–13    | Rating/review count screenshot             | [SOCIAL PROOF RULE — see above]          | White  | Center     |
-| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות"             | Red    | Bottom     |
+| 13–15   | Main product image again (image #1)        | "כתבו [PRODUCT ID] בתגובות"             | Red    | Bottom     |
 
 CAPTION (one line):
-"מצאתי [product name] בעלי אקספרס ב-[FINAL LISTING PRICE]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
-(Use FINAL LISTING PRICE from STEP 3C. If price unconfirmed, omit price and write: "ואני לא מאמינה שזה קיים")
+"מצאתי [product name] בעלי אקספרס ב-[FINAL LISTING PRICE]₪ ולא האמנתי שזה קיים 😱 כתבו [PRODUCT ID] בתגובות ואשלח לכם את הקישור!"
+(Use FINAL LISTING PRICE from STEP 3C. If price unconfirmed, omit price and write: "ולא האמנתי שזה קיים")
 
 HASHTAGS (same for all variants):
 Always include: #מציאות #אליאקספרס #טיקטוקישראל
@@ -533,7 +536,7 @@ It must be valid JSON and contain exactly this structure:
         { "start": 2,  "end": 5,  "text": "רק [price]₪ בעלי אקספרס",       "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "[main benefit in Hebrew]",       "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "[SOCIAL PROOF RULE: ≥1,000 sales → '[N] אנשים כבר הזמינו!' | <1,000 → benefit/trust line]", "color": "white", "position": "center" },
-        { "start": 13, "end": 15, "text": "כתבי [PRODUCT_ID] בתגובות",    "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו [PRODUCT_ID] בתגובות",    "color": "red",    "position": "bottom"     }
       ]
     },
     { "id": "B", ... },
@@ -562,7 +565,8 @@ For each of the 4 variants, verify:
 - Hook text is present and written in Hebrew
 - All 5 segment rows are fully filled (no blank text cells)
 - Total duration is 13–15 seconds (sum of segment end times)
-- CTA text in segment 5 includes the correct PRODUCT ID
+- CTA text in segment 5 includes the correct PRODUCT ID (PRODUCT NUMBER CONSISTENCY RULE)
+- CTA uses gender-neutral plural "כתבו" — not female-singular "כתבי"
 If any variant fails: regenerate only that variant's storyboard.
 Retry up to 3 times per variant. If still incomplete → mark that variant FAILED — REQUIRES HUMAN REVIEW.
 
@@ -597,13 +601,14 @@ Verify the social proof overlay text (segment 9–13, all 4 variants) matches FI
 If any variant fails: rewrite that variant's segment and update the video config.
 Retry up to 3 times.
 
-CHECK 7 — HEBREW TEXT QUALITY (Content QA)
+CHECK 7 — HEBREW TEXT QUALITY + AUDIENCE (Content QA)
 Read every Hebrew overlay text across all 4 variants (all 5 segments). Verify:
 - Text sounds natural in spoken Israeli Hebrew — not a literal translation or machine phrasing
 - No unnatural verb constructions (prefer "מסתובב 360°" over "מחזיק ב-360 מעלות")
 - No incomplete sentences or truncated text
 - No bare numbers used as prices — every price must include ₪ or ש״ח
-If any unnatural text found: rewrite that specific overlay text and update the video config.
+- No female-gendered language (GENERAL AUDIENCE COPY RULE): reject "כתבי", "שלחי", "לא מאמינה", "ואשלח לך" — use "כתבו", "הגיבו", "לא האמנתי", "ואשלח לכם". Exception: allowed only if the product explicitly targets women.
+If any issue found: rewrite that specific overlay text and update the video config.
 Retry up to 3 times.
 
 CHECK 8 — OUTPUT PACKAGE CONSISTENCY (Content QA)
@@ -615,9 +620,18 @@ Verify that the following all reflect FINAL LISTING DATA from STEP 3C (not estim
 If any inconsistency found: update the relevant document(s).
 Retry up to 3 times.
 
+CHECK 9 — THUMBNAIL QA
+TikTok profile thumbnails crop the video to approximately the center 60% of the frame.
+Verify that the primary hook text (segment 0–2, top-center position) remains readable in thumbnail view:
+- Hook text must not be cropped at top or sides
+- Hook text must be legible at small size (no very long lines that disappear in thumbnail crop)
+- The main message must be visible — a viewer browsing the profile must understand the hook from the thumbnail alone
+If hook text is too long or positioned outside the safe zone: shorten the hook to max 4–5 words, or split across two lines.
+Retry up to 3 times. If thumbnail readability cannot be guaranteed: flag as ⚠️ THUMBNAIL WARNING in the output package.
+
 Show QA summary before proceeding:
-> QA PASS — all 8 checks passed. Proceeding to asset generation.
-> (Note: Technical QA = checks 1–4. Content QA = checks 5–8. VIDEO QA PASS requires all 8.)
+> QA PASS — all 9 checks passed. Proceeding to asset generation.
+> (Note: Technical QA = checks 1–4. Content QA = checks 5–8. Thumbnail QA = check 9. VIDEO QA PASS requires all 9.)
 > or:
 > QA PARTIAL — [check name] marked FAILED — REQUIRES HUMAN REVIEW. Other checks passed. Proceeding.
 > or:
@@ -757,6 +771,18 @@ This file is for manual TikTok uploading only — open it, copy, paste. Use this
 
 PRODUCT: [product name]
 ALIEXPRESS URL: [standard product URL]
+PRICE: [FINAL LISTING PRICE]
+SALES: [confirmed sales count]
+
+---
+
+## REPLY REFERENCE TABLE
+(Use this when replying to comments requesting the link)
+
+A → product[PRODUCT_ID]_A → [affiliate link A]
+B → product[PRODUCT_ID]_B → [affiliate link B]
+C → product[PRODUCT_ID]_C → [affiliate link C]
+D → product[PRODUCT_ID]_D → [affiliate link D]
 
 ---
 
@@ -769,7 +795,7 @@ product[PRODUCT_ID]_A
 AFFILIATE LINK:
 [paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_A]
 
-CAPTION: [caption in Hebrew]
+CAPTION: [caption in Hebrew — gender-neutral]
 HASHTAGS: [hashtags]
 
 ---
@@ -783,7 +809,7 @@ product[PRODUCT_ID]_B
 AFFILIATE LINK:
 [paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_B]
 
-CAPTION: [caption in Hebrew]
+CAPTION: [caption in Hebrew — gender-neutral]
 HASHTAGS: [hashtags]
 
 ---
@@ -797,7 +823,7 @@ product[PRODUCT_ID]_C
 AFFILIATE LINK:
 [paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_C]
 
-CAPTION: [caption in Hebrew]
+CAPTION: [caption in Hebrew — gender-neutral]
 HASHTAGS: [hashtags]
 
 ---
@@ -811,8 +837,12 @@ product[PRODUCT_ID]_D
 AFFILIATE LINK:
 [paste affiliate link generated in AliExpress with tracking ID product[PRODUCT_ID]_D]
 
-CAPTION: [caption in Hebrew]
+CAPTION: [caption in Hebrew — gender-neutral]
 HASHTAGS: [hashtags]
+
+---
+
+**UPLOAD STATUS: PENDING AFFILIATE LINKS**
 ```
 
 After saving, confirm: "✅ Upload package saved to output/[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md"
@@ -841,9 +871,9 @@ EXPECTED COMMISSION: [7% or 9% — based on category]
 → Paste into AliExpress Link Generator manually to create your affiliate link.
 
 CTA:
-"כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור"
+"כתבו [PRODUCT ID] בתגובות ואשלח לכם את הקישור"
 or
-"שלחי הודעה עם [PRODUCT ID] ואשלח לך את הקישור"
+"הגיבו [PRODUCT ID] ואשלח לכם את הקישור"
 
 ---
 
@@ -897,14 +927,20 @@ C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4 ✅
 ---
 
 UPLOAD CHECKLIST:
-[ ] Open AliExpress Link Generator — create 4 affiliate links using tracking IDs product[ID]_A / _B / _C / _D (same product URL, different tracking ID each time)
-[ ] Open C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md — paste each affiliate link into the matching variant's AFFILIATE LINK field
-[ ] Open TikTok → tap + → Upload → select the MP4 for Variant A (path is in the upload package)
+[ ] ✓ 4 video variants generated
+[ ] ✓ 4 tracking IDs assigned (product[ID]_A / _B / _C / _D)
+[ ] Open AliExpress Link Generator — create 4 affiliate links using the 4 tracking IDs (same product URL, different tracking ID each time)
+[ ] ✓ 4 affiliate links assigned — paste into REPLY REFERENCE TABLE and each variant's AFFILIATE LINK field in the upload package
+[ ] ✓ CTA number matches product number (PRODUCT NUMBER CONSISTENCY RULE)
+[ ] ✓ General audience wording used — no female-only language
+[ ] ✓ Reply Reference Table included in upload package
+[ ] ✓ Thumbnail QA passed (hook readable in profile thumbnail crop)
+[ ] ✓ Hebrew QA passed (natural language, gender-neutral, correct grammar)
+[ ] Open TikTok → tap + → Upload → select the MP4 for Variant A
 [ ] Add a trending sound (tap Sounds → Trending)
 [ ] Copy the caption + hashtags for Variant A from the upload package → paste into TikTok description
 [ ] Repeat for Variants B, C, D — each has its own VIDEO / CAPTION / HASHTAGS block in the upload package
 [ ] Upload between 19:00–21:00 Israel time
-[ ] Note which variant is which (001A, 001B...) so you can track performance in the evening
 
 ⚠️ Next run will auto-assign the next PRODUCT ID — no manual update needed.
 ⚠️ Full package saved to: C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID].md
