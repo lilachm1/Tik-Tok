@@ -309,13 +309,75 @@ Flag ⚠️ UNCONFIRMED if product is in a category known to restrict affiliate 
 ---
 
 PASS — all critical checks clear, unconfirmed items flagged:
-> ✅ VALIDATION PASSED — [product name] — [price] — proceeding to Step 4.
+> ✅ VALIDATION PASSED — [product name] — [price] — proceeding to Step 3C.
 > ⚠️ Unconfirmed: [list any unconfirmed checks, e.g. "affiliate eligibility not verified live"]
 
 FAIL — any critical check fails:
 > ❌ VALIDATION FAILED — [product name] — [check that failed]. Rejecting.
 Automatically return to Step 1. Select the next highest-scoring product and repeat Steps 2, 3, and 3B.
 If all 5 candidate products fail validation: stop the run and report to the user.
+
+---
+
+STEP 3C — FINAL LISTING CONSISTENCY CHECK (MANDATORY)
+
+Run after STEP 3B confirms the URL is active and real.
+Verify that the SPECIFIC FINAL LISTING meets minimum quality requirements.
+
+⚠️ DO NOT use research-phase or category-level metrics from STEP 1/2 as proof for this check.
+⚠️ Only data confirmed for the FINAL URL counts here.
+⚠️ AliExpress is JS-rendered — use Google search snippets, Google Shopping results, or any structured
+   data that shows this specific item ID's actual metrics.
+
+MINIMUM REQUIREMENTS:
+- Sales / orders: 1,000+
+- Rating: 4.5★ or higher
+- Product images: 5+
+- Ships to Israel: ✅ (confirmed in STEP 3B)
+- Price: actual price visible (not estimated)
+- Purchasable now: listing is active (✅ from STEP 3B)
+
+PROCEDURE:
+1. Search: "aliexpress.com/item/[ITEM_ID]" to find sales count, rating, and review count in Google results.
+2. Check Google Shopping results for this specific item ID — they often show sold count and rating.
+3. If the STEP 3B search snippet already showed these figures, use them here.
+4. If metrics cannot be confirmed for the SPECIFIC listing: flag as UNCONFIRMED.
+
+FAIL CONDITIONS — REJECT THIS LISTING:
+- Sales / orders confirmed < 1,000 → REJECT
+- Rating confirmed < 4.5★ → REJECT
+- Image count confirmed < 5 → REJECT
+
+REJECTION FLOW:
+→ Rejected here: return to STEP 2 and find an alternative listing for the SAME product.
+→ No alternative listing for the same product meets requirements: reject the product entirely.
+   Return to STEP 1 and select the next-highest scoring product.
+→ All 5 candidate products fail: stop the run and report to the user.
+
+RECORD FINAL LISTING PRICE (mandatory):
+→ Record the actual price confirmed for THIS specific listing.
+→ This becomes the FINAL LISTING PRICE. Use it everywhere from this point forward.
+→ Round to nearest whole number. Approved display formats:
+   "רק [N]₪ בעלי אקספרס"
+   "בערך [N]₪ בעלי אקספרס"
+→ NEVER carry an estimated price forward from STEP 1/2 research.
+→ If actual price cannot be confirmed: note as UNCONFIRMED and use "מחיר מפתיע בעלי אקספרס"
+   instead of a number in all overlays and captions.
+
+RECORD FINAL LISTING SOCIAL PROOF (mandatory):
+→ Record the actual sales/orders count and review count for THIS specific listing.
+→ These become FINAL LISTING SOCIAL PROOF. Use them in all storyboard segments.
+→ NEVER carry forward an aggregated or comparable-listing count from STEP 1/2 research.
+
+Show:
+> FINAL LISTING DATA — [product name]
+> URL: [final URL]
+> Sales/orders: [N] | (source: [where confirmed]) | [✅ ≥1,000 PASS / ❌ <1,000 REJECT]
+> Rating: [X.X]★ | (source: [where confirmed]) | [✅ ≥4.5 PASS / ❌ <4.5 REJECT]
+> Images: [N] | (source: [where confirmed]) | [✅ ≥5 PASS / ❌ <5 REJECT]
+> Ships to Israel: ✅ (STEP 3B)
+> FINAL LISTING PRICE: [N]₪ | (source: [where confirmed]) | [✅ confirmed / ⚠️ UNCONFIRMED]
+> FINAL LISTING SOCIAL PROOF: [N] sold | [N] reviews
 
 ---
 
@@ -401,17 +463,43 @@ Angle: Social proof — others are already using or talking about it.
 
 For EACH variant generate:
 
+PRICE RULE (mandatory — applies to segment 2–5 and all captions):
+→ Use the FINAL LISTING PRICE recorded in STEP 3C. Never the estimated price from research.
+→ Round to nearest whole number.
+→ Approved formats: "רק [N]₪ בעלי אקספרס" / "בערך [N]₪ בעלי אקספרס"
+→ If price unconfirmed: "מחיר מפתיע בעלי אקספרס"
+→ Always include ₪ or ש״ח. Never bare numbers without currency.
+
+SOCIAL PROOF RULE (mandatory — applies to segment 9–13):
+→ Use the FINAL LISTING SOCIAL PROOF recorded in STEP 3C.
+→ If final listing has ≥ 1,000 sales/orders: use "[N] אנשים כבר הזמינו!" (actual count, rounded)
+→ If final listing has < 1,000 sales/orders: replace entirely with a benefit/trust line.
+   NEVER claim a sales number higher than what the final listing shows.
+   Benefit/trust line examples (adapt to product):
+   - "[main product benefit]"
+   - "מחזיק חזק גם על מהמורות" (adapt to product)
+   - "מתאים לכל סוג רכב ומכשיר" (adapt to product)
+→ Do NOT use category-level or comparable-listing sales counts as social proof.
+
+HEBREW TEXT QUALITY RULE (mandatory):
+→ All overlay text must be natural, conversational Israeli Hebrew.
+→ Avoid mechanical phrasing or literal translations.
+→ Prefer: "מסתובב 360° ונשאר יציב" — NOT "מחזיק ב-360 מעלות"
+→ Prefer: "מחזיק חזק גם בנסיעה" — NOT "לא נופל לעולם"
+→ Keep benefit lines short — max 4–5 words per line is ideal.
+
 STORYBOARD:
-| Seconds | Asset to use                              | Text on screen (Hebrew)              | Color  | Position   |
-|---------|-------------------------------------------|--------------------------------------|--------|------------|
-| 0–2     | Main product image (image #1 from listing) | [variant hook]                       | White  | Top center |
-| 2–5     | Price screenshot or close-up product image | "רק [price]₪ בעלי אקספרס"           | Yellow | Center     |
-| 5–9     | In-use or detail product image             | "[main benefit in Hebrew]"           | White  | Center     |
-| 9–13    | Rating/review count screenshot             | "[number] אנשים כבר הזמינו!"         | White  | Center     |
-| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות"          | Red    | Bottom     |
+| Seconds | Asset to use                              | Text on screen (Hebrew)                  | Color  | Position   |
+|---------|-------------------------------------------|------------------------------------------|--------|------------|
+| 0–2     | Main product image (image #1 from listing) | [variant hook]                          | White  | Top center |
+| 2–5     | Price screenshot or close-up product image | [PRICE RULE — see above]                | Yellow | Center     |
+| 5–9     | In-use or detail product image             | "[main benefit — natural Hebrew]"        | White  | Center     |
+| 9–13    | Rating/review count screenshot             | [SOCIAL PROOF RULE — see above]          | White  | Center     |
+| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות"             | Red    | Bottom     |
 
 CAPTION (one line):
-"מצאתי [product name] בעלי אקספרס ב-[price]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
+"מצאתי [product name] בעלי אקספרס ב-[FINAL LISTING PRICE]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
+(Use FINAL LISTING PRICE from STEP 3C. If price unconfirmed, omit price and write: "ואני לא מאמינה שזה קיים")
 
 HASHTAGS (same for all variants):
 Always include: #מציאות #אליאקספרס #טיקטוקישראל
@@ -442,7 +530,7 @@ It must be valid JSON and contain exactly this structure:
         { "start": 0,  "end": 2,  "text": "[hook in Hebrew]",               "color": "white",  "position": "top-center" },
         { "start": 2,  "end": 5,  "text": "רק [price]₪ בעלי אקספרס",       "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "[main benefit in Hebrew]",       "color": "white",  "position": "center"     },
-        { "start": 9,  "end": 13, "text": "[number] אנשים כבר הזמינו!",    "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "[SOCIAL PROOF RULE: ≥1,000 sales → '[N] אנשים כבר הזמינו!' | <1,000 → benefit/trust line]", "color": "white", "position": "center" },
         { "start": 13, "end": 15, "text": "כתבי [PRODUCT_ID] בתגובות",    "color": "red",    "position": "bottom"     }
       ]
     },
@@ -486,8 +574,42 @@ Confirm data/[PRODUCT_ID]-video-config.json exists, is valid JSON, and contains 
 If missing or malformed: rewrite the file.
 Retry up to 3 times.
 
+CHECK 5 — PRICE CONSISTENCY (Content QA)
+Verify the price in ALL storyboard segment texts and ALL caption texts matches the FINAL LISTING PRICE from STEP 3C.
+Compare every price-bearing text field in the video config and output package against the FINAL LISTING PRICE.
+If any mismatch: update the specific segment text(s) and rewrite the video config and output docs.
+Retry up to 3 times.
+⚠️ An estimated price from STEP 1/2 research that does not match the final listing is an automatic failure.
+
+CHECK 6 — SOCIAL PROOF ACCURACY (Content QA)
+Verify the social proof overlay text (segment 9–13, all 4 variants) matches FINAL LISTING SOCIAL PROOF from STEP 3C.
+- If final listing ≥ 1,000 sales/orders: overlay must show actual count (within rounding). Verify the number used is plausible.
+- If final listing < 1,000 sales/orders: overlay must be a benefit/trust line — NOT a sales count.
+  Any variant showing "[N] אנשים כבר הזמינו!" when the listing has < 1,000 sales = automatic failure.
+If any variant fails: rewrite that variant's segment and update the video config.
+Retry up to 3 times.
+
+CHECK 7 — HEBREW TEXT QUALITY (Content QA)
+Read every Hebrew overlay text across all 4 variants (all 5 segments). Verify:
+- Text sounds natural in spoken Israeli Hebrew — not a literal translation or machine phrasing
+- No unnatural verb constructions (prefer "מסתובב 360°" over "מחזיק ב-360 מעלות")
+- No incomplete sentences or truncated text
+- No bare numbers used as prices — every price must include ₪ or ש״ח
+If any unnatural text found: rewrite that specific overlay text and update the video config.
+Retry up to 3 times.
+
+CHECK 8 — OUTPUT PACKAGE CONSISTENCY (Content QA)
+Verify that the following all reflect FINAL LISTING DATA from STEP 3C (not estimated/research-phase values):
+- WHY CHOSEN in the output package
+- ALIEXPRESS DEMAND line in Step 12 final package
+- All price references in the upload package captions
+- Sales/orders/review claims anywhere in the output or upload packages
+If any inconsistency found: update the relevant document(s).
+Retry up to 3 times.
+
 Show QA summary before proceeding:
-> QA PASS — all 4 checks passed. Proceeding to asset generation.
+> QA PASS — all 8 checks passed. Proceeding to asset generation.
+> (Note: Technical QA = checks 1–4. Content QA = checks 5–8. VIDEO QA PASS requires all 8.)
 > or:
 > QA PARTIAL — [check name] marked FAILED — REQUIRES HUMAN REVIEW. Other checks passed. Proceeding.
 > or:
@@ -579,8 +701,13 @@ PASS THRESHOLD:
 - 3/4 pass → Partial success — flag the failed variant and continue
 - Fewer than 3 pass → Mark entire run FAILED — REQUIRES HUMAN REVIEW
 
+⚠️ VIDEO QA PASS requires BOTH gates:
+   Gate 1 — Technical QA (this step): file exists, duration 13–17s, size 500KB–50MB, resolution 1080×1920
+   Gate 2 — Content QA (STEP 7 checks 5–8): price accurate, social proof accurate, Hebrew text natural, output package consistent
+A variant cannot receive "PASS" if either gate failed.
+
 Show QA result:
-> VIDEO QA — [N]/4 variants passed
+> VIDEO QA — [N]/4 variants passed (Technical + Content)
 > ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4 — PASS ([duration]s, [size] MB)
 > ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4 — PASS ([duration]s, [size] MB)
 > ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4 — PASS ([duration]s, [size] MB)
@@ -697,6 +824,7 @@ PRODUCT: [name]
 WHY CHOSEN: [one sentence — what makes it trend-worthy]
 TREND SOURCES: [Source 1] + [Source 2]
 ALIEXPRESS DEMAND: [orders] orders | [rating]★ | [reviews] reviews
+(⚠️ These figures must come from the FINAL LISTING DATA confirmed in STEP 3C — not from research-phase estimates.)
 TIKTOK PROOF: [videos found] videos found | [comment theme]
 
 ALIEXPRESS PRODUCT URL: [standard product URL]

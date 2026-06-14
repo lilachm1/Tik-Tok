@@ -190,12 +190,13 @@ For each product, the agent must show:
 | 3 | Finds best AliExpress listing (1,000+ sales, 4.5★+, 5+ images, ships to Israel) | Nothing |
 | 4 | Safety check — no fake brands, no copyright risk | Nothing |
 | 3B | **Product Validation Check (mandatory)** — two-path validation: Path A uses WebFetch to confirm product title + price in fetched content and reject on any "page not found" / removal message; Path B (AliExpress JS wall returns footer-only) runs fallback Google search — item must appear as a Google-indexed product listing with a title in the snippet, not only in wiki/article pages. Prefers items confirmed in multiple regional AliExpress domains. Ships to Israel confirmed by redirect to he.aliexpress.com. Auto-rejects and retries next candidate if any critical check fails. | Nothing |
+| 3C | **Final Listing Consistency Check (mandatory)** — verifies the SPECIFIC final URL's own metrics: sales ≥ 1,000, rating ≥ 4.5★, images ≥ 5. Records FINAL LISTING PRICE and FINAL LISTING SOCIAL PROOF. Rejects listing (and retries with next listing/product) if any critical check fails. Prevents research-phase estimates from carrying forward unchecked. | Nothing |
 | 5 | Prepares AliExpress product URL + category + commission rate for manual link generation | Nothing |
 | 6 | Finds review videos for **research reference only** — not used as footage | Nothing |
 | 7 | Generates 4 video variants — winning hook assigned to Variant A | Nothing |
 | 7b | Writes storyboard + caption + hashtags for each of the 4 variants (Hebrew) | Nothing |
 | 7c | Writes `data/[PRODUCT_ID]-video-config.json` (text overlay interface for scripts) | Nothing |
-| 8 | **Pre-generation QA** — 4 checks (image count, storyboard completeness, hook distinctiveness, config integrity), up to 3 retries each | Nothing |
+| 8 | **Pre-generation QA — Technical + Content (8 checks total)** — Technical: image count, storyboard completeness, hook distinctiveness, config integrity. Content: price consistency vs final listing, social proof accuracy vs final listing, Hebrew text naturalness, output package consistency. VIDEO QA PASS requires all 8. | Nothing |
 | 9 | **Unique asset generation** — runs `generate_assets.py`: downloads AliExpress product images, price/rating screenshots, slow scroll capture → `assets/[PRODUCT_ID]/` | Nothing |
 | 10 | **Silent video generation** — runs `generate_videos.py`: composes 4 MP4s from assets + text overlays via MoviePy/FFmpeg | Nothing |
 | 11 | **Post-generation QA** — verifies all 4 MP4s (existence, duration 13–17s, file size, resolution), up to 3 retries per variant | Nothing |
@@ -352,6 +353,8 @@ ffmpeg -version
 | `scripts/generate_videos.py` | ✅ Implemented and tested (2026-06-11) |
 
 Both scripts are operational. Full end-to-end `/tiktok` pipeline (Steps 0–12) tested successfully on 2026-06-11 (product 001 — Astronaut Galaxy Projector). 4/4 MP4 variants generated, 1080×1920 H.264, 15s, no audio.
+
+**2026-06-14 — Critical logic + Content QA bugs fixed:** Three bugs found during product 002 run. (1) STEP 3B validated URL existence only — never verified the specific listing's own sales/rating metrics; product 002 final listing had 1 sold / 2 reviews, failing the 1,000+ requirement. (2) Research-phase estimated price (~25₪) leaked into video overlays without reconciliation; actual price was ₪60.66. (3) False social proof: "1,200 אנשים" from category research used in overlay when listing had 1 sold. Fixes: STEP 3C added (Final Listing Consistency Check), PRICE RULE + SOCIAL PROOF RULE + HEBREW TEXT QUALITY RULE added to STEP 6, Content QA checks 5–8 added to STEP 7, VIDEO QA PASS now requires both Technical QA and Content QA.
 
 **2026-06-14 — Emoji root cause fix:** `generate_videos.py` now strips all non-BMP Unicode characters (codepoints > U+FFFF, i.e. all emoji) from text before rendering via `strip_unsupported_chars()` called at entry of `build_text_layer()`. Tahoma has no glyphs above U+FFFF — this was causing broken-square artefacts. Hook/CTA/JSON templates in `tiktok.md` also cleaned (emoji removed from video-overlay text; caption templates unchanged — TikTok captions support emoji natively).
 
