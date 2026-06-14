@@ -89,6 +89,16 @@
 ✅ STEP 4 in /tiktok updated — generates 4 tracking IDs, instructs user to create 4 affiliate links
 ✅ video_results.csv schema updated — 4 new columns: tracking_id, affiliate_clicks, affiliate_sales, affiliate_commission
 ✅ /tiktok analyze updated — collects optional affiliate data per variant; affiliate_sales override engagement when choosing winner
+
+— 2026-06-14 content rules + pipeline standards + product completions —
+✅ GENERAL AUDIENCE COPY RULE added to tiktok.md — all Hebrew copy gender-neutral throughout ("כתבו", "הגיבו", "ואשלח לכם"); no female-only verb forms in any template
+✅ PRODUCT NUMBER CONSISTENCY RULE updated — CTAs now variant-level: "[PRODUCT_ID][VARIANT]" format (e.g. "כתבו 003A בתגובות"); shared codes across variants permanently prohibited
+✅ REPLY MANAGEMENT RULE added — REPLY REFERENCE TABLE (CTA code → tracking ID → affiliate link) required at top of every upload package
+✅ CHECK 9 (Thumbnail QA) added — hook text must be readable in TikTok profile thumbnail crop; first 3–4 words must convey the full message without truncation
+✅ CHECK 7 expanded — now covers HEBREW TEXT QUALITY + AUDIENCE: natural conversational Hebrew, gender-neutral language, no mechanical phrasing
+✅ FINAL QA CHECKLIST expanded — VIDEO QA PASS now requires 9 checks: Technical (1–4) + Content (5–8) + Thumbnail (9)
+✅ Product 002 COMPLETE — Plug Adapter (item 1005010033519251), ₪23, 10,000+ sold; 4 affiliate links assigned (product002_A/B/C/D); READY TO UPLOAD
+✅ Product 003 COMPLETE — Mini Bag Sealer (item 1005006860946828), ₪8, 100,000+ sold; 4 affiliate links assigned (product003_A/B/C/D); READY TO UPLOAD
 ```
 
 ---
@@ -199,18 +209,18 @@ C:\Automation\TikTok\
 
 ---
 
-## Pending Implementation Tasks
+## Implementation Tasks — All Complete
 
-In order. Do not skip steps — each depends on the previous.
+All tasks complete as of 2026-06-11. The end-to-end `/tiktok` pipeline has been operational since product 001.
 
-| # | Task | Depends on | Spec |
-|---|---|---|---|
-| 1 | Implement `generate_assets.py` | Nothing | `generate_assets_spec.md` |
-| 2 | Test asset collection on a real AliExpress product URL | Task 1 | Section 7 of assets spec |
-| 3 | Implement `generate_videos.py` | Task 1 (needs manifest to test) | `generate_videos_spec.md` |
-| 4 | Test video generation end-to-end | Tasks 1 + 3 | Section 10 of videos spec |
-| 5 | Run full `/tiktok` pipeline test (all 12 steps) | Tasks 1–4 | Full tiktok.md |
-| 6 | Update `TIKTOK_AGENT_PLAN.md` script status table | Task 5 | — |
+| # | Task | Status |
+|---|---|---|
+| 1 | Implement `generate_assets.py` | ✅ Complete (2026-06-11) |
+| 2 | Test asset collection on a real AliExpress product URL | ✅ Complete (2026-06-11) |
+| 3 | Implement `generate_videos.py` | ✅ Complete (2026-06-11) |
+| 4 | Test video generation end-to-end | ✅ Complete (2026-06-11) |
+| 5 | Run full `/tiktok` pipeline test (all 12 steps) | ✅ Complete (2026-06-11, product 001) |
+| 6 | Update `TIKTOK_AGENT_PLAN.md` script status table | ✅ Complete (2026-06-11) |
 
 ---
 
@@ -247,39 +257,15 @@ ffprobe -version
 
 ---
 
-## Exact Next Prompt (copy-paste to resume tomorrow)
+## Resuming the Pipeline
 
-```
-You are an expert Python developer and automation architect.
+The `/tiktok` pipeline is fully operational. To run the next product:
 
-We are building a TikTok Affiliate Agent for the Israeli market.
-The project lives at C:\Automation\TikTok\.
+1. Open Claude Code in `C:\Automation\TikTok\`
+2. Type `/tiktok`
+3. The agent auto-assigns the next product ID, runs all Steps 0–13, and outputs 4 MP4 files ready to upload
 
-The full architecture is documented in TIKTOK_AGENT_PLAN.md.
-The implementation spec for the first script is at scripts/generate_assets_spec.md.
-Read both files before writing any code.
-
-Your task: implement scripts/generate_assets.py exactly as specified in generate_assets_spec.md.
-
-Summary of what the script does:
-- Takes --product-id and --url as CLI arguments
-- Navigates to an AliExpress product page using Playwright (headless Chromium)
-- Downloads product images (min 5, max 12) to assets/[PRODUCT_ID]/images/
-- Screenshots price, rating, and review sections to assets/[PRODUCT_ID]/screenshots/
-- Captures a slow page scroll to assets/[PRODUCT_ID]/scroll/ (video preferred, PNG frames fallback)
-- Writes assets/[PRODUCT_ID]/manifest.json with metadata for every collected asset
-- Runs 6 QA checks with 3-retry logic
-- Exits with code 0 (full pass), 1 (partial), or 2 (FAILED — REQUIRES HUMAN REVIEW)
-
-Rules:
-- Follow the spec exactly. Do not add features not in the spec.
-- Do not download review videos. AliExpress product page only.
-- Use Playwright + requests + Pillow. No paid tools.
-- Output must match the exact manifest.json schema in the spec.
-- Hebrew font is not needed in this script (that is generate_videos.py).
-
-Start by reading TIKTOK_AGENT_PLAN.md and scripts/generate_assets_spec.md, then implement the script.
-```
+Products completed to date: 001 (Astronaut Galaxy Projector), 002 (Plug Adapter ₪23), 003 (Mini Bag Sealer ₪8). Next run will auto-assign 004.
 
 ---
 
