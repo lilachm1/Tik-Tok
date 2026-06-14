@@ -468,7 +468,9 @@ PRICE RULE (mandatory — applies to segment 2–5 and all captions):
 → Round to nearest whole number.
 → Approved formats: "רק [N]₪ בעלי אקספרס" / "בערך [N]₪ בעלי אקספרס"
 → If price unconfirmed: "מחיר מפתיע בעלי אקספרס"
-→ Always include ₪ or ש״ח. Never bare numbers without currency.
+→ Always include ₪ or ש״ח immediately after the number. Never bare numbers without currency.
+→ Examples of INVALID price text: "רק 23 בעלי אקספרס" / "23 שקל" / "מחיר 23"
+→ Examples of VALID price text: "רק 23₪ בעלי אקספרס" / "בערך 23₪ בעלי אקספרס"
 
 SOCIAL PROOF RULE (mandatory — applies to segment 9–13):
 → Use the FINAL LISTING SOCIAL PROOF recorded in STEP 3C.
@@ -580,6 +582,12 @@ Compare every price-bearing text field in the video config and output package ag
 If any mismatch: update the specific segment text(s) and rewrite the video config and output docs.
 Retry up to 3 times.
 ⚠️ An estimated price from STEP 1/2 research that does not match the final listing is an automatic failure.
+
+CURRENCY SYMBOL SUB-CHECK (part of Check 5 — automatic fail):
+Scan every text field in all 4 variants that contains a number intended as a price.
+Any price shown WITHOUT ₪ or ש״ח immediately after the number = automatic CHECK 5 FAIL.
+Fix: add ₪ after the number. Do not proceed to video generation until all price fields include ₪ or ש״ח.
+Valid: "רק 23₪ בעלי אקספרס" | Invalid: "רק 23 בעלי אקספרס" or "23 שקל" or a bare "23"
 
 CHECK 6 — SOCIAL PROOF ACCURACY (Content QA)
 Verify the social proof overlay text (segment 9–13, all 4 variants) matches FINAL LISTING SOCIAL PROOF from STEP 3C.

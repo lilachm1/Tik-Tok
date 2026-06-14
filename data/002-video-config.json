@@ -1,0 +1,54 @@
+{
+  "product_id": "002",
+  "date": "2026-06-14",
+  "price_ils": 23,
+  "sales_count": "10000",
+  "cta_id": "002",
+  "aliexpress_url": "https://www.aliexpress.com/item/1005010033519251.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "לא תאמיני כמה זה עולה בעלי אקספרס...",  "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 23₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מסתובב 360 ונשאר יציב",                  "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "10,000 אנשים כבר הזמינו!",               "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבי 002 בתגובות",                        "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...", "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 23₪ בעלי אקספרס",                          "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מתקפל, מתחבר תוך שנייה",                     "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "10,000 אנשים כבר הזמינו!",                   "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבי 002 בתגובות",                            "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "מצאתי את הפתרון לבעיה שכולנו מכירות",   "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 23₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "הטלפון יציב, הידיים פנויות",             "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "10,000 אנשים כבר הזמינו!",               "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבי 002 בתגובות",                        "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "כולן מדברות על זה ואני סוף סוף הזמנתי...", "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 23₪ בעלי אקספרס",                         "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מתאים לכל רכב ולכל טלפון",                 "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "10,000 אנשים כבר הזמינו!",                  "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבי 002 בתגובות",                           "color": "red",    "position": "bottom"     }
+      ]
+    }
+  ]
+}
