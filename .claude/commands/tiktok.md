@@ -382,7 +382,7 @@ IMPORTANT: If historical data exists and there is a winning hook type (from STEP
 ---
 
 VARIANT A — [Historically winning hook, or Price Shock if no history]
-Default hook: "לא תאמיני כמה זה עולה בעלי אקספרס... 😱"
+Default hook: "לא תאמיני כמה זה עולה בעלי אקספרס..."
 Angle: Lead with the price. Shock with the value.
 
 VARIANT B — Curiosity Hook
@@ -390,7 +390,7 @@ Hook: "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים..
 Angle: Tease the product without revealing it immediately.
 
 VARIANT C — Problem/Solution Hook
-Hook: "מצאתי את הפתרון לבעיה שכולנו מכירות 🔥"
+Hook: "מצאתי את הפתרון לבעיה שכולנו מכירות"
 Angle: Open with a pain point the product solves.
 
 VARIANT D — TikTok Discovery Hook
@@ -408,7 +408,7 @@ STORYBOARD:
 | 2–5     | Price screenshot or close-up product image | "רק [price]₪ בעלי אקספרס"           | Yellow | Center     |
 | 5–9     | In-use or detail product image             | "[main benefit in Hebrew]"           | White  | Center     |
 | 9–13    | Rating/review count screenshot             | "[number] אנשים כבר הזמינו!"         | White  | Center     |
-| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות 💬"       | Red    | Bottom     |
+| 13–15   | Main product image again (image #1)        | "כתבי [PRODUCT ID] בתגובות"          | Red    | Bottom     |
 
 CAPTION (one line):
 "מצאתי [product name] בעלי אקספרס ב-[price]₪ ואני לא מאמינה שזה קיים 😱 כתבי [PRODUCT ID] בתגובות ואשלח לך את הקישור!"
@@ -443,7 +443,7 @@ It must be valid JSON and contain exactly this structure:
         { "start": 2,  "end": 5,  "text": "רק [price]₪ בעלי אקספרס",       "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "[main benefit in Hebrew]",       "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "[number] אנשים כבר הזמינו!",    "color": "white",  "position": "center"     },
-        { "start": 13, "end": 15, "text": "כתבי [PRODUCT_ID] בתגובות 💬",  "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבי [PRODUCT_ID] בתגובות",    "color": "red",    "position": "bottom"     }
       ]
     },
     { "id": "B", ... },

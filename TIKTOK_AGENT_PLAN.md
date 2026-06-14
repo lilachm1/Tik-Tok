@@ -353,6 +353,8 @@ ffmpeg -version
 
 Both scripts are operational. Full end-to-end `/tiktok` pipeline (Steps 0–12) tested successfully on 2026-06-11 (product 001 — Astronaut Galaxy Projector). 4/4 MP4 variants generated, 1080×1920 H.264, 15s, no audio.
 
+**2026-06-14 — Emoji root cause fix:** `generate_videos.py` now strips all non-BMP Unicode characters (codepoints > U+FFFF, i.e. all emoji) from text before rendering via `strip_unsupported_chars()` called at entry of `build_text_layer()`. Tahoma has no glyphs above U+FFFF — this was causing broken-square artefacts. Hook/CTA/JSON templates in `tiktok.md` also cleaned (emoji removed from video-overlay text; caption templates unchanged — TikTok captions support emoji natively).
+
 ---
 
 ## Command Reference
