@@ -10,11 +10,11 @@
       "id": "A",
       "hook_type": "Price Shock",
       "segments": [
-        { "start": 0,  "end": 2,  "text": "לא האמנתי כמה זה עולה בעלי אקספרס...", "color": "white",  "position": "top-center" },
+        { "start": 0,  "end": 2,  "text": "לא האמנתי שזה סוגר שקיות בשניות...",   "color": "white",  "position": "top-center" },
         { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "חטיפים נשארים פציחים לימים",            "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",             "color": "white",  "position": "center"     },
-        { "start": 13, "end": 15, "text": "כתבו 003 בתגובות",                       "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו 003A בתגובות",                      "color": "red",    "position": "bottom"     }
       ]
     },
     {
@@ -25,7 +25,7 @@
         { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                          "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "סוגר כל שקית תוך שנייה",                    "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",                  "color": "white",  "position": "center"     },
-        { "start": 13, "end": 15, "text": "כתבו 003 בתגובות",                            "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו 003B בתגובות",                           "color": "red",    "position": "bottom"     }
       ]
     },
     {
@@ -36,7 +36,7 @@
         { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                    "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "בלי עוד חטיפים מתיישנים",              "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",            "color": "white",  "position": "center"     },
-        { "start": 13, "end": 15, "text": "כתבו 003 בתגובות",                      "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו 003C בתגובות",                     "color": "red",    "position": "bottom"     }
       ]
     },
     {
@@ -47,7 +47,7 @@
         { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "עובד על כל שקית ניילון",                "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",             "color": "white",  "position": "center"     },
-        { "start": 13, "end": 15, "text": "כתבו 003 בתגובות",                       "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו 003D בתגובות",                      "color": "red",    "position": "bottom"     }
       ]
     }
   ]

@@ -7,8 +7,8 @@ Rules:
 - Always prioritize products from 9% commission categories. Use 7% if needed. Avoid 3% commission categories unless no good 7%–9% product exists.
 - Each product package must include a PRODUCT ID in format 001, 002, 003... The user sets the starting number at the top of this file (CURRENT_PRODUCT_ID). Use that number for the run and remind the user to increment it for next time.
 - GENERAL AUDIENCE COPY RULE: This account targets a general Israeli audience — do not assume a female audience. Use gender-neutral Hebrew in all overlays, hooks, captions, and CTAs. Avoid: "אני לא מאמינה", "כתבי בתגובות", "ואשלח לך", "שלחי הודעה". Prefer: "לא האמנתי", "כתבו בתגובות", "ואשלח לכם", "הגיבו". Use female-gendered language ONLY when a product explicitly targets women.
-- PRODUCT NUMBER CONSISTENCY RULE: The CTA number must always match the current run's PRODUCT ID. "כתבו [PRODUCT ID] בתגובות" — never carry forward a previous product's number. Verify in CHECK 2.
-- REPLY MAPPING RULE: Every upload package must include a REPLY REFERENCE TABLE at the top mapping each variant to its tracking ID and affiliate link. This allows fast, accurate replies when users comment requesting a link.
+- PRODUCT NUMBER CONSISTENCY RULE: The CTA must always match the current product AND variant. Use "כתבו [PRODUCT ID][VARIANT] בתגובות" (e.g. "כתבו 003A בתגובות", "כתבו 003B בתגובות"). Never use a shared code across variants — it breaks attribution, reply management, and performance analysis. Verify in CHECK 2.
+- REPLY MAPPING RULE: Every upload package must include a REPLY REFERENCE TABLE at the top mapping each variant's CTA code (e.g. "003A") to its tracking ID and affiliate link. This allows fast, accurate variant-level replies when users comment. The CTA code in the video must match exactly what is in the reply table.
 
 ---
 
@@ -500,7 +500,7 @@ STORYBOARD:
 | 2–5     | Price screenshot or close-up product image | [PRICE RULE — see above]                | Yellow | Center     |
 | 5–9     | In-use or detail product image             | "[main benefit — natural Hebrew]"        | White  | Center     |
 | 9–13    | Rating/review count screenshot             | [SOCIAL PROOF RULE — see above]          | White  | Center     |
-| 13–15   | Main product image again (image #1)        | "כתבו [PRODUCT ID] בתגובות"             | Red    | Bottom     |
+| 13–15   | Main product image again (image #1)        | "כתבו [PRODUCT ID][VARIANT] בתגובות"    | Red    | Bottom     |
 
 CAPTION (one line):
 "מצאתי [product name] בעלי אקספרס ב-[FINAL LISTING PRICE]₪ ולא האמנתי שזה קיים 😱 כתבו [PRODUCT ID] בתגובות ואשלח לכם את הקישור!"
@@ -536,7 +536,7 @@ It must be valid JSON and contain exactly this structure:
         { "start": 2,  "end": 5,  "text": "רק [price]₪ בעלי אקספרס",       "color": "yellow", "position": "center"     },
         { "start": 5,  "end": 9,  "text": "[main benefit in Hebrew]",       "color": "white",  "position": "center"     },
         { "start": 9,  "end": 13, "text": "[SOCIAL PROOF RULE: ≥1,000 sales → '[N] אנשים כבר הזמינו!' | <1,000 → benefit/trust line]", "color": "white", "position": "center" },
-        { "start": 13, "end": 15, "text": "כתבו [PRODUCT_ID] בתגובות",    "color": "red",    "position": "bottom"     }
+        { "start": 13, "end": 15, "text": "כתבו [PRODUCT_ID][VARIANT] בתגובות", "color": "red", "position": "bottom" }
       ]
     },
     { "id": "B", ... },
@@ -567,6 +567,7 @@ For each of the 4 variants, verify:
 - Total duration is 13–15 seconds (sum of segment end times)
 - CTA text in segment 5 includes the correct PRODUCT ID (PRODUCT NUMBER CONSISTENCY RULE)
 - CTA uses gender-neutral plural "כתבו" — not female-singular "כתבי"
+- CTA includes VARIANT LETTER after product ID: "כתבו [PRODUCT ID]A", "כתבו [PRODUCT ID]B", etc. — NEVER a shared code across variants (breaks attribution)
 If any variant fails: regenerate only that variant's storyboard.
 Retry up to 3 times per variant. If still incomplete → mark that variant FAILED — REQUIRES HUMAN REVIEW.
 
