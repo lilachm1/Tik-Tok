@@ -1,0 +1,54 @@
+{
+  "product_id": "test001",
+  "date": "2026-06-11",
+  "price_ils": 49,
+  "sales_count": "50,000+",
+  "cta_id": "test001",
+  "aliexpress_url": "https://he.aliexpress.com/item/1005006956233010.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "price_shock",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "רק 49 שקל?!",                    "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "המחיר הזה לא יישאר",               "color": "white",  "position": "center"},
+        {"start": 5,  "end": 9,  "text": "איכות מדהימה במחיר נמוך",          "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "50,000 לקוחות מרוצים",             "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבי test001 בתגובות 💬",           "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "social_proof",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "50,000 איש כבר קנו את זה",         "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "ב-49 שקל בלבד",                    "color": "white",  "position": "center"},
+        {"start": 5,  "end": 9,  "text": "מגיע לישראל תוך שבועיים",          "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "4.8 כוכבים מ-12,000 ביקורות",     "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבי test001 בתגובות 💬",           "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "curiosity",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "למה כולם מזמינים את זה?",          "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "49 שקל באליאקספרס",               "color": "white",  "position": "center"},
+        {"start": 5,  "end": 9,  "text": "איכות שלא תאמיני",                 "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "נמכר ב-50,000 יחידות",             "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבי test001 בתגובות 💬",           "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "problem_solution",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "נמאס לך מהבעיה הזאת?",             "color": "red",    "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "הפתרון עולה רק 49 שקל",            "color": "white",  "position": "center"},
+        {"start": 5,  "end": 9,  "text": "אלפי אנשים כבר פתרו את זה",        "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "דירוג 4.8 מ-12,000 ביקורות",      "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבי test001 בתגובות 💬",           "color": "red",    "position": "bottom"}
+      ]
+    }
+  ]
+}

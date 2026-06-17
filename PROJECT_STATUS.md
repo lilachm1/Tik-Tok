@@ -1,6 +1,6 @@
 # TikTok Affiliate Agent — Project Status
 
-**Last updated:** 2026-06-14  
+**Last updated:** 2026-06-16  
 **Owner:** Lilach  
 **Working directory:** `C:\Automation\TikTok\`
 
@@ -8,8 +8,18 @@
 
 ## Current Status
 
-**Phase:** ALL TASKS COMPLETE. Full /tiktok pipeline operational end-to-end.  
-**Blocker:** None.
+**Phase:** Pipeline operational. Product 006 in progress — paused mid-validation.  
+**Next action tomorrow:** Create `C:\Automation\TikTok\state\` directory, write the Product 006 state file (content in Downloads/tiktok-session-2026-06-16.md), then run `/tiktok`.
+
+**Products:**
+| ID | Product | Status |
+|----|---------|--------|
+| 001 | Astronaut Galaxy Projector | ✅ UPLOADED |
+| 002 | 360° Magnetic Car Phone Mount | ✅ READY TO UPLOAD |
+| 003 | Mini Bag Sealer | ✅ READY TO UPLOAD |
+| 004 | Mini Mist Fan | ❌ BLOCKED (unconfirmed sales/price) |
+| 005 | Electric Lint Remover | ❌ BLOCKED (unconfirmed sales/rating/price) |
+| 006 | — | 🔄 IN PROGRESS — Candidate 1 (Car Seat Gap Filler) rejected; Candidate 2 (Cordless Mini Vacuum) is next |
 
 ```
 ✅ Architecture designed
@@ -99,6 +109,71 @@
 ✅ FINAL QA CHECKLIST expanded — VIDEO QA PASS now requires 9 checks: Technical (1–4) + Content (5–8) + Thumbnail (9)
 ✅ Product 002 COMPLETE — Plug Adapter (item 1005010033519251), ₪23, 10,000+ sold; 4 affiliate links assigned (product002_A/B/C/D); READY TO UPLOAD
 ✅ Product 003 COMPLETE — Mini Bag Sealer (item 1005006860946828), ₪8, 100,000+ sold; 4 affiliate links assigned (product003_A/B/C/D); READY TO UPLOAD
+⚠️ Product 004 — Mist Fan — BLOCKED (sales UNCONFIRMED, price research-estimated; videos generated under prior rules; do not upload without manual validation)
+⚠️ Product 005 — Fabric Shaver — BLOCKED (sales UNCONFIRMED, rating UNCONFIRMED, price research-estimated; videos generated under prior rules; do not upload without manual validation)
+
+— 2026-06-15 QA architecture audit + full system fixes —
+✅ QA RULE 1: SALES UNCONFIRMED = HARD BLOCK — added to STEP 3C FAIL CONDITIONS
+✅ QA RULE 2: Unconfirmed price blocks numeric overlays — CHECK 5 rewritten with PRICE CONFIRMATION sub-check
+✅ QA RULE 3: Dual UNCONFIRMED escalation — 2+ unconfirmed fields = reject listing
+✅ QA RULE 4: Fallback candidate strict validation — all fields must be confirmed; added to STEP 3B + STEP 3C
+✅ QA RULE 5 + GATE C: Asset Identity Gate (STEP 8B) added — 5 checks: main image, usable count, anomalous size, sequential numbering, screenshot coverage
+✅ QA RULE 6: Screenshot failure = explicit ASSET DEGRADATION WARNING in upload package (no silent PASS)
+✅ QA RULE 7: Canonical Product Term established at start of STEP 6; enforced in CHECK 2 (benefit coherence, term consistency) and CHECK 7 (product noun consistency)
+✅ QA RULE 8: Minimum commission viability screen — ₪1.50/sale floor added to STEP 1 before shortlist
+✅ Pricing table overhauled — preferred range now ₪25–₪65; hard reject below ₪15 and above ₪120; PREFERRED band at ₪40–₪65 (12 pts)
+✅ Tie-breaking rule updated — favor higher expected commission/sale, not cheaper price
+✅ CONFIRMATION COMPLETENESS EVALUATION added at end of STEP 3C (new STEP 3C gate before STEP 4)
+✅ CHECK 2 expanded — canonical term consistency + benefit coherence checks added
+✅ CHECK 5 rewritten — price confirmation status checked before currency symbol check
+✅ CHECK 7 expanded — product noun consistency check added
+✅ CHECK 8 expanded — caption product noun consistency check added
+✅ Upload package VALIDATION SUMMARY block added (sales, rating, price, screenshot status at a glance)
+✅ Upload package UPLOAD STATUS now a conditional system: PENDING AFFILIATE LINKS / ⚠️ ASSET WARNING / ⚠️ ASSET DEGRADATION WARNING / ❌ BLOCKED
+✅ TIKTOK_AGENT_PLAN.md updated — pricing table, step table (STEP 8B added), validation descriptions
+✅ tiktok-analyze.md updated — price bands aligned to new tiers; female-gendered CTA example corrected
+✅ Products 004 and 005 status corrected to BLOCKED (generated under prior rules; require manual review before upload)
+
+— 2026-06-15 Product 006 attempt 1 —
+⚠️ Product 006 run failed after 20+ minutes — no confirmed orders/rating found for car seat gap filler (AliExpress JS wall blocked all fetches; alitools.io returned 404)
+✅ Fix: AUTOMATED VALIDATION LIMITS added — 10 searches / 5 fetches / 3 item IDs / 5 min; first limit hit → HVM triggered immediately
+✅ Fix: HUMAN VERIFICATION MODE (HVM) added to STEP 3C — user opens URL, provides 4 fields; treated as CONFIRMED
+✅ Fix: STEP 0C Product Exclusion Check added
+
+— 2026-06-15 Product 006 attempt 2 —
+✅ HVM triggered for item 1005005879520048 (SEAMETAL car seat gap organizer, atmosphere light + USB)
+✅ HVM result: 322 sold, 4.6★, ₪63.91, In Stock → HARD BLOCK (322 < 1,000)
+⚠️ Alternative listing item 4001293078470 shown to user via HVM → URL non-working (dead listing shown to user)
+
+— 2026-06-16 Validation + Resume Mode —
+✅ Bug root cause: item 4001293078470 found only on alitools.io + seametalco.com — no direct aliexpress.com listing result; pipeline incorrectly treated third-party cache as live listing signal
+✅ Fix: HVM URL VALIDATION GATE — direct aliexpress.com/item/[ID] result required before any URL shown to user
+✅ Fix: LISTING SELECTION PRIORITY in STEP 2 — highest confirmed sales first; features are tie-breakers only
+✅ Fix: RESUME MODE (STEP 0A-R) — pipeline checks state/[PRODUCT_ID]-pipeline-state.json on startup; restores shortlist; skips STEP 0/1; STATE FILE hooks at 5 pipeline points
+✅ state\ directory added to project structure
+✅ TIKTOK_AGENT_PLAN.md + PROJECT_STATUS.md updated
+⚠️ state/006-pipeline-state.json NOT YET WRITTEN — must create state\ dir and write file before next run (content in Downloads/tiktok-session-2026-06-16.md)
+
+	— 2026-06-16 Trend Discovery Audit (TODO — after Product 006 completes) —
+⚠️ RISK: STEP 1 shortlist may be drifting from TikTok trend discovery toward AliExpress bestseller discovery
+⚠️ Observation: Product 006 shortlist appears strongly driven by AliExpress bestseller data and commission categories; TikTok evidence may be secondary in practice
+📋 TODO: After Product 006 completes, audit STEP 1 trend discovery across all past products
+📋 Audit must record per candidate: TikTok search terms used, number of TikTok videos found, common comment themes, trend evidence source(s), AliExpress evidence source(s), final scoring breakdown
+📋 Goal: Ensure the system is TikTok-first — AliExpress confirms demand, it does not discover trends
+
+	— 2026-06-16 Product 006 Post-Mortem + Architecture Decision —
+❌ Product 006 FAILED — all 5 candidates rejected; no listing passed liveness validation
+❌ Experimental Tier 2C (1-domain rule) REVERTED — item 1005006288564334 (de.aliexpress.com) passed but user confirmed dead page
+📋 POST-MORTEM FINDING 1: ALL Google-index-based signals are unreliable — stale cache affects main domain AND regional domains equally
+📋 POST-MORTEM FINDING 2: Tier 2A (sold count in snippet) and Tier 2B (Google Shopping) were unavailable for every listing tested
+📋 POST-MORTEM FINDING 3: Tier 2C (regional domain) proved unreliable — regional domain indexing is stale cache just like .com
+📋 POST-MORTEM FINDING 4: Only reliable liveness signal is rendering the actual page (Playwright or user HVM)
+📋 POST-MORTEM FINDING 5: HVM is 100% reliable but fires too late — after 10+ wasted WebSearch calls per listing
+✅ Architecture decision: Playwright-first validation (STEP 3A) — IMPLEMENTED 2026-06-16
+✅ generate_assets.py --check-only: renders page via headless Chromium; detects dead pages; extracts price/sold/rating from DOM
+✅ Phase 2 validated: DEAD ✅ (item 1005006288564334 → DEAD in 12.8s) | LIVE ✅ (item 1005006860946828 → sold 100,000+, rating 4.9★)
+✅ Phase 3 complete: STEP 3A integrated into tiktok.md; STEP 3B demoted to fallback-only; Tier 2 gate marked REPLACED
+✅ Tier 2 gate in tiktok.md: marked REPLACED by STEP 3A (no longer pending)
 ```
 
 ---
@@ -188,6 +263,7 @@ C:\Automation\TikTok\
 ├── output\                       ✅ (exists — daily MD packages)
 ├── analysis\                     ✅ (exists — evening analysis files)
 ├── data\                         ✅ (exists — video_results.csv + video-config JSON)
+├── state\                        📁 create before Product 006 resume (see next action above)
 ├── assets\                       📁 create before first run
 │   └── [product-id]\
 │       ├── images\
@@ -265,7 +341,11 @@ The `/tiktok` pipeline is fully operational. To run the next product:
 2. Type `/tiktok`
 3. The agent auto-assigns the next product ID, runs all Steps 0–13, and outputs 4 MP4 files ready to upload
 
-Products completed to date: 001 (Astronaut Galaxy Projector), 002 (Plug Adapter ₪23), 003 (Mini Bag Sealer ₪8). Next run will auto-assign 004.
+Products to date: 001 (Galaxy Projector ✅), 002 (Car Phone Mount ✅), 003 (Bag Sealer ✅), 004 (Mist Fan ❌ BLOCKED), 005 (Lint Remover ❌ BLOCKED), 006 (🔄 IN PROGRESS — resume at Candidate 2: Cordless Mini Vacuum).
+
+**Before running `/tiktok` tomorrow:**
+1. Ask Claude: "Create `C:\Automation\TikTok\state\` and write the 006 state file from Downloads/tiktok-session-2026-06-16.md"
+2. Then run `/tiktok` — pipeline will show ♻️ RESUME MODE and skip straight to STEP 2 for Cordless Mini Vacuum
 
 ---
 

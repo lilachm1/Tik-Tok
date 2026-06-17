@@ -1,0 +1,82 @@
+{
+  "product_id": "006",
+  "created": "2026-06-15",
+  "last_updated": "2026-06-16",
+  "status": "FAILED",
+  "step": "STEP_3C",
+  "shortlist": [
+    {
+      "rank": 1,
+      "name": "Car RGB LED Ambient Interior Light Strip (18-in-1, App Control)",
+      "score": 50,
+      "category": "Interior Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 65,
+      "status": "REJECTED",
+      "rejection_reason": "No listing with Tier 2 liveness signal found within search budget.",
+      "listings_tried": []
+    },
+    {
+      "rank": 2,
+      "name": "Waterproof Phone Pouch / Beach Case",
+      "score": 47,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 28,
+      "status": "REJECTED",
+      "rejection_reason": "No specific listing with Tier 2 liveness signal found within search budget.",
+      "listings_tried": []
+    },
+    {
+      "rank": 3,
+      "name": "LED Cup Holder Lights for Car",
+      "score": 46,
+      "category": "Interior Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 30,
+      "status": "REJECTED",
+      "rejection_reason": "Skipped — same structural listing-search difficulty as other Interior Accessories candidates.",
+      "listings_tried": []
+    },
+    {
+      "rank": 4,
+      "name": "Clip-on Mini Selfie Ring Light (USB)",
+      "score": 45,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 30,
+      "status": "REJECTED",
+      "rejection_reason": "All listings failed. Item 1005005250286559: no Tier 2 signal. Items 1005006288564334 and 1005006859963827: passed Tier 2C (experimental 1-domain rule) but 1005006288564334 confirmed dead by user (HVM_FAIL_PAGE_NOT_FOUND). Experimental Tier 2C rule failed — single regional domain is insufficient to prove liveness.",
+      "listings_tried": [
+        {
+          "item_id": "1005005250286559",
+          "url": "https://www.aliexpress.com/item/1005005250286559.html",
+          "result": "HVM_URL_VALIDATION_FAILED",
+          "reason": "Tier 1 PASS — Tier 2 FAIL. No sold count in snippet, no Shopping panel, no regional domain.",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005006288564334",
+          "url": "https://de.aliexpress.com/item/1005006288564334.html",
+          "result": "HVM_FAIL_PAGE_NOT_FOUND",
+          "reason": "Passed Tier 2C experimental rule (de.aliexpress.com = 1 regional domain). User opened URL — dead page confirmed. Conclusion: regional domain indexing is stale cache just like main .com indexing. Single regional domain is NOT a liveness signal.",
+          "hvm_data": null
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "Phone Grip Ring / Kickstand",
+      "score": 42,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 25,
+      "status": "REJECTED",
+      "rejection_reason": "No listing with Tier 2 liveness signal found within search budget.",
+      "listings_tried": []
+    }
+  ],
+  "active_candidate": null,
+  "hvm_pending": null,
+  "resume_note": "Product 006 fully FAILED. Post-mortem in progress. Do not resume until validation architecture is revised. Experimental Tier 2C (1-domain rule) produced a false positive — item 1005006288564334 on de.aliexpress.com was a dead listing confirmed by user."
+}

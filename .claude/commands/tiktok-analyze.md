@@ -29,7 +29,7 @@ REQUIRED — once per run:
 
   Product category: [e.g. Mobile Phone Accessories]
   Product price in ₪: [e.g. 45]
-  CTA style used: [comment ("כתבי X בתגובות") / dm ("שלחי הודעה עם X")]
+  CTA style used: [comment ("כתבו X בתגובות") / dm ("הגיבו X ואשלח לכם")]
   Upload date: [YYYY-MM-DD]
   Upload time: [HH:MM — 24h Israel time]
 
@@ -185,8 +185,9 @@ WINNING CATEGORY
 - Note how many data points support this conclusion
 
 WINNING PRICE RANGE
-- Group winning CONFIRMED rows by price band (under 30₪ / 30–50₪ / 50–75₪ / 75–100₪ / over 100₪)
+- Group winning CONFIRMED rows by price band (under ₪15 / ₪15–₪24 / ₪25–₪40 / ₪40–₪65 / ₪65–₪80 / ₪80–₪120 / over ₪120)
 - Identify the price band with the best saves/views ratio among winners
+- Note: bands below ₪15 and above ₪120 are hard-reject zones in product selection — flag any legacy data in those ranges
 
 WINNING CTA STYLE
 - Group CONFIRMED rows by cta_style (comment / dm / blank)

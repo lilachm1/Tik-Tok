@@ -1,0 +1,54 @@
+{
+  "product_id": "001",
+  "date": "2026-06-11",
+  "price_ils": 29,
+  "sales_count": "362,000+",
+  "cta_id": "001",
+  "aliexpress_url": "https://www.aliexpress.com/item/1005005980338736.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "פרויקטור כוכבים ב-29 שקל?!",             "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "רק 29₪ בעלי אקספרס",                     "color": "yellow", "position": "center"},
+        {"start": 5,  "end": 9,  "text": "הופך כל חדר לשמיים מלאי כוכבים",         "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "362,000 אנשים כבר הזמינו!",              "color": "white",  "position": "center"},
+        {"start": 13, "end": 15, "text": "כתבי 001 בתגובות",                        "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים",  "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "רק 29₪ בעלי אקספרס",                       "color": "yellow", "position": "center"},
+        {"start": 5,  "end": 9,  "text": "גלקסיה שלמה על תקרת החדר שלך",            "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "362,000 אנשים כבר הזמינו!",                "color": "white",  "position": "center"},
+        {"start": 13, "end": 15, "text": "כתבי 001 בתגובות",                          "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "נמאס לך מחדר משעמם? יש פתרון",             "color": "red",    "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "רק 29₪ בעלי אקספרס",                      "color": "yellow", "position": "center"},
+        {"start": 5,  "end": 9,  "text": "אסטרונאוט שהופך הכל לחלל בשנייה",         "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "362,000 אנשים כבר הזמינו!",               "color": "white",  "position": "center"},
+        {"start": 13, "end": 15, "text": "כתבי 001 בתגובות",                         "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        {"start": 0,  "end": 2,  "text": "כולן מדברות על זה ואני סוף סוף הזמנתי",   "color": "yellow", "position": "top-center"},
+        {"start": 2,  "end": 5,  "text": "רק 29₪ בעלי אקספרס",                      "color": "yellow", "position": "center"},
+        {"start": 5,  "end": 9,  "text": "פרויקטור אסטרונאוט עם 16 מצבי תאורה",    "color": "white",  "position": "center"},
+        {"start": 9,  "end": 13, "text": "362,000 אנשים כבר הזמינו!",               "color": "white",  "position": "center"},
+        {"start": 13, "end": 15, "text": "כתבי 001 בתגובות",                         "color": "red",    "position": "bottom"}
+      ]
+    }
+  ]
+}

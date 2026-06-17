@@ -1,0 +1,54 @@
+{
+  "product_id": "004",
+  "date": "2026-06-15",
+  "price_ils": 19,
+  "sales_count": "UNCONFIRMED",
+  "cta_id": "004",
+  "aliexpress_url": "https://www.aliexpress.com/item/1005007287191340.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "לא האמנתי כמה זה עולה...",          "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 19₪ בעלי אקספרס",               "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מצנן בערפל תוך שניות",             "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "נטען ב-USB — מחזיק כל היום",       "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 004A בתגובות",                "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "ראיתי בטיקטוק ולא האמנתי...",      "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 19₪ בעלי אקספרס",               "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "פולט ערפל ומאוורר בבת אחת",        "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "קומפקטי — נכנס לכל תיק",           "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 004B בתגובות",                "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "מצאתי פתרון לחום הישראלי",         "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 19₪ בעלי אקספרס",               "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "ערפל + רוח — קירור מיידי",          "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "מושלם לחוף, לפארק, לרחוב",         "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 004C בתגובות",                "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "כולם מדברים על זה...",              "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 19₪ בעלי אקספרס",               "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "ריסוס עדין — לא מרטיב את הבגדים",  "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "נטען ב-USB — שעות של קירור",        "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 004D בתגובות",                "color": "red",    "position": "bottom"     }
+      ]
+    }
+  ]
+}

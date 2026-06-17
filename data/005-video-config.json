@@ -1,0 +1,54 @@
+{
+  "product_id": "005",
+  "date": "2026-06-15",
+  "price_ils": 18,
+  "sales_count": "UNCONFIRMED",
+  "cta_id": "005",
+  "aliexpress_url": "https://www.aliexpress.com/item/1005004610041424.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "לא האמנתי שזה אפשרי...",                "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 18₪ בעלי אקספרס",                   "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מסיר קמצוצים תוך שניות",               "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "בגד ישן — נראה חדש לגמרי",             "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 005A בתגובות",                    "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "ראיתי בטיקטוק ולא האמנתי...",          "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 18₪ בעלי אקספרס",                   "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מגלח בד — נטען ב-USB",                 "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "עובד על סוודרים, קפוצ'ונים, שמיכות",  "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 005B בתגובות",                    "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "קמצוצים בבגדים? מצאתי פתרון",          "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 18₪ בעלי אקספרס",                   "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "לחיצת כפתור — מחליק את הכל",           "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "לפני ואחרי — הבדל מטורף",               "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 005C בתגובות",                    "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "כולם מדברים על זה...",                  "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 18₪ בעלי אקספרס",                   "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "מסיר קמצוצים חשמלי — 3 מהירויות",     "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "נטען ב-USB — לא צריך סוללות",          "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 005D בתגובות",                    "color": "red",    "position": "bottom"     }
+      ]
+    }
+  ]
+}

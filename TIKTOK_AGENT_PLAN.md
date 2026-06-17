@@ -59,6 +59,8 @@ C:\Automation\TikTok\
 ├── data\                           ← persistent data files
 │   ├── video_results.csv           ← learning database (appended by /tiktok analyze)
 │   └── [PRODUCT_ID]-video-config.json  ← video overlay spec (written by /tiktok Step 6)
+├── state\                          ← pipeline resume state (one JSON per product ID)
+│   └── [PRODUCT_ID]-pipeline-state.json  ← active run state; deleted/ignored when COMPLETED
 ├── assets\                         ← collected product assets per run
 │   └── [product-id]\
 │       ├── images\                 ← downloaded AliExpress product images (min 5)
@@ -131,20 +133,28 @@ Target: products that make people say **"That's cheap, I'll try it."** — not "
 
 ### Price Scoring
 
-| Price | Score | Bonus | Total |
-|-------|-------|-------|-------|
-| Under 30₪ | 10 | +3 | 13 |
-| 30–50₪ | 9 | +2 | 11 |
-| 50–75₪ | 7 | — | 7 |
-| 75–100₪ | 5 | — | 5 |
-| Over 100₪ | 2 | — | 2 |
+| Price | Score | Notes |
+|-------|-------|-------|
+| Under ₪15 | **HARD REJECT** | Commission/sale below ₪1.05 — not commercially viable |
+| ₪15–₪24 | 6 | Acceptable only with 9% commission category |
+| ₪25–₪40 | 10 | Good balance of impulse + commission |
+| ₪40–₪65 | **12 (PREFERRED)** | Best commission-to-impulse balance |
+| ₪65–₪80 | 9 | Viable with strong problem/solution angle |
+| ₪80–₪120 | 5 | Exceptional trend evidence required |
+| Over ₪120 | **HARD REJECT** | Too high for TikTok impulse behavior |
+
+### Minimum Commission Screen
+Before scoring any candidate, compute: expected_commission_per_sale = price × commission_rate ÷ 100
+- If < ₪1.50 → remove from shortlist (COMMISSION TOO LOW)
+- If all 5 candidates fail → relax to ₪1.00 minimum
 
 ### Price Rules
-- **Preferred range:** 20₪–50₪
-- **Acceptable range:** 50₪–79₪
-- **Avoid:** Products over 80₪ unless there is exceptional trend evidence AND a very strong problem/solution angle
-- When comparing two similar products with similar total scores, always choose the cheaper one
-- Goal: maximum conversions and impulse purchases — not maximum commission per sale
+- **Preferred range:** ₪25–₪65 (best commission per sale while remaining impulse-friendly)
+- **Acceptable range:** ₪20–₪80
+- **Hard reject below ₪15** — commission per sale below commercial viability threshold
+- **Hard reject above ₪120** — too high for impulse purchase behavior
+- Tie-breaking: when two products are within 1 point, pick the one with higher expected commission per sale; if equal, pick the cheaper one
+- Goal: maximize profitable affiliate revenue while preserving impulse-buy behavior — NOT maximum conversions at any price point
 
 ### Preferred Product Types (impulse-buy friendly, +1 bonus)
 - Small home gadgets
@@ -183,20 +193,25 @@ For each product, the agent must show:
 | Step | What the Agent Does | You Do |
 |------|---------------------|--------|
 | 0A | **Auto-assign PRODUCT ID** — scans output/, data/, videos/ for highest existing ID, sets next run to highest + 1 (zero-padded to 3 digits). No manual update needed. | Nothing |
+| 0A-R | **Resume Check** — immediately after PRODUCT ID is assigned, checks for `state/[PRODUCT_ID]-pipeline-state.json`. If found with status IN_PROGRESS: shows resume banner, skips STEP 0/0B/0C/1, restores shortlist from state, jumps directly to the saved step. If found COMPLETED/FAILED: starts fresh. If not found: starts fresh, state file will be created at end of STEP 1. | Nothing |
 | 0 | Reads `video_results.csv` — calculates best hook type, category, price range from CONFIRMED rows only (72h+ rule) | Nothing |
 | 0B | **Winner Scaling Check** — if a WINNING PRODUCT exists (2+ CONFIRMED variants, 20%+ above account average), shows 3–5 scaling variant ideas before proceeding to new product search | Nothing |
-| 1 | Finds 5 trending products (must have 2+ trend sources each), scores using price model + history bonuses | Nothing |
-| 2 | Picks highest-scoring product automatically (tie = cheaper wins) | Nothing |
-| 3 | Finds best AliExpress listing (1,000+ sales, 4.5★+, 5+ images, ships to Israel) | Nothing |
-| 4 | Safety check — no fake brands, no copyright risk | Nothing |
-| 3B | **Product Validation Check (mandatory)** — two-path validation: Path A uses WebFetch to confirm product title + price in fetched content and reject on any "page not found" / removal message; Path B (AliExpress JS wall returns footer-only) runs fallback Google search — item must appear as a Google-indexed product listing with a title in the snippet, not only in wiki/article pages. Prefers items confirmed in multiple regional AliExpress domains. Ships to Israel confirmed by redirect to he.aliexpress.com. Auto-rejects and retries next candidate if any critical check fails. | Nothing |
-| 3C | **Final Listing Consistency Check (mandatory)** — verifies the SPECIFIC final URL's own metrics: sales ≥ 1,000, rating ≥ 4.5★, images ≥ 5. Records FINAL LISTING PRICE and FINAL LISTING SOCIAL PROOF. Rejects listing (and retries with next listing/product) if any critical check fails. Prevents research-phase estimates from carrying forward unchecked. | Nothing |
+| 0C | **Product Exclusion Check** — scans all upload packages to build exclusion list. HARD REJECT on item ID / URL / name match. SOFT REJECT on same product type + same price tier. Skipped for explicit scale/retry runs. | Nothing |
+| 1 | Finds 5 trending products (must have 2+ trend sources each), scores using price model + history bonuses. Writes state file after shortlist is finalised. | Nothing |
+| 1 — TODO | **Trend Source Audit** (pending — run after Product 006 completes): verify TikTok evidence is the primary driver of candidate selection and AliExpress bestseller data is secondary validation only. Per-candidate record required: TikTok search terms used, number of TikTok videos found, common comment themes, trend evidence sources, AliExpress evidence sources, final scoring breakdown. Risk: pipeline may be drifting toward AliExpress-first discovery. | Manual review |
+| 3C — REVERTED | **Tier 2C experimental rule REVERTED (2026-06-16):** 1-domain rule produced a false positive immediately (item 1005006288564334 on de.aliexpress.com = dead page). Post-mortem conclusion: regional domain indexing is stale cache same as main .com. ALL Google-based liveness signals (Tier 1, 2A, 2B, 2C) are unreliable. Tier 2C restored to 2-domain rule and marked pending replacement. | Resolved |
+| 3A — ACTIVE | **Playwright Liveness Check (STEP 3A, implemented 2026-06-16):** New step between STEP 3 (safety) and STEP 3B (validation). Runs `generate_assets.py --check-only`. DEAD → reject immediately, no HVM. LIVE + hard blocks all pass → skip STEP 3B/3C entirely, proceed to STEP 4. LIVE + sold count UNCONFIRMED → fall through to STEP 3B for confirmation. UNKNOWN (script error/timeout) → fall back to STEP 3B. Dead page detection: renders page, checks body text + URL redirect. Data extraction: JS globals → CSS selectors → regex text scan. Phase 2 validated: DEAD test ✅, LIVE test ✅ (sold/rating/price all correct). | Nothing |
+| 2 | Finds best AliExpress listing. **LISTING SELECTION PRIORITY:** 1. Highest confirmed sales 2. Highest rating 3. Verified live listing 4. Price 5. Feature set. Features (LED, USB, premium version etc.) are tie-breakers only — never choose lower sales for more features. | Nothing |
+| 3 | Safety check — no fake brands, no copyright risk | Nothing |
+| 3B | **Product Validation Check (mandatory)** — two-path validation: Path A uses WebFetch to confirm product title + price; Path B (AliExpress JS wall) runs fallback Google search. Flags fallback candidates (non-#1 picks) for stricter validation in STEP 3C. **AUTOMATED VALIDATION LIMITS:** 10 searches / 5 fetches / 3 item IDs / 5 min per candidate — first limit reached triggers HVM immediately. Auto-rejects on any critical check failure. | Nothing |
+| 3C | **Final Listing Consistency Check (mandatory)** — automated validation (5 sources); if any field UNCONFIRMED → **HVM URL VALIDATION GATE** (confirm listing is live on AliExpress before showing URL) → **Human Verification Mode** (user opens URL, provides 4 fields). Verifies sales ≥ 1,000, rating ≥ 4.5★, images ≥ 5. **UNCONFIRMED sales = HARD BLOCK.** Dual UNCONFIRMED escalation: 2+ fields → reject. Fallback candidates require ALL fields confirmed. Ends with CONFIRMATION COMPLETENESS EVALUATION. State file updated at each listing outcome and at HVM trigger. | Open URL if prompted for HVM |
 | 5 | Prepares AliExpress product URL + category + commission rate for manual link generation | Nothing |
 | 6 | Finds review videos for **research reference only** — not used as footage | Nothing |
 | 7 | Generates 4 video variants — winning hook assigned to Variant A | Nothing |
 | 7b | Writes storyboard + caption + hashtags for each of the 4 variants (Hebrew) | Nothing |
 | 7c | Writes `data/[PRODUCT_ID]-video-config.json` (text overlay interface for scripts) | Nothing |
-| 8 | **Pre-generation QA — Technical + Content + Thumbnail (9 checks total)** — Technical (1–4): image count, storyboard completeness (incl. variant-level CTA codes + gender-neutral Hebrew), hook distinctiveness, config integrity. Content (5–8): price consistency vs final listing, social proof accuracy vs final listing, Hebrew text quality + gender-neutral audience check, output package consistency. Thumbnail (9): hook text readable in TikTok profile crop, first 3–4 words convey the full message. VIDEO QA PASS requires all 9. | Nothing |
+| 8 | **Pre-generation QA — Technical + Content + Thumbnail (9 checks total)** — Technical (1–4): image count, storyboard completeness (incl. canonical product term consistency, benefit coherence, variant-level CTA codes + gender-neutral Hebrew), hook distinctiveness, config integrity. Content (5–8): price consistency + confirmation status check (unconfirmed → replace with "מחיר מפתיע"), social proof accuracy, Hebrew text quality + product noun consistency, output package consistency + caption product noun match. Thumbnail (9): hook readable in profile crop. VIDEO QA PASS requires all 9. | Nothing |
+| 8B | **Asset Identity Gate (new)** — 5-check gate after asset collection: main image present (001_main.jpg), minimum 4 usable images, anomalous file size detection, non-sequential numbering detection, screenshot coverage. Warnings written to upload package UPLOAD STATUS. FAILED on < 4 usable images → stop run. | Nothing |
 | 9 | **Unique asset generation** — runs `generate_assets.py`: downloads AliExpress product images, price/rating screenshots, slow scroll capture → `assets/[PRODUCT_ID]/` | Nothing |
 | 10 | **Silent video generation** — runs `generate_videos.py`: composes 4 MP4s from assets + text overlays via MoviePy/FFmpeg | Nothing |
 | 11 | **Post-generation QA** — verifies all 4 MP4s (existence, duration 13–17s, file size, resolution), up to 3 retries per variant | Nothing |
@@ -477,6 +492,8 @@ The analyzer tells you each evening what to double down on.
 You upload. The system learns. Results compound.
 
 ---
+
+*Updated: 2026-06-16 — Validation reliability + Resume Mode. (1) HVM URL VALIDATION GATE added: before triggering Human Verification Mode the pipeline must confirm a direct aliexpress.com/item/[ID] result appears in Google search — alitools.io or brand-website-only results = FAIL, listing silently rejected, return to STEP 2, URL never shown to user. Root cause: Product 006 showed user a dead URL (item 4001293078470) that existed only in third-party caches. (2) LISTING SELECTION PRIORITY added to STEP 2: when multiple variants/listings exist, selection order is Highest Sales → Rating → Verified Live → Price → Feature set. Features (LED, USB, cup holder, premium versions) are tie-breakers only — lower-sales listing must not win over higher-sales listing due to extra features. (3) STEP 0A-R RESUME MODE added: pipeline checks for state/[PRODUCT_ID]-pipeline-state.json immediately after product ID is assigned. If IN_PROGRESS: restores full shortlist, skips STEP 0/1, jumps to saved step (including HVM_PENDING). STATE FILE WRITE/UPDATE hooks added at: end of STEP 1 (create), HVM trigger (update step=HVM_PENDING), STEP 3C listing rejection, STEP 3C candidate rejection, STEP 3C pass (→STEP_4). State directory: state\. (4) STEP 0C Product Exclusion Check documented in step table. (5) output structure updated: state\ directory added.*
 
 *Created: 2026-05-27*  
 *Updated: 2026-06-10 — MVP video generation upgrade. Added: Unique Asset Generation Agent, Silent Video Generator Agent, Quality & Learning Agent. Added new folders: assets\, videos\, qa\, scripts\. Review videos repurposed as research reference only — final footage now comes from AliExpress product images, page screenshots, and scroll captures. Agent outputs 4 silent MP4 files per run (1080×1920, H.264, text overlays baked in, no voiceover). Added pre-generation QA (4 checks) and post-generation QA with 3-retry logic and FAILED — REQUIRES HUMAN REVIEW escalation path. Updated daily routine: screen recording removed, user only generates affiliate link and uploads ready MP4s. Updated video_results.csv schema: added optional asset_source and best_segment columns. Replaced inline agent prompts with command file references.*  
