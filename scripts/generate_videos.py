@@ -154,7 +154,7 @@ def make_frame(pil_image: Image.Image) -> np.ndarray:
     img = pil_image.convert("RGB")
     iw, ih = img.size
 
-    if ih > iw * 1.5:
+    if ih > iw * 1.5 or iw > ih * 2:
         scale  = max(CANVAS_W / iw, CANVAS_H / ih)
         bw, bh = int(iw * scale), int(ih * scale)
         filled = img.resize((bw, bh), Image.LANCZOS)
@@ -186,11 +186,17 @@ def make_frame(pil_image: Image.Image) -> np.ndarray:
 # ---------------------------------------------------------------------------
 
 def strip_unsupported_chars(text: str) -> str:
-    """Remove non-BMP Unicode characters (code point > U+FFFF).
-    Tahoma and most Windows Hebrew fonts only cover the Basic Multilingual
-    Plane. Emoji (U+1F000+) render as broken squares — strip them before
-    any text reaches Pillow so artefacts are impossible regardless of what
-    the video-config contains."""
+    """Remove characters that Tahoma cannot render.
+
+    Two-pass sanitization:
+    1. REPLACEMENTS — BMP glyphs missing from Tahoma (★ U+2605, ☆ U+2606)
+       render as □; replace them with empty string before Pillow sees them.
+    2. Non-BMP strip — code points > U+FFFF (emoji, etc.) are outside the
+       Basic Multilingual Plane; Tahoma cannot render them either.
+    """
+    REPLACEMENTS = {'★': '', '☆': ''}
+    for ch, rep in REPLACEMENTS.items():
+        text = text.replace(ch, rep)
     cleaned = "".join(ch for ch in text if ord(ch) <= 0xFFFF)
     return " ".join(cleaned.split())
 
@@ -243,11 +249,11 @@ def build_text_layer(text: str, font_path: Path, font_size: int,
     total_h = line_h * len(lines)
 
     if position_str == "top-center":
-        y_start = 100
+        y_start = 320  # TikTok safe zone: top 15% of 1920px = 288px; 320 clears the search bar
     elif position_str == "center":
         y_start = CANVAS_H // 2 - total_h // 2
     else:  # bottom
-        y_start = 1820 - total_h
+        y_start = 1520 - total_h
 
     overlay = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
     draw    = ImageDraw.Draw(overlay)
@@ -640,6 +646,18 @@ def main():
     for vid in variants_to_run:
         segs_config = variants[vid]["segments"]
         asset_paths = select_segment_assets(vid, asset_idx)
+
+        # Apply per-segment asset overrides declared in config ("asset" key)
+        product_assets_dir = assets_dir / args.product_id
+        for i, seg in enumerate(segs_config):
+            override = seg.get("asset")
+            if override:
+                p = product_assets_dir / override
+                if p.exists():
+                    asset_paths[i] = p
+                else:
+                    warn(f"Variant {vid} seg {i}: asset override '{override}' not found — using auto-selected")
+
         out_path    = output_dir / f"{args.date}-product-{args.product_id}-{vid}.mp4"
         output_paths[vid] = out_path
 

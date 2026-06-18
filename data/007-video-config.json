@@ -1,0 +1,54 @@
+{
+  "product_id": "007",
+  "date": "2026-06-17",
+  "price_ils": 39,
+  "sales_count": "4,000+",
+  "cta_id": "007",
+  "aliexpress_url": "https://www.aliexpress.com/item/4001145808790.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        {"start": 0,  "end": 3,  "text": "₪39 למארגן גב מושב עם שולחן מתקפל?",    "color": "yellow", "position": "top-center"},
+        {"start": 3,  "end": 6,  "text": "שולחן שמתקפל מגב המושב",               "color": "white",  "position": "center"},
+        {"start": 6,  "end": 9,  "text": "הכל מסודר. אין בלאגן",                  "color": "white",  "position": "center"},
+        {"start": 9,  "end": 12, "text": "₪39 בלבד — 4,000+ רכישות",             "color": "yellow", "position": "center"},
+        {"start": 12, "end": 15, "text": "כתבו 007A בתגובות",                     "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        {"start": 0,  "end": 3,  "text": "רוב האנשים לא יודעים שזה קיים ברכב",   "color": "yellow", "position": "top-center"},
+        {"start": 3,  "end": 6,  "text": "רגע אחד. קבוע. מסודר.",                 "color": "white",  "position": "center"},
+        {"start": 6,  "end": 9,  "text": "גם שולחן קטן בפנים",                   "color": "white",  "position": "center"},
+        {"start": 9,  "end": 12, "text": "מקום לכל דבר",                         "color": "white",  "position": "center"},
+        {"start": 12, "end": 15, "text": "כתבו 007B בתגובות",                    "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        {"start": 0,  "end": 3,  "text": "הגב של המושב ברכב שלי היה בלאגן מוחלט", "color": "red",    "position": "top-center"},
+        {"start": 3,  "end": 6,  "text": "עד שמצאתי את זה",                        "color": "yellow", "position": "center"},
+        {"start": 6,  "end": 9,  "text": "פתרון לכל הדברים — 30 שניות התקנה",    "color": "white",  "position": "center"},
+        {"start": 9,  "end": 12, "text": "הרכב נראה אחרת",                        "color": "white",  "position": "center"},
+        {"start": 12, "end": 15, "text": "כתבו 007C בתגובות",                     "color": "red",    "position": "bottom"}
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        {"start": 0,  "end": 3,  "text": "טיקטוק הכניס לי ₪39 לסל",              "color": "yellow", "position": "top-center"},
+        {"start": 3,  "end": 6,  "text": "ועכשיו אני לא מבין איך חייתי בלי זה",  "color": "white",  "position": "center"},
+        {"start": 6,  "end": 9,  "text": "מארגן גב מושב עם שולחן מתקפל",         "color": "white",  "position": "center"},
+        {"start": 9,  "end": 12, "text": "₪39 — 4,000+ רכישות",                  "color": "yellow", "position": "center"},
+        {"start": 12, "end": 15, "text": "כתבו 007D בתגובות",                    "color": "red",    "position": "bottom"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "product_id": "007",
+  "created": "2026-06-17",
+  "last_updated": "2026-06-17",
+  "status": "COMPLETED",
+  "step": "COMPLETED",
+  "shortlist": [
+    {
+      "rank": 1,
+      "name": "3-in-1 Foldable Magnetic Wireless Charger",
+      "score": 52,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 55,
+      "status": "REJECTED",
+      "rejection_reason": "3 listings tried via STEP 3A — all DEAD (1005005477708386, 1005003461974885, 1005007237754604). Category appears heavily delisted.",
+      "listings_tried": [
+        {"item_id": "1005005477708386", "url": "https://www.aliexpress.com/item/1005005477708386.html", "result": "HVM_URL_VALIDATION_FAILED", "reason": "STEP 3A DEAD — page_not_found", "hvm_data": null},
+        {"item_id": "1005003461974885", "url": "https://www.aliexpress.com/item/1005003461974885.html", "result": "HVM_URL_VALIDATION_FAILED", "reason": "STEP 3A DEAD — page_not_found", "hvm_data": null},
+        {"item_id": "1005007237754604", "url": "https://www.aliexpress.com/item/1005007237754604.html", "result": "HVM_URL_VALIDATION_FAILED", "reason": "STEP 3A DEAD — page_not_found", "hvm_data": null}
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Car Backseat Seat-Back Organizer",
+      "score": 48,
+      "category": "Interior Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 39,
+      "status": "SELECTED",
+      "rejection_reason": null,
+      "listings_tried": [
+        {"item_id": "1005007689238886", "url": "https://www.aliexpress.com/item/1005007689238886.html", "result": "HARD_BLOCK", "reason": "STEP 3A LIVE but sold_count_numeric=18 < 500", "hvm_data": null},
+        {
+          "item_id": "4001145808790",
+          "url": "https://www.aliexpress.com/item/4001145808790.html",
+          "result": "PASS",
+          "reason": "STEP 3A LIVE, price ₪39.05, rating 5.0★. Sold count unconfirmed by STEP 3A (parsing artifact 000+). HVM confirmed: 4,000+ orders, 5.0★, ₪39.05, in stock.",
+          "hvm_data": {
+            "orders": "4000+",
+            "rating": 5.0,
+            "price_ils": 39.05,
+            "in_stock": true
+          }
+        }
+      ]
+    }
+  ],
+  "active_candidate": { "rank": 2, "name": "Car Backseat Seat-Back Organizer" },
+  "selected_listing": {
+    "item_id": "4001145808790",
+    "url": "https://www.aliexpress.com/item/4001145808790.html",
+    "product_name": "Car Seat Back Organizer with Foldable Table Tray PU Leather",
+    "price_ils": 39.05,
+    "sold_count": "4000+",
+    "rating": 5.0,
+    "category": "Interior Accessories",
+    "commission_rate": 9
+  },
+  "hvm_pending": null,
+  "resume_note": "FULLY COMPLETE. 4 MP4 videos generated (15s, 1080x1920, H.264, 4/4 QA pass). Upload package at output/2026-06-17-product-007-upload_package.md. Affiliate links filled in. RTL Hebrew rendering verified via preview frame. Ready to upload."
+}

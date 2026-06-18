@@ -5,7 +5,7 @@
 **Video content language:** Hebrew  
 **Daily time budget:** 2 hours  
 **Products per day:** 1 (agent picks automatically)  
-**Commands:** `/tiktok` (morning) and `/tiktok analyze` (evening)
+**Commands:** `/tiktok` (morning), `/tiktok collect` (data entry), `/tiktok analyze` (evening analysis + Product 009 decision)
 
 ---
 
@@ -215,11 +215,15 @@ For each product, the agent must show:
 | 9 | **Unique asset generation** — runs `generate_assets.py`: downloads AliExpress product images, price/rating screenshots, slow scroll capture → `assets/[PRODUCT_ID]/` | Nothing |
 | 10 | **Silent video generation** — runs `generate_videos.py`: composes 4 MP4s from assets + text overlays via MoviePy/FFmpeg | Nothing |
 | 11 | **Post-generation QA** — verifies all 4 MP4s (existence, duration 13–17s, file size, resolution), up to 3 retries per variant | Nothing |
+| 11B | **Visual Composition QA** — extracts 8 frames per variant (0s, 1s, 3s, 5s, 7s, 9s, 11s, 14s) via ffmpeg, opens each with Read tool, evaluates 6 criteria: Hook Power, Visual Composition, Product Dominance, Screenshot Evidence Quality, English Contamination, TikTok Native Feel. PASS/WARNING/FAIL per frame and per variant. FAIL = upload blocked + re-render required; WARNING = CEO review required before upload. | Nothing |
+| 11C | **Frame Sequence Visual QA** — evaluates the 8 frames extracted in STEP 11B as a sequence proxy for the video's story structure and conversion logic. NOT a motion review — does not assess timing feel, pacing, or transition smoothness in real playback. 12 criteria: First-Second Clarity, Scroll-Stopping Power, Hook-to-Product Match, Story Flow, Text Timing (estimated from config), Transition Feel (from boundary frames), Product Clarity, Benefit Clarity, Trust/Proof Clarity, CTA Strength, Mobile-View Realism, Overall Upload Judgment. Outputs per variant: PASS/WARNING/FAIL per criterion + 7 scores (Hook, Clarity, Flow, TikTok-native, CTA, Trust, Overall 1–10) + upload priority ranking #1–#4. FAIL or WARNING with score < 6 = upload BLOCKED; WARNING with score ≥ 6 = CEO review. Precedes STEP 11D. | Nothing |
+| 11D | **Full Motion Video Review (Automated)** — Agent-executed Gate 5 using 1fps frame extraction from the actual MP4 files. Extracts 15 frames per variant (ffmpeg fps=1), reads all 60 frames via multimodal image analysis, evaluates 12 criteria: Scroll-Stopping Power, Product Clarity within 1s, Hook Effectiveness, Story Flow, Text Readability in Motion, Text Timing, Transition Quality (consecutive frame comparison), Product Dominance Throughout, Trust/Proof Clarity, CTA Effectiveness, TikTok-Native Feel, Final Upload Judgment. Outputs per variant: PASS/WARNING/FAIL per criterion + 6 scores (Hook, Clarity, Flow, TikTok-Native, CTA, Overall 1-10) + revised upload priority ranking. FAIL (any FAIL criterion OR WARNING + Overall < 6) = upload BLOCKED. WARNING + Overall ≥ 6 = CEO review. PASS = proceed to STEP 11. Honest scope: strongest automated review an agent can perform; cannot replicate real-time pacing feel; human phone review available as optional supplement for WARNING on criteria 1, 6, or 7. | Nothing |
 | 12 | Saves full package to `output/YYYY-MM-DD-product-XXX.md` | Nothing |
 | 13 | Shows complete ready-to-use package in chat with MP4 file paths and QA status | Nothing |
-| — | Paste AliExpress product URL into AliExpress Link Generator → copy affiliate link | **You (1 min)** |
+| — | Paste AliExpress product URL into AliExpress Link Generator → generate 4 tracking-ID links (TikTok[ID]A/B/C/D) → fill REPLY REFERENCE TABLE in upload package | **You (1 min)** |
+| PRE-UPLOAD | **Pre-Upload Human Review Agent** — mandatory final gate triggered when user declares readiness to upload. Reads upload package + all QA gate results. 12 checks: affiliate links complete, CTA/link match, caption quality, hashtag relevance, STEP 11B/11C status, upload order, video files present, product data accuracy, upload timing advisory, CEO judgment, completeness. Verdict: APPROVED TO UPLOAD ✅ / BLOCKED ❌ / NEEDS CEO REVIEW ⚠️. BLOCKED if: affiliate links missing, STEP 11C not run or any FAIL, CTA mismatch, video files missing. APPROVED TO UPLOAD is the only verdict that unambiguously permits publishing. | Type "ready to upload Product [ID]" |
 | — | Open `C:\Automation\TikTok\videos\` — 4 MP4 files ready | **You (30 sec)** |
-| — | Upload each MP4 to TikTok, add trending sound, paste caption + hashtags | **You (5–10 min)** |
+| — | Upload each MP4 to TikTok in STEP 11C priority order, add trending sound, paste caption + hashtags | **You (5–10 min)** |
 
 ### `/tiktok analyze` — Evening Command
 
@@ -377,6 +381,14 @@ Both scripts are operational. Full end-to-end `/tiktok` pipeline (Steps 0–12) 
 
 **2026-06-14 — Products 002 and 003 complete:** Product 002 — Plug Adapter (item 1005010033519251), ₪23, 10,000+ sold, 4 variants generated, 4 affiliate links assigned (product002_A/B/C/D), READY TO UPLOAD. Product 003 — Mini Bag Sealer (item 1005006860946828), ₪8, 100,000+ sold, 4 variants generated, 4 affiliate links assigned (product003_A/B/C/D), READY TO UPLOAD.
 
+**2026-06-18 — Three new permanent QA rules:**
+
+**TIKTOK UI SAFE ZONE RULE (generator-level fix + permanent QA):** `generate_videos.py` "top-center" position was rendering at `y_start=100`, placing hook text inside the top 15% of the 1920px frame (danger zone = top 288px, covered by TikTok's search bar and tab UI). Fixed to `y_start=320`. Rule: no critical text may appear in the top 288px. QA check: extract frames at 0s, 1s, 3s; hook text must be fully below y=288. Violation = FAIL → re-render. This is a global generator fix — applies to all future products automatically.
+
+**SCREENSHOT EVIDENCE RULE (permanent storyboard + QA rule):** Overlay text must not cover the key proof elements a screenshot is meant to prove. Root cause: "center" position at y≈960 lands directly on the price screenshot band (y≈836–1084 on 1920px canvas) and covers written reviews in the rating screenshot. Fix applied globally to STORYBOARD defaults: price screenshot segments use "top-center" (text above strip); rating screenshot segments use "bottom" (text below reviews, rating breakdown visible at top). QA check added at 4s (price) and 11s (rating) — if overlay covers price, star rating, or review content → FAIL → reposition → re-render. Added to `tiktok.md` STORYBOARD position column and FRAME SAMPLING checklist.
+
+**PRODUCT VISIBILITY RULE (permanent storyboard + QA rule):** Overlay text must not obscure the primary product subject. The product must remain visually dominant in every product-image frame. Root cause: "center" position at y≈960 places text dead-center where most products sit. Rule: use "bottom" for benefit/detail segments (6–9s) when product occupies the center of the image. Screenshot frames (price, rating) are exempt — overlay reinforcing screenshot data is by design. QA check: extract 7s frame for all variants; if overlay covers the product → FAIL → move to "bottom" → re-render. Added to STORYBOARD section and FRAME SAMPLING QA checklist in `tiktok.md`.
+
 ---
 
 ## Command Reference
@@ -385,8 +397,9 @@ The full agent prompts live in the slash command files. Do not maintain a second
 
 | Command | File | Steps |
 |---------|------|-------|
-| `/tiktok` | `.claude/commands/tiktok.md` | Steps 0–12 (research → QA → asset gen → video gen → output) |
-| `/tiktok analyze` | `.claude/commands/tiktok-analyze.md` | Steps 1–5 + A–C (analysis → CSV → learning) |
+| `/tiktok` | `.claude/commands/tiktok.md` | Steps 0–12 (research → QA → asset gen → video gen → output). STEP 11D v2 active. |
+| `/tiktok collect` | `.claude/commands/tiktok-collect.md` | NEW: Performance Data Collector. Enters TikTok Analytics stats → video_results.csv v2 (33 cols). |
+| `/tiktok analyze` | `.claude/commands/tiktok-analyze.md` | Analysis → CSV → Quality & Learning (C.A–C.J) + Step E Product 009 Decision Layer. |
 
 ---
 

@@ -1077,6 +1077,15 @@ def extract_listing_data(page) -> dict:
         except Exception:
             pass
 
+    # Guard: Hebrew AliExpress renders "4,000+" as separate DOM spans.
+    # The selector may capture only "000+ נמכר" (missing the leading "4,"), which
+    # produces sold_count_numeric=0 — a parsing artifact, not a true zero.
+    # Any raw sold string beginning with "0" (e.g. "000+") is impossible for a real
+    # zero-sales listing (which would show nothing or "0 sold"), so treat as unconfirmed.
+    raw_sold = result.get("sold_count_raw") or ""
+    if result.get("sold_count_numeric") == 0 and raw_sold.lstrip().startswith("0"):
+        result["sold_count_numeric"] = None
+
     return result
 
 

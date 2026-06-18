@@ -157,6 +157,48 @@ Show a one-line summary before proceeding:
 > Historical insights (CONFIRMED data): Best hook: [type] | Best category: [category] | Best price range: [range]
 > (or: "No confirmed history yet — treating as day 1")
 
+STEP 0 SUPPLEMENT — READ ANALYZER LEARNING REPORT
+
+After computing raw CSV insights above, check for the analyzer learning report:
+C:\Automation\TikTok\data\learning_report.json
+
+IF FILE DOES NOT EXIST:
+  Note: "No analyzer report found — using CSV-computed insights (standard mode)."
+  Continue to STEP 0B normally.
+
+IF FILE EXISTS:
+  Read and parse the JSON.
+
+  IF "decision" = "PAUSE":
+    > ⏸ PRODUCT [NEXT_ID] IS PAUSED — /tiktok analyze says PAUSE
+    > Reason: [learning_report.pause_reason]
+    > Action: Run /tiktok collect → /tiktok analyze → check again before running /tiktok.
+    STOP. Do not proceed to product search. Do not run this pipeline.
+
+  IF "decision" = "CHANGE STRATEGY":
+    > ⚠️ CHANGE STRATEGY REQUIRED before generating next product.
+    > Issue: [learning_report.change_strategy_issue]
+    > Required: Apply the strategy changes from the analyzer report to this file (tiktok.md) before running /tiktok again.
+    STOP. Do not proceed to product search. Do not run this pipeline.
+
+  IF "decision" = "PROCEED":
+    Override CSV-computed insights with learning report values (report takes precedence where non-null):
+    - learning.best_hook_type → BEST HOOK TYPE for STEP 1 scoring and STEP 6 hook assignment
+    - learning.best_category → BEST CATEGORY for STEP 1 scoring bonuses
+    - learning.best_price_range_min / best_price_range_max → BEST PRICE RANGE for STEP 1 scoring
+    - learning.best_cta_style → BEST CTA STYLE (carry to STEP 6 caption generation)
+    - product_009_brief.lead_hook_for_variant_A → assign this hook type to VARIANT A in STEP 6
+    - product_009_brief.price_target_min / price_target_max → apply +3 bonus in STEP 1 for products in that range
+    - product_009_brief.recommended_category → apply +3 bonus in STEP 1 for that category
+    - product_009_brief.product_types_to_avoid → apply −5 penalty in STEP 1 for any product matching those types
+    - product_009_brief.first_frame_requirement (if not "standard approach") → carry to STEP 6 storyboard as a hard constraint on the hook segment first frame
+
+    Show COMBINED SUMMARY (replaces the CSV-only one-line summary shown above):
+    > Analyzer Report (generated [date], [confirmed_rows] CONFIRMED rows) — decision: PROCEED
+    > Hook: [learning.best_hook_type] | Category: [learning.best_category] | Price: ₪[min]–₪[max]
+    > Retention: [learning.retention_diagnosis | "no data"] | Variant A lead: [lead_hook_for_variant_A]
+    > [Only if retention WEAK or CRITICAL]: ⚠️ First-frame: [product_009_brief.first_frame_requirement]
+
 ---
 
 STEP 0B — WINNER SCALING CHECK
@@ -862,14 +904,78 @@ HEBREW TEXT QUALITY RULE (mandatory):
 → Prefer: "מחזיק חזק גם בנסיעה" — NOT "לא נופל לעולם"
 → Keep benefit lines short — max 4–5 words per line is ideal.
 
+WOW MOMENT GUIDELINE (soft — apply when suitable assets exist):
+→ Include at least one REAL USAGE MOMENT or WOW MOMENT in the storyboard when the product assets support it.
+→ WOW MOMENT types: before/after contrast, product in use (hands, context), installation moment, transformation reveal, unexpected benefit.
+→ Variants built around showing a PROBLEM BEING SOLVED consistently outperform variants that only describe the product.
+→ Priority: assign the WOW MOMENT to segment 3 (5–9s) — the "in-use or detail image" slot — for maximum mid-video retention.
+→ Only apply when a relevant usage asset exists. Do not fabricate usage scenarios if the images don't support them.
+
+TEXT COLOR RULE (mandatory):
+→ Yellow = default for hooks and key benefit lines. Highest contrast across most product image backgrounds.
+→ Red = CTA only (final segment). Never use red for body copy.
+→ White = only when the background image is confirmed dark (e.g., dark car interior, dark shelf, black product on dark background) OR when a strong dark outline is rendered. Default to Yellow if unsure.
+
+TIKTOK UI SAFE ZONE RULE (mandatory):
+→ No critical text may appear within the top 15% of the video frame (top 288px on a 1920px-tall frame).
+→ The hook line (0–3s) must begin BELOW the TikTok search overlay area. Use "top-center" position but ensure text clears the search bar.
+→ All hook text must remain fully readable when the TikTok search bar, creator name, and sponsored overlays are visible.
+→ Violation = QA FAIL. Move text lower and re-render before upload.
+
+PRODUCT VISIBILITY RULE (mandatory):
+→ Text readability alone is not sufficient. Overlay text must not obscure the primary product subject.
+→ The product must remain visually dominant in every frame where a product image is the background.
+→ Avoid "center" position overlay text when the product occupies the center of the image. Use "top-center" (≥y320), "bottom", or a side offset instead.
+→ Screenshot segments (price screenshots, rating screenshots) are NOT exempt from positioning rules — see SCREENSHOT EVIDENCE RULE below.
+→ During storyboard: choose text position based on where the product sits in the asset, not just a default "center".
+→ Violation = QA FAIL. Update position in config and re-render before upload.
+
+SCREENSHOT EVIDENCE RULE (mandatory):
+→ When a frame uses a screenshot as evidence, overlay text must not cover the key proof elements.
+→ Prices, ratings, order counts, reviews, discounts, and social proof elements must remain readable without the overlay.
+→ Price screenshot (thin horizontal band): use "top-center" — text floats above the screenshot band, leaving the price strip fully visible.
+→ Rating screenshot (fills full canvas): use "bottom" — text sits below review content, rating breakdown at top remains unobstructed.
+→ If a screenshot contains one key proof element (single price, single star rating), that element must be completely unobstructed.
+→ Violation = QA FAIL. Reposition text and re-render before upload.
+
+SCREENSHOT COMPOSITION RULE (mandatory):
+→ When using screenshots, the screenshot must DOMINATE the frame. Key evidence must be visible within 1 second of the frame appearing.
+→ Do NOT use a screenshot if it does not visually prove the overlay claim. A price screenshot on a "back pain" claim frame is a mismatch — use a product detail image instead.
+→ Never render a screenshot as a thin strip surrounded by large gray/blurred areas. If more than 30% of the frame is blurred filler (not screenshot content), the composition fails.
+→ Root cause: extremely wide screenshots (e.g. 535×123px, 4.3:1 ratio) trigger the letterbox path in make_frame(), producing a 248px strip on a 1920px canvas (13% coverage). Fix at generator level: for images with iw > ih × 2, use scale-to-fill instead of letterbox.
+→ If a screenshot is "too busy" (competing product carousel, unrelated prices visible), replace it with a clean product detail image and let the overlay text carry the claim.
+→ Violation = FRAME COMPOSITION FAIL. Replace asset or fix generator before upload.
+
+BOTTOM SAFE ZONE RULE (mandatory):
+→ The bottom 20% of the TikTok frame (y ≥ 1536 on 1920px canvas) is occupied by UI controls: like/comment/share buttons and caption overlay.
+→ Text rendered with "bottom" position must NOT extend below y=1520. Text block bottom must stay at or above y=1500–1550.
+→ Generator anchor: y_start = 1520 − total_h (text bottom = y1520, 400px above bottom edge).
+→ Check at 7s (detail/benefit segment), 10s (social proof segment), and 13s (CTA segment).
+→ Violation = QA FAIL. Fix bottom y_start in generate_videos.py and re-render.
+
+VISUAL COMPOSITION RULE (mandatory):
+→ Passing coordinate checks (safe zone, product visibility) is NOT sufficient. Each frame must look intentional and clean to a human viewer.
+→ For hook and CTA frames: prefer placing hook text in naturally empty areas of the image. Avoid placing hook text over existing infographic or product-description text baked into the image.
+→ Avoid splitting the visual focal point with text. Hook text should complement the image, not compete with it.
+→ Avoid opening or closing frames that use AliExpress product-page infographic images with large embedded English text ("Tablet Holder", "360° Free Rotation", etc.). Prefer clean product-use images or studio shots.
+→ After passing automated coordinate QA: review each frame as a human viewer — "does this look like a TikTok-native frame or an AliExpress product page screenshot?"
+→ Violation = VISUAL COMPOSITION FAIL. Switch asset to a clean image and re-render.
+
+GLYPH INTEGRITY RULE (mandatory):
+→ Tahoma (the Windows Hebrew font used by the generator) does NOT have a glyph for ★ (U+2605, BLACK STAR) — it renders as □ (broken square).
+→ The strip_unsupported_chars() function only removes chars > U+FFFF (non-BMP). ★ is U+2605 (BMP) so it is NOT stripped automatically.
+→ Glyph fix: add REPLACEMENTS = {'★': '', '☆': ''} to strip_unsupported_chars() to silently remove ★ and ☆ before they reach Pillow.
+→ In all segment texts: replace "4.9★" with "4.9" or "4.9 כוכבים". Never rely on ★ rendering correctly in Tahoma.
+→ QA check: visually inspect all social proof segments (usually segment 3, 9–13s range) for broken squares. Any □ = GLYPH FAIL → fix config → re-render.
+
 STORYBOARD:
-| Seconds | Asset to use                              | Text on screen (Hebrew)                  | Color  | Position   |
-|---------|-------------------------------------------|------------------------------------------|--------|------------|
-| 0–2     | Main product image (image #1 from listing) | [variant hook]                          | White  | Top center |
-| 2–5     | Price screenshot or close-up product image | [PRICE RULE — see above]                | Yellow | Center     |
-| 5–9     | In-use or detail product image             | "[main benefit — natural Hebrew]"        | White  | Center     |
-| 9–13    | Rating/review count screenshot             | [SOCIAL PROOF RULE — see above]          | White  | Center     |
-| 13–15   | Main product image again (image #1)        | "כתבו [PRODUCT ID][VARIANT] בתגובות"    | Red    | Bottom     |
+| Seconds | Asset to use                              | Text on screen (Hebrew)                  | Color         | Position   |
+|---------|-------------------------------------------|------------------------------------------|---------------|------------|
+| 0–2     | Main product image (image #1 from listing) | [variant hook]                          | Yellow        | Top center |
+| 2–5     | Price screenshot or close-up product image | [PRICE RULE — see above]                | Yellow        | Top center (keeps text above price strip) |
+| 5–9     | In-use or detail product image             | "[main benefit or WOW MOMENT — see above]" | Yellow or White (dark bg only) | Bottom (keeps product visible) |
+| 9–13    | Rating/review count screenshot             | [SOCIAL PROOF RULE — see above]          | Yellow        | Bottom (keeps rating breakdown visible above) |
+| 13–15   | Main product image again (image #1)        | "כתבו [PRODUCT ID][VARIANT] בתגובות"    | Red           | Bottom     |
 
 CAPTION (one line):
 "מצאתי [product name] בעלי אקספרס ב-[FINAL LISTING PRICE]₪ ולא האמנתי שזה קיים 😱 כתבו [PRODUCT ID] בתגובות ואשלח לכם את הקישור!"
@@ -1154,10 +1260,28 @@ PASS THRESHOLD:
 - 3/4 pass → Partial success — flag the failed variant and continue
 - Fewer than 3 pass → Mark entire run FAILED — REQUIRES HUMAN REVIEW
 
-⚠️ VIDEO QA PASS requires BOTH gates:
+⚠️ VIDEO QA PASS requires ALL FIVE gates:
    Gate 1 — Technical QA (this step): file exists, duration 13–17s, size 500KB–50MB, resolution 1080×1920
    Gate 2 — Content QA (STEP 7 checks 5–8): price accurate, social proof accurate, Hebrew text natural, output package consistent
-A variant cannot receive "PASS" if either gate failed.
+   Gate 3 — Visual Composition QA (STEP 11B): 8-frame visual evaluation PASS for all variants
+   Gate 4 — Frame Sequence Visual QA (STEP 11C): 8-frame sequence analysis — composition, story flow, and conversion criteria
+   Gate 5 — Full Motion Video Review (STEP 11D v2): automated 3fps frame extraction from actual MP4 (45 frames/15s video) + 14-criterion evaluation — scroll-stopping power, frame-delta transitions, dead-frame detection, text exposure timing, CTA exposure measurement, TikTok mobile simulation, product dominance timeline, TikTok-native feel, remediation output
+A variant cannot receive "PASS" if any gate failed.
+
+FRAME SAMPLING — extract frames per variant at 0s, 1s, 3s, 4s, 7s, 10s, 11s, and 13s and visually verify:
+- Hebrew text is readable and not reversed
+- Text contrast is adequate (yellow on most backgrounds; white only on confirmed dark backgrounds)
+- No text clipping or overflow off-screen
+- Product image is visible and not distorted
+- No black frame or stuck frame
+- UI SAFE ZONE: Hook text at 0s/1s/3s must NOT overlap TikTok search bar area (top 15% of frame = top 288px). FAIL if any text starts above y=288.
+- BOTTOM SAFE ZONE: At 7s, 10s, and 13s — bottom-position text must NOT extend below y=1520. Check that text block bottom is visible and not cut off by TikTok UI controls.
+- PRODUCT VISIBILITY: At 7s (detail segment) check that overlay text does NOT cover the primary product subject. Product must remain visually dominant.
+- SCREENSHOT EVIDENCE: At 4s (price segment) verify overlay text is ABOVE the price strip. At 11s (rating segment) verify overlay text is at BOTTOM — rating breakdown at top of frame must be unobstructed.
+- SCREENSHOT COMPOSITION: At 4s and 11s — does the screenshot fill most of the frame? If a thin strip surrounded by gray fills less than 30% of frame height → COMPOSITION FAIL → replace with product detail image or fix generator scale path.
+- VISUAL COMPOSITION: At 0s (hook) and 13s (CTA) — does the frame look TikTok-native? Are there embedded English words or AliExpress infographic labels competing with overlay text? FAIL if hook/CTA frame uses an infographic image with large embedded text.
+- GLYPH INTEGRITY: At 9–13s (social proof segment) — are there any broken squares □ in the text? Any □ = GLYPH FAIL → fix config (remove ★) → re-render.
+Flag any frame where text blends into the background as a contrast issue.
 
 Show QA result:
 > VIDEO QA — [N]/4 variants passed (Technical + Content)
@@ -1166,6 +1290,651 @@ Show QA result:
 > ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4 — PASS ([duration]s, [size] MB)
 > ✅ [YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4 — PASS ([duration]s, [size] MB)
 > (or: ⚠️ variant D — FAILED — REQUIRES HUMAN REVIEW)
+
+---
+
+STEP 11B — VISUAL COMPOSITION QA
+
+Run immediately after STEP 10 (post-generation technical QA).
+All variants that passed STEP 10 must pass this gate before proceeding to STEP 11.
+
+Purpose: Catch videos that pass technical checks but would fail a human TikTok review —
+letterboxing, screenshot strips, English contamination, broken glyphs, weak hooks.
+
+---
+
+FRAME EXTRACTION
+
+For each variant that passed STEP 10, extract 8 frames using ffmpeg:
+
+  ffmpeg -ss [T] -i "C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-[VARIANT].mp4" -vframes 1 -f image2 "C:\Automation\TikTok\scripts\qa_[PRODUCT_ID]_[VARIANT]_[T]s.png"
+
+Extract at timestamps: 0s, 1s, 3s, 5s, 7s, 9s, 11s, 14s
+Run for each T in {0, 1, 3, 5, 7, 9, 11, 14}. Total: 8 frames × 4 variants = 32 images.
+Open each image using the Read tool for visual evaluation.
+
+---
+
+CRITERIA — primary checks per timestamp:
+
+  0s  → Hook Power · English Contamination · TikTok Native Feel
+  1s  → Hook Power · Product Dominance
+  3s  → Hook Power · Visual Composition
+  5s  → Visual Composition · Screenshot Evidence Quality · Product Dominance
+  7s  → Product Dominance · English Contamination · Visual Composition
+  9s  → Screenshot Evidence Quality · Visual Composition
+  11s → Screenshot Evidence Quality · Product Dominance
+  14s → TikTok Native Feel · English Contamination · Product Dominance
+
+CRITERION 1 — HOOK POWER (0s, 1s, 3s)
+PASS:    Compelling frame — clear product, readable Hebrew hook, strong contrast; would stop a scroller
+WARNING: Hook visible but weak pull — flat angle, empty background, low contrast or energy
+FAIL:    Hook text unreadable | Black or blank frame | Frame looks like a product catalog page
+
+CRITERION 2 — VISUAL COMPOSITION (all frames)
+PASS:    Frame fills 1080×1920 naturally — product and text use the full canvas without awkward gaps
+WARNING: Minor awkward framing — slight product edge crop, marginally unbalanced layout
+FAIL:    Letterboxing visible (gray filler bands >30% of frame height) | Width-crop so extreme only 1–2 characters visible | Visually broken layout
+
+CRITERION 3 — PRODUCT DOMINANCE (1s, 5s, 7s, 11s, 14s)
+PASS:    Product is the clear primary visual subject — ≥40% of visible frame area
+WARNING: Product visible but small or peripheral — overlay text or screenshot background dominates
+FAIL:    Product not visible — fully hidden behind overlay text or screenshot
+
+CRITERION 4 — SCREENSHOT EVIDENCE QUALITY (5s, 9s, 11s)
+PASS:    Price, rating, or social proof clearly readable alongside overlay text
+WARNING: Evidence partially visible — key numbers or stars slightly obscured but decipherable
+FAIL:    Overlay covers price, star rating, or order count entirely | Screenshot is a thin strip (>30% gray filler) | Evidence unreadable
+
+CRITERION 5 — ENGLISH CONTAMINATION (0s, 3s, 7s, 14s)
+PASS:    No English text, or only unobtrusive English on the product surface itself
+WARNING: Small AliExpress feature callout text visible but not competing with Hebrew overlay
+FAIL:    Large English infographic text competes with Hebrew overlay | AliExpress promotional graphic >20% of frame | Feature labels ("Tablet Holder", "360° Free Rotation", "Material: Aluminium Alloy") visible at display size
+
+CRITERION 6 — TIKTOK NATIVE FEEL (0s, 3s, 14s)
+PASS:    Frame looks like authentic TikTok product content — natural, clean, plausibly organic
+WARNING: Slightly promotional feel — recognizably an ad but not jarring
+FAIL:    Frame looks like a raw AliExpress product listing screenshot | Hebrew text floating on a marketplace thumbnail | Could not plausibly appear in an organic TikTok scroll
+
+---
+
+OUTPUT FORMAT — per variant:
+
+VARIANT [X] — VISUAL QA
+
+Frame 0s:  [PASS / WARNING / FAIL] — [reason, or "clean"]
+Frame 1s:  [PASS / WARNING / FAIL] — [reason]
+Frame 3s:  [PASS / WARNING / FAIL] — [reason]
+Frame 5s:  [PASS / WARNING / FAIL] — [reason]
+Frame 7s:  [PASS / WARNING / FAIL] — [reason]
+Frame 9s:  [PASS / WARNING / FAIL] — [reason]
+Frame 11s: [PASS / WARNING / FAIL] — [reason]
+Frame 14s: [PASS / WARNING / FAIL] — [reason]
+
+VARIANT [X] RESULT: [PASS / WARNING / FAIL]
+
+VARIANT RESULT RULES:
+→ Any FAIL frame → variant = FAIL
+→ No FAIL, ≥1 WARNING → variant = WARNING
+→ All 8 PASS → variant = PASS
+
+---
+
+APPROVAL RULES:
+
+FAIL variant:
+→ Upload BLOCKED for this variant
+→ Identify root cause: wrong asset / config text / generator bug
+→ Fix: update [PRODUCT_ID]-video-config.json and/or re-run generator (--variant [X])
+→ Re-run STEP 11B for the re-rendered variant before proceeding to STEP 11
+
+WARNING variant:
+→ Flagged for human review
+→ Document the WARNING frame(s) in the upload package under UPLOAD STATUS
+→ CEO may approve for upload despite the warning
+→ If approved: proceed to STEP 11 with ⚠️ VISUAL WARNING documented in upload package
+→ If not approved: treat as FAIL → fix → re-render → re-run STEP 11B
+
+PASS variant:
+→ Proceed to STEP 11
+
+---
+
+GATE RESULT:
+
+4/4 PASS or approved        → Full pass — proceed to STEP 11
+3/4 acceptable              → Partial — flag in upload package, proceed
+<3 acceptable               → ⚠️ VISUAL QA PARTIAL — stop, requires human review before any upload
+
+Show:
+> STEP 11B VISUAL QA — [N]/4 PASS | [N] WARNING | [N] FAIL
+> Variant A: [PASS / WARNING / FAIL]
+> Variant B: [PASS / WARNING / FAIL]
+> Variant C: [PASS / WARNING / FAIL]
+> Variant D: [PASS / WARNING / FAIL]
+
+---
+
+STEP 11C — FRAME SEQUENCE VISUAL QA
+
+Run immediately after STEP 11B (Visual Composition QA).
+All variants that passed STEP 11B (or received CEO-approved WARNINGs) must complete this gate before proceeding to STEP 11D.
+
+Purpose: Evaluate the 8-frame sequence extracted in STEP 11B as a proxy for the video's visual flow, story structure, and conversion logic.
+STEP 11B checks individual frames for composition quality and contamination in isolation.
+STEP 11C evaluates the same 8 frames in sequence — assessing how well they tell the product story, drive toward the CTA, and handle the narrative arc across segments.
+NOTE: This is a frame-based analysis, NOT a real-time motion review. It does not capture timing feel, transition smoothness, or scroll-stopping power as experienced in live playback. STEP 11D (Full Motion Video Review) covers those dimensions.
+
+---
+
+HOW TO RUN:
+
+Use the 8 QA frames already extracted in STEP 11B (scripts/qa_[PRODUCT_ID]_[VARIANT]_[T]s.png).
+Read the frames in sequence (0s → 1s → 3s → 5s → 7s → 9s → 11s → 14s) and evaluate the frame sequence against the 12 criteria below.
+Do not re-extract frames. Do not re-render.
+IMPORTANT: This analysis covers static composition, story logic, and visual quality of sampled frames. Timing feel, pacing, and transition smoothness as experienced in real playback are evaluated separately in STEP 11D.
+
+---
+
+THE 12 CRITERIA:
+
+1. FIRST-SECOND CLARITY — Do I understand what I'm looking at within the first 1 second?
+   Frames: 0s, 1s
+   PASS:    Product and hook are immediately clear — viewer knows what this is about within 1 second
+   WARNING: Slightly ambiguous — viewer needs 2–3 seconds to understand context
+   FAIL:    First frame is confusing, dark, or unrelated — viewer has no idea what is being sold
+
+2. SCROLL-STOPPING POWER — Would this stop a TikTok user mid-scroll?
+   Frames: 0s, 1s
+   PASS:    Opening frame is visually striking — strong product angle, dramatic composition, or compelling hook text
+   WARNING: Functional but not eye-catching — average scroll-through rate likely
+   FAIL:    Opening frame blends into feed noise — no reason to stop; looks like every other product ad
+
+3. HOOK-TO-PRODUCT MATCH — Does the visual actually support the hook text?
+   Frames: 0s, 1s, 3s
+   PASS:    Opening image directly shows or implies the product and the claim made by the hook
+   WARNING: Hook text and image are loosely related — connection requires viewer interpretation
+   FAIL:    Hook text and opening image are mismatched — the hook claims something the visual does not show
+
+4. STORY FLOW — Does the sequence feel natural: hook → problem/price/benefit → proof → CTA?
+   Frames: all 8 in sequence
+   PASS:    Clear narrative arc — each segment logically follows the previous; viewer is carried through to CTA
+   WARNING: Minor flow break — one transition feels slightly abrupt or out of sequence
+   FAIL:    Disjointed structure — no clear narrative; segments feel randomly assembled; viewer would drop off mid-video
+
+5. TEXT TIMING — Is any text too fast, too slow, or hard to read in motion?
+   Reference: compare text length per segment vs. its duration from video-config.json
+   PASS:    All overlay text is readable within its segment duration; no segment feels rushed or padded
+   WARNING: One segment has slightly too much or too little text for its duration
+   FAIL:    A key segment's text cannot be fully read at normal viewing speed, OR a segment wastes screen time with minimal content
+
+6. TRANSITION FEEL — Do cuts feel smooth and TikTok-native, or jarring and cheap?
+   Frames: transitions at segment boundaries (~3s, ~6s, ~9s, ~13s)
+   PASS:    Hard cuts feel intentional — consistent with TikTok native style
+   WARNING: One transition is slightly jarring due to a large visual shift (e.g., abrupt color/contrast change)
+   FAIL:    Multiple jarring cuts, OR a cut that produces a visual non-sequitur (wrong product appearing)
+
+7. PRODUCT CLARITY — Is the product visually clear throughout the full video?
+   Frames: 1s, 3s, 5s, 7s
+   PASS:    Product is easily identifiable in every product-image frame; no ambiguity about what is being sold
+   WARNING: Product is slightly small or peripheral in one frame but clear in others
+   FAIL:    Product is unrecognizable in 2+ frames — viewer would not know what product is being promoted
+
+8. BENEFIT CLARITY — Does the viewer understand WHY this product is useful?
+   Frames: 5s, 7s + segment text
+   PASS:    Core benefit is clearly communicated — a viewer who has never seen this product understands what it solves
+   WARNING: Benefit is implied but not explicitly stated; requires prior product knowledge to connect
+   FAIL:    No clear benefit communicated — video shows the product without explaining why anyone would want it
+
+9. TRUST / PROOF CLARITY — Does the social proof segment feel credible and readable?
+   Frames: 9s, 11s
+   PASS:    Rating and order count are readable and feel like genuine social proof; numbers are clearly visible
+   WARNING: Social proof is visible but slightly hard to read (small text, partial overlap with overlay)
+   FAIL:    Proof segment is confusing — numbers unreadable, source looks untrustworthy, or overlay obscures all evidence
+
+10. CTA STRENGTH — Is the final CTA clear, easy to act on, and comment-worthy?
+    Frame: 14s
+    PASS:    CTA is explicit (e.g., "כתבו 008A בתגובות"), the action is immediately clear, and the code is correct for this variant
+    WARNING: CTA is present but slightly generic or low-urgency; specific code is readable
+    FAIL:    CTA is missing, illegible, unclear about what to do, or uses the wrong variant code
+
+11. MOBILE-VIEW REALISM — Would this read well on a phone screen while scrolling fast?
+    Frames: all — consider text size, contrast, and information density at phone scale
+    PASS:    All text is large enough to read at normal TikTok scroll speed; no frame is information-overloaded
+    WARNING: One segment has borderline text readability on a small screen (long line, low contrast, or dense text)
+    FAIL:    A key segment's text is too small to read on a phone at normal viewing speed — viewer scrolls past without getting the message
+
+12. OVERALL UPLOAD JUDGMENT — Would you upload this to TikTok?
+    Holistic view: does anything feel cheap, robotic, templated, marketplace-like, or low quality?
+    PASS:    Video feels like authentic TikTok content — professional enough not to embarrass the account, organic enough not to feel like a blatant ad
+    WARNING: Video is functional but has a slightly amateurish or templated feel in one area; upload with awareness it may underperform
+    FAIL:    Video feels obviously machine-generated, cheap, or like an AliExpress screengrab — would actively harm account reputation or TikTok reach
+
+---
+
+OUTPUT FORMAT — per variant:
+
+VARIANT [X] — MOTION + CONVERSION QA
+
+Criterion 1  — First-Second Clarity:    [PASS / WARNING / FAIL] — [reason]
+Criterion 2  — Scroll-Stopping Power:   [PASS / WARNING / FAIL] — [reason]
+Criterion 3  — Hook-to-Product Match:   [PASS / WARNING / FAIL] — [reason]
+Criterion 4  — Story Flow:              [PASS / WARNING / FAIL] — [reason]
+Criterion 5  — Text Timing:             [PASS / WARNING / FAIL] — [reason]
+Criterion 6  — Transition Feel:         [PASS / WARNING / FAIL] — [reason]
+Criterion 7  — Product Clarity:         [PASS / WARNING / FAIL] — [reason]
+Criterion 8  — Benefit Clarity:         [PASS / WARNING / FAIL] — [reason]
+Criterion 9  — Trust/Proof Clarity:     [PASS / WARNING / FAIL] — [reason]
+Criterion 10 — CTA Strength:            [PASS / WARNING / FAIL] — [reason]
+Criterion 11 — Mobile-View Realism:     [PASS / WARNING / FAIL] — [reason]
+Criterion 12 — Overall Upload Judgment: [PASS / WARNING / FAIL] — [reason]
+
+Scores:
+→ Hook score:          [1–10]  (criteria 1, 2, 3)
+→ Clarity score:       [1–10]  (criteria 7, 8, 11)
+→ Flow score:          [1–10]  (criteria 4, 5, 6)
+→ TikTok-native score: [1–10]  (criteria 2, 6, 12)
+→ CTA score:           [1–10]  (criterion 10)
+→ Trust score:         [1–10]  (criterion 9)
+→ Overall upload score:[1–10]  (holistic judgment — not a simple average; weight toward upload-worthiness and first impression)
+
+Overall upload score guide:
+  9–10: Upload immediately — strong creative
+  7–8:  Upload — solid performance expected
+  5–6:  Upload with awareness — may underperform; config fix recommended before next run
+  3–4:  Upload only if no better variant available — likely to underperform
+  1–2:  Do not upload — would harm account
+
+VARIANT [X] RESULT:   [PASS / WARNING / FAIL]
+Final recommendation: [Upload ✅ / Upload with warning ⚠️ / Do not upload ❌]
+
+---
+
+VARIANT RESULT RULES:
+
+→ Any FAIL criterion                                          → variant = FAIL
+→ No FAIL + ≥1 WARNING + overall upload score ≥ 6            → variant = WARNING (CEO review required)
+→ No FAIL + ≥1 WARNING + overall upload score < 6            → variant = FAIL (do not upload)
+→ All 12 criteria PASS                                        → variant = PASS
+
+---
+
+UPLOAD PRIORITY RANKING:
+
+After evaluating all 4 variants, rank them #1 through #4 by overall upload score.
+Tiebreaker order: stronger hook > stronger CTA > better flow.
+
+> Upload priority: #1 Variant [X] ([N]/10) | #2 Variant [X] ([N]/10) | #3 Variant [X] ([N]/10) | #4 Variant [X] ([N]/10)
+
+---
+
+APPROVAL RULES:
+
+FAIL variant:
+→ Upload BLOCKED for this variant
+→ Identify which criterion(ia) failed
+→ Fix: update [PRODUCT_ID]-video-config.json (asset swap, text rewrite, CTA correction) → re-render → re-run STEP 11B + STEP 11C for the affected variant
+
+WARNING variant:
+→ CEO review required before upload
+→ Document which criterion(ia) flagged and the overall score
+→ If CEO approves: proceed to STEP 11 with ⚠️ MOTION WARNING documented in upload package
+→ If CEO rejects: treat as FAIL → fix → re-render → re-run STEP 11B + STEP 11C
+
+PASS variant:
+→ Proceed to STEP 11
+
+---
+
+GATE RESULT:
+
+Show:
+> STEP 11C FRAME SEQUENCE VISUAL QA — [N]/4 PASS | [N] WARNING | [N] FAIL
+> Variant A: [PASS / WARNING / FAIL] — Score [N]/10 — [Upload ✅ / Upload with warning ⚠️ / Do not upload ❌]
+> Variant B: [PASS / WARNING / FAIL] — Score [N]/10 — [Upload ✅ / Upload with warning ⚠️ / Do not upload ❌]
+> Variant C: [PASS / WARNING / FAIL] — Score [N]/10 — [Upload ✅ / Upload with warning ⚠️ / Do not upload ❌]
+> Variant D: [PASS / WARNING / FAIL] — Score [N]/10 — [Upload ✅ / Upload with warning ⚠️ / Do not upload ❌]
+>
+> Upload priority: #1 Variant [X] ([N]/10) | #2 Variant [X] ([N]/10) | #3 Variant [X] ([N]/10) | #4 Variant [X] ([N]/10)
+
+---
+
+STEP 11D — FULL MOTION VIDEO REVIEW v2 (AUTOMATED)
+
+Run immediately after STEP 11C (Frame Sequence Visual QA).
+
+Purpose: The deepest agent-executable video review, using the actual MP4 as input source. v2 extracts 3 frames per second (45 frames per 15s video — 3× the coverage of v1) to capture mid-segment dead zones, unintended visual discontinuities, and text disappearance events that 1fps misses. Adds: frame-delta analysis, dead-frame detection, text exposure duration measurement, CTA timing check, TikTok mobile simulation, product dominance full-timeline scoring, stricter TikTok-native scoring, and per-finding remediation output.
+
+Honest scope: Strongest automated review an AI agent can perform on a video file. Cannot replicate the subjective experience of watching at normal speed (pacing feel, scroll impulse). Human phone review remains available as an optional supplement and is recommended for any variant with WARNING on criteria 1, 7, or 9.
+
+---
+
+HOW TO RUN:
+
+STEP 1 — Extract 3fps frames from the actual MP4 (not reusing STEP 11B frames):
+```
+ffmpeg -i "videos/[YYYY-MM-DD]-product-[PRODUCT_ID]-[VARIANT].mp4" -vf fps=3 "scripts/step11d_[PRODUCT_ID]_[VARIANT]_%03d.png" -y
+```
+This produces 45 PNG files for a 15s video.
+Frame-to-time mapping: frame N → time (N ÷ 3) seconds. Frame 003 = 1.0s, Frame 009 = 3.0s, Frame 027 = 9.0s, Frame 039 = 13.0s, Frame 045 = 15.0s.
+Run for all 4 variants.
+
+STEP 2 — Run ffprobe for timing verification:
+```
+ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1 "videos/[filename].mp4"
+```
+
+STEP 3 — Frame-delta analysis (infer from frame group comparisons):
+When reading consecutive frames, assess the visual change between each pair.
+Classify each frame boundary:
+  SMOOTH: minimal or gradual change — organic visual continuity within a segment
+  INTENDED CUT: large change occurring at a config segment boundary (±1 frame) — acceptable
+  JARRING: large unexpected change WITHIN a segment (not at a config boundary) — penalize
+  DEAD: 5+ consecutive frames with negligible change (>1.5s of no visual movement)
+
+Dead moment threshold: 5 consecutive frames at 3fps = 1.67s. Any dead moment ≥5 frames must be logged.
+Log format: DEAD MOMENT — Variant [X] frames [NNN]–[NNN] (~[Xs] of no change) — [segment name]
+
+STEP 4 — Text exposure measurement:
+Map each segment from video-config.json to its 3fps frame range:
+  Segment 1 (hook, 0–3s):   frames 001–009 (9 frames)
+  Segment 2 (price, 3–6s):  frames 010–018 (9 frames)
+  Segment 3 (benefit, 6–9s):frames 019–027 (9 frames)
+  Segment 4 (proof, 9–13s): frames 028–039 (12 frames)
+  Segment 5 (CTA, 13–15s):  frames 040–045 (6 frames)
+
+CTA EXPOSURE CHECK (mandatory):
+→ Count frames 040–045 where CTA text is visible and readable
+→ ≥5/6 frames = PASS (≥1.7s exposure)
+→ 4/6 frames = WARNING (≥1.3s — marginal, reader may not catch code before cut)
+→ <4/6 frames = FAIL (too brief — viewer cannot read code before video ends)
+→ CTA color check: all CTA frames must show red text. Any non-red CTA frame = WARNING (note frame number)
+→ CTA code check: verify the correct variant code in at least one frame (e.g., "008B" for Variant B). Wrong code = FAIL.
+
+STEP 5 — TikTok mobile simulation:
+When evaluating each key frame, mentally apply the TikTok UI overlay grid:
+  TOP ZONE (y=0–288, top 15%): TikTok search bar, creator name — text here is overlapped
+  BOTTOM ZONE (y=1536–1920, bottom 20%): like/comment/share buttons, caption — text below y=1520 is cut off
+  RIGHT STRIP (rightmost ~160px, x=920–1080): profile/sound/stitch buttons — product centered here is partially hidden
+  SAFE CONTENT ZONE: y=288–1520, x=0–920 — all critical text, product, and CTA must fit here
+
+Flag any critical content (hook text, product, CTA) outside the safe content zone as a TikTok UI conflict.
+Report per variant: [CLEAR / RISK (borderline) / CONFLICT (definite overlap)] per zone.
+
+STEP 6 — Read frame groups using the Read tool (multimodal image analysis).
+Read these specific frame indices per variant:
+  Hook group (0–3s):          001, 003, 006, 009
+  Price group (3–6s):         010, 014, 018
+  Benefit group (6–9s):       019, 023, 027
+  Proof group (9–13s):        028, 033, 039
+  CTA group (13–15s):         040, 042, 045
+  Transition boundary frames: 009→010, 018→019, 027→028, 039→040
+Total: ~19 key frames per variant (v1 read 15 frames).
+
+STEP 7 — Evaluate all 14 criteria below. Apply timing math and delta observations.
+
+---
+
+DEAD FRAME / LOW ENERGY — DETECTION PROTOCOL (applied in criterion 13):
+
+Classify each detected dead moment:
+  MINOR: duration 1.5–3s, in a non-hook segment (Segment 2, 3, or 4) → WARNING
+  MAJOR: duration ≥3s OR occurring in hook segment (0–3s) OR in CTA segment (13–15s) → FAIL
+  ROOT CAUSE: identify the asset causing the static — typically a non-moving product image with too long a segment duration
+
+---
+
+THE 14 CRITERIA:
+
+1. SCROLL-STOPPING POWER — Frames 001–003 (first 1 second at 3fps)
+   Does frame 001 have visual impact strong enough to stop a scroll? Is the opening image striking, the product clearly visible, and the hook text compelling?
+   PASS: Visually strong — distinct composition, clear product, readable hook text
+   WARNING: Functional but not striking — would compete poorly against entertaining content
+   FAIL: Visually weak, confusing, or generic — would not stop a scroll
+
+2. PRODUCT CLARITY WITHIN 1 SECOND — Frames 001–003
+   Can a viewer identify what is being sold within the first second?
+   PASS: Product clearly identifiable in frame 001
+   WARNING: Takes 2–3 seconds to understand what is shown
+   FAIL: First frame does not show the product or context
+
+3. HOOK EFFECTIVENESS — Frames 001–009
+   Does the hook text create immediate curiosity, urgency, or relevance? Is it readable and large enough?
+   PASS: Hook is short, readable, creates a pull reason to keep watching
+   WARNING: Hook is present but generic or low-urgency
+   FAIL: Hook is absent, illegible, or creates no pull
+
+4. STORY FLOW — All 45 frames in sequence (assessed from key frame groups)
+   Does the sequence follow a clear narrative arc: hook (0–3s) → reveal/price (3–6s) → benefit (6–9s) → proof (9–13s) → CTA (13–15s)?
+   PASS: Clean arc — each segment logically follows the previous; viewer is carried toward CTA
+   WARNING: One segment slightly out of sequence or redundant
+   FAIL: No clear arc — segments feel randomly ordered
+
+5. TEXT READABILITY IN MOTION — All text frames
+   Is text large enough, high enough contrast, and short enough to read at 3 seconds per segment?
+   Reading speed reference: a viewer can comfortably read ~12–15 Hebrew words in 3 seconds at TikTok scroll speed.
+   PASS: All text segments within readable length for their duration
+   WARNING: One segment has borderline text density
+   FAIL: A key segment's text is too long to read in 3 seconds, OR text contrast makes it unreadable
+
+6. TEXT TIMING — Segment duration vs. text length (enhanced with 3fps measurement)
+   Using segment durations from video-config.json. CTA (13–15s, 2s) — must have ≥5/6 frame exposure.
+   Apply CTA EXPOSURE CHECK from STEP 4.
+   PASS: All segments appropriate density for duration; CTA exposure ≥5/6 frames
+   WARNING: One segment slightly over/under density; CTA 4/6 frames (marginal)
+   FAIL: CTA < 4/6 frame exposure; OR hook appears for <2s; OR key segment text cannot be read at normal speed
+
+7. TRANSITION QUALITY — Boundary frames (009→010, 018→019, 027→028, 039→040)
+   Compare the 3 frames on each side of every segment boundary.
+   Also check for JARRING transitions detected WITHIN a segment (unintended from delta analysis).
+   PASS: All transitions are visual hard cuts at boundaries — no jarring non-sequiturs; no unintended mid-segment jumps
+   WARNING: One transition has a jarring color/composition jump at boundary; OR one mid-segment jarring transition
+   FAIL: Multiple jarring cuts; OR a cut produces a visual non-sequitur (wrong product angle, wrong product visible); OR unintended jarring within the hook segment
+
+8. PRODUCT DOMINANCE THROUGHOUT — Frames 001–027 (all pre-proof segments)
+   Track product visibility across the entire pre-proof timeline using 3fps coverage.
+   Classify any frame where the product is:
+     SECONDARY: product visible but text or screenshot background dominates frame
+     TOO SMALL: product occupies <20% of visible frame area
+     CROPPED: product partially cut off — key features removed
+     HIDDEN: product fully behind overlay text or out of frame
+   PASS: Product clearly identifiable and dominant in every product-image frame; 0–1 secondary moments
+   WARNING: Product secondary or small in 2–3 frames but clear overall
+   FAIL: Product absent or unrecognizable in 3+ product frames; OR product hidden in hook segment
+
+9. TRUST / PROOF CLARITY — Frames 028–039
+   Is the social proof (rating + order count) clearly visible and credible?
+   PASS: Proof numbers readable, source looks authentic, overlay reinforces screenshot data
+   WARNING: Proof visible but one element hard to read (small text, partial overlap)
+   FAIL: Proof segment confusing — numbers unreadable, source looks fake, or overlay covers key data
+
+10. CTA EFFECTIVENESS — Frames 040–045 (CTA EXPOSURE CHECK applied here)
+    Is the CTA code correct, prominently displayed, the action clear, and exposure sufficient?
+    PASS: Correct code (e.g., "כתבו 008B בתגובות"), red text, ≥5/6 frames, clearly readable
+    WARNING: CTA present but low-urgency or small; OR marginal exposure (4/6 frames); OR one non-red CTA frame
+    FAIL: CTA missing, wrong code, illegible, <4/6 frame exposure, or color never red
+
+11. TIKTOK-NATIVE FEEL (STRICTER) — All frames holistically
+    Does the overall aesthetic feel like authentic TikTok content, or like a generic ad?
+    Penalize each of the following (each item = -1 from score, max -5):
+      - AliExpress infographic aesthetic (feature call-out labels, spec comparison graphics) in any prominent frame
+      - Static catalog shots in the hook segment (flat angle, no energy, looks like product listing thumbnail)
+      - Unnatural asset jumps between segments (correct product but jarring angle change)
+      - Over-polished studio feel (looks like stock-photo ad, not organic creator content)
+      - English text contamination competing with Hebrew overlays (not product surface text — competing infographic text)
+    PASS: Organic TikTok feel — 0–1 penalties
+    WARNING: Slightly promotional or templated — 2–3 penalties
+    FAIL: 4+ penalties; OR AliExpress infographic screenshot used as hook or CTA frame
+
+12. FINAL UPLOAD JUDGMENT — Holistic
+    Given all 13 other criteria: does this video warrant upload?
+    PASS: Upload recommended
+    WARNING: Upload with awareness — likely to underperform but not actively harmful
+    FAIL: Do not upload — defects would harm account or produce zero conversions
+
+13. DEAD FRAME / LOW ENERGY DETECTION (NEW)
+    Apply DEAD FRAME DETECTION from above. Are there segments where nothing meaningful changes for 1.5+ seconds?
+    PASS: No dead moments detected (no sequence of 5+ frames with negligible visual change)
+    WARNING: One MINOR dead moment (1.5–3s) in a non-hook, non-CTA segment
+    FAIL: Dead moment ≥3s; OR dead moment in hook segment (frames 001–009); OR dead moment in CTA segment (frames 040–045)
+
+14. MOTION / TRANSITION QUALITY — Frame-delta analysis results
+    Using delta observations from STEP 3: are there jarring mid-segment discontinuities or unintended brightness shocks?
+    PASS: All large visual changes occur at intended config boundaries; no unintended jarring events
+    WARNING: One unintended mid-segment jarring transition; OR one brightness shock at a non-boundary frame
+    FAIL: Multiple unintended jarring events (2+); OR brightness shock in hook segment; OR visual chaos within a single segment
+
+---
+
+REMEDIATION OUTPUT — MANDATORY for every WARNING or FAIL finding:
+
+After evaluating all 14 criteria, for each non-PASS finding output a remediation block:
+
+REMEDIATION — [VARIANT] Criterion [N] — [WARNING/FAIL]:
+→ Finding: [what was observed, referencing specific frame numbers, e.g., "Frame 041 CTA text is yellow, not red"]
+→ Root cause: [asset issue / config issue / generator bug / segment design issue]
+→ Fix: [select the exact action from the list below]
+   REPLACE ASSET: replace [segment N] asset "[current filename]" with [description of needed asset — clean shot, usage shot, etc.]
+   CHANGE OVERLAY COLOR: change segment [N] color from "[X]" to "[Y]" in data/[PRODUCT_ID]-video-config.json
+   MOVE TEXT: change segment [N] position from "[X]" to "[Y]" in data/[PRODUCT_ID]-video-config.json
+   SHORTEN TEXT: reduce segment [N] text to max [N] words — current: "[full text]"
+   EXTEND CTA: increase CTA segment end time to ensure ≥2s duration in data/[PRODUCT_ID]-video-config.json
+   RE-RENDER: run python scripts/generate_videos.py --product-id [ID] --date [YYYY-MM-DD] after config fix (add --variant [X] if only one variant affected)
+   REORDER SEGMENTS: swap segment [N] with segment [M] in config to improve story flow
+   BLOCK UPLOAD: variant [X] must not be uploaded until [specific fix] is completed and STEP 11D v2 re-run confirms PASS
+→ Priority: CRITICAL (blocks upload — must fix before any upload) / HIGH (strong recommendation before upload) / MEDIUM (optional — improves quality)
+
+---
+
+SCORING — per variant (10 category scores + overall):
+
+→ Hook Score:              [1–10] (criteria 1, 2, 3)
+→ Flow Score:              [1–10] (criteria 4, 7)
+→ Motion Quality Score:    [1–10] (criteria 13, 14 — NEW)
+→ Text Timing Score:       [1–10] (criteria 5, 6)
+→ CTA Score:               [1–10] (criterion 10 — exposure + color + code)
+→ TikTok-Native Score:     [1–10] (criterion 11 — stricter penalty model)
+→ Product Dominance Score: [1–10] (criterion 8 — full timeline, not just 2 frames)
+→ Trust Score:             [1–10] (criterion 9)
+→ Mobile Readability Score:[1–10] (TikTok mobile simulation — STEP 5 result)
+→ Overall Upload Score:    [1–10] (holistic — weight toward scroll-stopping power and CTA conversion; not a simple average)
+
+Overall upload score guide:
+  9–10: Upload immediately — strong creative
+  7–8:  Upload — solid performance expected
+  5–6:  Upload with awareness — may underperform; config fix recommended before next run
+  3–4:  Upload only if no better variant available — likely to underperform
+  1–2:  Do not upload — would harm account
+
+VARIANT RESULT:
+→ Any FAIL criterion → FAIL
+→ No FAIL + any WARNING + Overall ≥ 6 → WARNING (CEO review required)
+→ No FAIL + any WARNING + Overall < 6 → FAIL
+→ All 14 PASS → PASS
+
+---
+
+GATE RESULT FORMAT:
+
+> STEP 11D v2 FULL MOTION VIDEO REVIEW — [N]/4 PASS | [N] WARNING | [N] FAIL
+>
+> Variant A: [PASS/WARNING/FAIL]
+>   Hook [N] | Flow [N] | Motion [N] | TextTiming [N] | CTA [N] | TikTokNative [N] | ProductDom [N] | Trust [N] | MobileRead [N] | Overall [N]/10
+>   Dead frames: [none / X dead moments logged]
+>   Remediations: [N total — see below]
+>
+> Variant B: [same format]
+> Variant C: [same format]
+> Variant D: [same format]
+>
+> Upload priority: #1 Variant [X] ([N]/10) | #2 Variant [X] ([N]/10) | #3 Variant [X] ([N]/10) | #4 Variant [X] ([N]/10)
+>
+> REMEDIATION SUMMARY:
+> [All REMEDIATION blocks for WARNING/FAIL findings, grouped by variant]
+>
+> FINAL UPLOAD DECISION:
+> Variants approved:    [list]
+> Variants BLOCKED:     [list + blocking reason + required fix]
+> CEO review required:  [list + reason + overall score]
+> Recommended action:   [PROCEED TO UPLOAD / FIX AND RE-RENDER [variants] THEN RE-RUN STEP 11D v2 / BLOCK ALL — do not upload]
+
+---
+
+OPTIONAL SUPPLEMENT — Human Phone Review:
+Recommended when any variant receives WARNING on criteria 1, 7, or 9 (scroll-stopping, transitions, proof clarity).
+Ask the human to watch the flagged variant on their phone and answer:
+Q1=hook stop / Q2=pacing / Q3=transitions / Q4=text read / Q5=CTA / Q6=upload / Q7=personal conversion
+Record answers alongside the automated verdict.
+
+---
+
+---
+
+IF USING OPTIONAL SUPPLEMENT — present this watch protocol to the user:
+
+STEP 11D OPTIONAL SUPPLEMENT — HUMAN WATCH PROTOCOL — Product [PRODUCT_ID]
+
+Watch each flagged variant on your phone at full screen, sound off (TikTok-native: vertical, no audio, as if scrolling TikTok).
+Then answer the questions below for each flagged variant.
+
+File paths to open:
+  Variant A: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-A.mp4
+  Variant B: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-B.mp4
+  Variant C: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-C.mp4
+  Variant D: C:\Automation\TikTok\videos\[YYYY-MM-DD]-product-[PRODUCT_ID]-D.mp4
+
+For EACH variant, answer:
+
+Q1 — HOOK STOP (0–2s): Did the first 2 seconds stop your scroll, or would you keep swiping?
+     Y = stopped / N = would scroll past
+
+Q2 — PACING: Did the text change at a comfortable reading speed throughout?
+     Y = right pace / FAST = too fast to read / SLOW = too slow, padded
+
+Q3 — TRANSITIONS: Did the cuts between segments feel smooth or jarring?
+     Y = smooth / N = jarring — note which cut (e.g., "3s cut felt abrupt")
+
+Q4 — TEXT READABILITY IN MOTION: Could you fully read every text overlay before it changed?
+     Y = all readable / N = not enough time — note which segment
+
+Q5 — CTA CLARITY: Did the final CTA land clearly before the video ended?
+     Y = clear / N = cut off or unclear
+
+Q6 — UPLOAD JUDGMENT: Watching as a TikTok viewer, would you post this on your account today?
+     Y = yes, upload / MAYBE = upload with awareness / N = do not upload
+
+Q7 — PERSONAL CONVERSION: Would you personally click the CTA and follow up on this product?
+     Y = yes, would click / MAYBE = maybe / N = no, would not click
+
+Reply in this format:
+  A: Q1=[Y/N] Q2=[Y/FAST/SLOW] Q3=[Y/N-note] Q4=[Y/N-note] Q5=[Y/N] Q6=[Y/MAYBE/N] Q7=[Y/MAYBE/N]
+  B: Q1=[Y/N] Q2=[Y/FAST/SLOW] Q3=[Y/N-note] Q4=[Y/N-note] Q5=[Y/N] Q6=[Y/MAYBE/N] Q7=[Y/MAYBE/N]
+  C: Q1=[Y/N] Q2=[Y/FAST/SLOW] Q3=[Y/N-note] Q4=[Y/N-note] Q5=[Y/N] Q6=[Y/MAYBE/N] Q7=[Y/MAYBE/N]
+  D: Q1=[Y/N] Q2=[Y/FAST/SLOW] Q3=[Y/N-note] Q4=[Y/N-note] Q5=[Y/N] Q6=[Y/MAYBE/N] Q7=[Y/MAYBE/N]
+
+---
+
+SUPPLEMENTAL VERDICT (adds to automated gate result — does not replace it):
+
+PASS variant:   Q1=Y AND Q2=Y AND Q3=Y AND Q4=Y AND Q5=Y AND Q6=Y
+FAIL variant:   ANY of Q1, Q2, Q3, Q4, Q5 = N
+WARNING variant: Q1–Q5 all pass + Q6 = MAYBE
+
+Q7 scoring (informational — does not change PASS/FAIL alone):
+→ Q7=Y     → strong conversion signal; noted as positive in report
+→ Q7=MAYBE → neutral; noted in report
+→ Q7=N     → weak conversion signal; if Q5=Y (CTA technically clear) this is a creative concern; noted as WARNING signal
+→ Q7=N + Q5=N → combined CTA failure → FAIL
+
+FAIL → upload BLOCKED for this variant. Document which question(s) failed. Fix the timed issue (shorten text in config, adjust segment duration, swap asset) → re-render → re-run STEP 11B + 11C + 11D.
+WARNING → CEO review required. Document Q6 = MAYBE and any human notes.
+PASS → proceed to STEP 11.
+
+---
+
+SUPPLEMENTAL GATE RESULT (append to automated scores — record human answers alongside):
+
+> STEP 11D OPTIONAL HUMAN SUPPLEMENT — Variant [X]: [PASS/WARNING/FAIL] — Q1=[Y/N] Q2=[Y/FAST/SLOW] Q3=[Y/N] Q4=[Y/N] Q5=[Y/N] Q6=[Y/MAYBE/N] Q7=[Y/MAYBE/N]
 
 ---
 
@@ -1279,8 +2048,22 @@ HASHTAGS: [hashtags]
 **UPLOAD STATUS: [determine from validation results using the rules below]**
 
 UPLOAD STATUS determination rules (agent must evaluate and set the correct status):
-→ All critical fields confirmed (sales ≥ 500, rating ≥ 4.5★, price confirmed) + all STEP 7 checks 1–8 passed + STEP 8B PASS or PASS WITH WARNINGS acknowledged + STEP 10 4/4 pass:
+→ All critical fields confirmed (sales ≥ 500, rating ≥ 4.5★, price confirmed) + all STEP 7 checks 1–8 passed + STEP 8B PASS or PASS WITH WARNINGS acknowledged + STEP 10 4/4 pass + STEP 11B 4/4 PASS + STEP 11C 4/4 PASS + STEP 11D 4/4 PASS:
    Set: PENDING AFFILIATE LINKS ✅
+→ STEP 11D resulted in any FAIL variant (any FAIL criterion, OR WARNING + Overall < 6):
+   Set: ⚠️ MOTION REVIEW FAIL — Variant [X] ❌ BLOCKED (automated frame review failed — fix identified issue, re-render, re-run STEP 11B + 11C + 11D).
+→ STEP 11D resulted in any WARNING variant (no FAIL + Overall ≥ 6, not yet CEO-approved):
+   Set: ⚠️ MOTION REVIEW WARNING — Variant [X] flagged for CEO review before upload (automated review: upload-worthiness uncertain).
+→ STEP 11D not yet run:
+   Set: ⚠️ PENDING STEP 11D — Full Motion Video Review (automated) required before upload approval.
+→ STEP 11C resulted in any FAIL variant (any FAIL criterion, OR WARNING variant with overall score < 6):
+   Set: ⚠️ FRAME SEQUENCE QA FAIL — Variant [X] ❌ BLOCKED (frame composition/flow failure — fix config and re-render required).
+→ STEP 11C resulted in any WARNING variant (no FAIL + overall score ≥ 6, not yet CEO-approved):
+   Set: ⚠️ FRAME SEQUENCE QA WARNING — Variant [X] flagged for CEO review before upload (frame sequence quality warning).
+→ STEP 11B resulted in any FAIL variant:
+   Set: ⚠️ VISUAL QA FAIL — Variant [X] ❌ BLOCKED (visual composition failure — fix config/generator and re-render required).
+→ STEP 11B resulted in any WARNING variant (not yet CEO-approved):
+   Set: ⚠️ VISUAL QA WARNING — Variant [X] flagged for CEO review before upload (visual composition warning).
 → STEP 10 resulted in 3/4 partial pass (one variant marked FAILED — REQUIRES HUMAN REVIEW):
    Set: ⚠️ PARTIAL — Variant [X] ❌ BLOCKED. Variants [A/B/C/D]: PENDING AFFILIATE LINKS ✅
 → Thumbnail warning only from CHECK 9 (all other checks passed):
@@ -1396,3 +2179,162 @@ UPLOAD CHECKLIST:
 ⚠️ Upload package saved to: C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md
 
 ================================================
+
+---
+
+PRE-UPLOAD REVIEW AGENT
+
+Trigger: the user says "ready to upload Product [ID]", "run pre-upload review for Product [ID]", or equivalent.
+This is the final mandatory gate before publishing any videos to TikTok.
+Run AFTER affiliate links have been generated and filled into the upload package.
+No product may be uploaded without an APPROVED TO UPLOAD verdict from this agent.
+
+---
+
+INPUT:
+Read: C:\Automation\TikTok\output\[YYYY-MM-DD]-product-[PRODUCT_ID]-upload_package.md
+Also reference: STEP 11B and STEP 11C results (documented in the upload package VALIDATION SUMMARY)
+
+---
+
+REVIEW CHECKLIST — 12 CHECKS:
+
+CHECK 1 — AFFILIATE LINKS COMPLETE
+Inspect the REPLY REFERENCE TABLE in the upload package.
+Are all 4 affiliate links filled (not "⬅️ FILL IN" or blank)?
+→ All 4 filled → ✅ PASS
+→ Any link missing or still showing placeholder → ❌ BLOCKED — cannot publish; generate missing links first
+
+CHECK 2 — CTA CODE / AFFILIATE LINK MATCH
+For each variant (A, B, C, D):
+Confirm the CTA code in the video overlay (e.g., "כתבו 008A") matches the tracking ID row in the REPLY REFERENCE TABLE (e.g., TikTok008A → affiliate link for code 008A).
+→ All 4 match → ✅ PASS
+→ Any mismatch → ❌ BLOCKED — wrong code routes viewer comments to the wrong affiliate link
+
+CHECK 3 — CAPTION QUALITY
+Read all 4 captions. Verify:
+- Natural conversational Israeli Hebrew (not stiff or literal)
+- Gender-neutral throughout ("כתבו", "לכם" — no female-only verb forms)
+- Correct CTA code per variant (e.g., "כתבו 008A" in Variant A caption)
+- Describes the correct product being sold
+→ All 4 natural, correct, gender-neutral → ✅ PASS
+→ Any issue → ⚠️ CEO REVIEW — flag the specific caption and issue
+
+CHECK 4 — HASHTAG RELEVANCE
+Review the hashtag set. Verify:
+- Tags are relevant to this specific product and the Israeli TikTok audience
+- Core tags present (#אליאקספרס + at least one product-category tag)
+- No off-topic, inappropriate, or overly generic filler tags
+→ Relevant and complete → ✅ PASS
+→ Clearly off-topic or missing core tags → ⚠️ CEO REVIEW
+
+CHECK 5 — STEP 11B STATUS (Visual Composition QA)
+Confirm STEP 11B result as documented in the upload package VALIDATION SUMMARY.
+→ 4/4 PASS, or all WARNINGs have CEO approval on record → ✅ PASS
+→ Any unresolved FAIL → ❌ BLOCKED
+→ Any WARNING without CEO approval on record → ⚠️ CEO REVIEW
+
+CHECK 6 — STEP 11C + STEP 11D STATUS (Frame Sequence QA + Full Motion Review)
+Confirm both STEP 11C (Frame Sequence Visual QA) and STEP 11D (Full Motion Video Review) have been run and results are documented.
+
+STEP 11C check:
+→ Run + all variants PASS, or all WARNINGs CEO-approved with scores ≥ 6 → ✅
+→ Not yet run → ❌ BLOCKED
+→ Any FAIL or any WARNING with score < 6 without fix → ❌ BLOCKED
+→ Any WARNING not CEO-approved → ⚠️ CEO REVIEW
+
+STEP 11D check:
+→ Run (automated) + all variants PASS, or all WARNINGs CEO-approved → ✅
+→ Not yet run → ❌ BLOCKED — automated Full Motion Video Review required before upload
+→ Any FAIL criterion without fix and re-render → ❌ BLOCKED
+→ Any WARNING (Overall ≥ 6) not CEO-approved → ⚠️ CEO REVIEW
+
+Combined verdict: ✅ only if both STEP 11C and STEP 11D are ✅
+
+CHECK 7 — UPLOAD ORDER
+Is the upload sequence specified and is the priority variant listed first?
+→ Upload order documented (from STEP 11D if run, otherwise STEP 11C) → ✅ PASS
+→ Order missing → derive from STEP 11D overall scores (or STEP 11C if 11D not yet run) and state it now
+
+CHECK 8 — VIDEO FILES PRESENT
+Confirm all 4 MP4 files exist at their documented paths.
+→ All 4 present → ✅ PASS
+→ Any missing → ❌ BLOCKED — regenerate before uploading
+
+CHECK 9 — PRODUCT DATA ACCURACY
+Re-verify: price in captions matches the STEP 3A confirmed price; sales count matches confirmed data; product name is consistent across all captions and the upload package header.
+→ All match → ✅ PASS
+→ Any discrepancy → ⚠️ CEO REVIEW — risk of misleading viewers after upload
+
+CHECK 10 — UPLOAD TIMING (advisory only)
+Note: optimal TikTok upload window is 19:00–21:00 Israel time for maximum organic reach.
+State whether the current time is within the window, or recommend when to schedule.
+→ Advisory only — never a blocker.
+
+CHECK 11 — CEO UPLOAD JUDGMENT
+Holistic director-level assessment: "Would I actually publish this today?"
+Consider: STEP 11C quality scores, content accuracy, TikTok-native feel, overall package completeness.
+→ Comfortable uploading → ✅
+→ Any concern → ⚠️ note it; flag for CEO awareness before publishing
+
+CHECK 12 — COMPLETENESS
+Is there anything missing that would create a problem after upload?
+(e.g., REPLY REFERENCE TABLE not at hand for comment replies, wrong video file opened, no reply system ready)
+→ Nothing flagged → ✅
+→ Any gap → document it
+
+---
+
+VERDICT RULES:
+
+BLOCKED ❌ — one or more of checks 1, 2, 5, 6, 8 failed
+→ List all blocking reasons with the required action for each
+→ Do not upload until ALL blocking items resolved
+
+NEEDS CEO REVIEW ⚠️ — all blocking checks passed but one or more of checks 3, 4, 9, 11 flagged a concern
+→ List each concern with context
+→ Upload is at CEO discretion; concerns are on record
+
+APPROVED TO UPLOAD ✅ — all blocking checks passed and no CEO review triggers
+→ Safe to publish
+→ APPROVED TO UPLOAD is the only verdict that unambiguously permits publishing
+
+---
+
+OUTPUT FORMAT:
+
+PRE-UPLOAD REVIEW — Product [PRODUCT_ID] — [YYYY-MM-DD]
+
+CHECK 1 — Affiliate Links:    [✅ All 4 filled / ❌ BLOCKED — [which ones]]
+CHECK 2 — CTA Code Match:     [✅ All 4 match / ❌ BLOCKED — [detail]]
+CHECK 3 — Caption Quality:    [✅ Natural, correct, gender-neutral / ⚠️ CEO REVIEW — [issue]]
+CHECK 4 — Hashtag Relevance:  [✅ Relevant and complete / ⚠️ CEO REVIEW — [concern]]
+CHECK 5 — STEP 11B Status:    [✅ PASS or CEO-approved / ❌ BLOCKED / ⚠️ CEO REVIEW]
+CHECK 6 — STEP 11C Status:    [✅ PASS or CEO-approved / ❌ BLOCKED / ⚠️ CEO REVIEW]
+CHECK 7 — Upload Order:       [✅ [order listed] / stated now: [derived from STEP 11C scores]]
+CHECK 8 — Video Files:        [✅ All 4 present / ❌ BLOCKED — [missing file]]
+CHECK 9 — Product Data:       [✅ Confirmed / ⚠️ CEO REVIEW — [discrepancy]]
+CHECK 10 — Upload Timing:     [ℹ️ [advisory: within window / wait until 19:00–21:00 IST]]
+CHECK 11 — CEO Judgment:      [✅ Upload / ⚠️ Concerns: [list]]
+CHECK 12 — Completeness:      [✅ Nothing missing / ⚠️ [gap]]
+
+─────────────────────────────────────────────────────────────────────
+VERDICT: [APPROVED TO UPLOAD ✅ / BLOCKED ❌ / NEEDS CEO REVIEW ⚠️]
+─────────────────────────────────────────────────────────────────────
+
+[If APPROVED TO UPLOAD ✅:]
+UPLOAD ORDER: [#1 Variant X (STEP 11C score N/10) → #2 → #3 → #4]
+Best upload window: 19:00–21:00 Israel time.
+For each video: TikTok → + → Upload → select [file path] → add trending sound → paste caption + hashtags → Publish.
+When users comment their CTA code, reply with the matching affiliate link from the REPLY REFERENCE TABLE.
+
+[If BLOCKED ❌:]
+Required before upload:
+1. [First blocking issue — what to do]
+2. [Second blocking issue + what to do]
+Do not upload until all items resolved.
+
+[If NEEDS CEO REVIEW ⚠️:]
+All blocking checks resolved. CEO decision required on:
+• [Each concern]
+Upload at CEO discretion.
