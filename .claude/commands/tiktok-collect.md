@@ -432,7 +432,7 @@ Columns 1–21 (v1, unchanged):
   15. upload_time             — HH:MM
   16. age_hours               — computed
   17. variant_status          — NEW / TESTING / CONFIRMED (computed)
-  18. tracking_id             — e.g. "TikTok007A"
+  18. tracking_id             — e.g. "product007_A"  (format: product[NNN][LETTER])
   19. affiliate_clicks
   20. affiliate_sales
   21. affiliate_commission
@@ -476,7 +476,7 @@ Every field required by /tiktok analyze is sourced by this collector:
 | upload_time               | upload package                                   | auto         |
 | age_hours                 | computed                                         | computed     |
 | variant_status            | computed                                         | computed     |
-| tracking_id               | upload package                                   | auto         |
+| tracking_id               | upload package (format: product[NNN][LETTER])    | auto         |
 | affiliate_clicks          | AliExpress Partner Center                        | manual       |
 | affiliate_sales           | AliExpress Partner Center                        | manual       |
 | affiliate_commission      | AliExpress Partner Center                        | manual       |

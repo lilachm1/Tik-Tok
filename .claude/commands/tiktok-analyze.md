@@ -8,6 +8,20 @@ You run two phases in sequence:
 
 PHASE 1 — COLLECT INPUTS
 
+CSV-FIRST CHECK (v2 flow — run before any manual input):
+Check whether C:\Automation\TikTok\data\video_results.csv already contains rows for the products being analyzed (written by /tiktok collect v2).
+
+IF rows exist for the requested product(s) in video_results.csv:
+  → SKIP this entire Phase 1. Do NOT ask the user to re-enter stats.
+  → Proceed directly to PHASE 2 using the existing CSV rows as input data.
+  → Note: "Using data from video_results.csv (collected by /tiktok collect). Skipping manual entry."
+
+IF no rows exist for the requested product(s):
+  → Prompt the user to run /tiktok collect first (preferred v2 path).
+  → Only fall back to the manual entry below if the user explicitly says they want to enter data manually.
+
+MANUAL FALLBACK (v1 — only if no CSV data and user requests manual entry):
+
 Ask the user to paste their stats for each video variant they uploaded.
 
 REQUIRED — repeat for each variant:
@@ -88,13 +102,22 @@ Do not give generic advice. Always reference exact PRODUCT VARIANT IDs (002A, 00
 
 STEP A — SAVE TO video_results.csv
 
+SKIP CHECK (v2 flow — run first):
+Scan video_results.csv for rows matching the product_id + variant combinations being analyzed.
+
+IF matching rows already exist (written by /tiktok collect v2 with 33-column schema):
+  → SKIP this step entirely. Do NOT append duplicate rows.
+  → Note: "Rows already present in video_results.csv from /tiktok collect — skipping STEP A write."
+  → Proceed directly to STEP B.
+
+IF no matching rows exist (v1 fallback — manual entry path):
 After analysis, append results to: C:\Automation\TikTok\data\video_results.csv
 
-If the file does not exist, create it with this header first:
-product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission
+If the file does not exist, create it with the v2 header (33 columns):
+product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission,hook_text,shares,average_watch_time,retention_rate,watched_full_video_rate,first_2_second_retention,cta_code_comments,engagement_rate,save_rate,comment_rate,share_rate,cta_comment_rate
 
-Then append one row per variant:
-[product_id],[variant_id],[hook_type],[category],[price_ils],[views],[likes],[comments],[saves],[true/false],[cta_style],[asset_source],[best_segment],[upload_date],[upload_time],[age_hours],[variant_status],[tracking_id],[affiliate_clicks],[affiliate_sales],[affiliate_commission]
+Then append one row per variant (fill enrichment columns 22–33 with blank values if not collected):
+[product_id],[variant_id],[hook_type],[category],[price_ils],[views],[likes],[comments],[saves],[true/false],[cta_style],[asset_source],[best_segment],[upload_date],[upload_time],[age_hours],[variant_status],[tracking_id],[affiliate_clicks],[affiliate_sales],[affiliate_commission],[hook_text],[shares],[average_watch_time],[retention_rate],[watched_full_video_rate],[first_2_second_retention],[cta_code_comments],[engagement_rate],[save_rate],[comment_rate],[share_rate],[cta_comment_rate]
 
 Column rules:
 - winner: true only for the single winning variant. All others: false.

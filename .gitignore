@@ -3,3 +3,7 @@ scripts/debug_*.png
 scripts/*.bak
 scripts/qa_*.png
 scripts/step11d_*.png
+data/tiktok-session.json
+scripts/__pycache__/
+__pycache__/
+*.pyc

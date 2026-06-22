@@ -1,6 +1,6 @@
 # TikTok Affiliate Agent — Project Status
 
-**Last updated:** 2026-06-19  
+**Last updated:** 2026-06-21 (end of day)
 **Owner:** Lilach  
 **Working directory:** `C:\Automation\TikTok\`
 
@@ -8,20 +8,50 @@
 
 ## Current Status
 
-**Phase:** Pipeline operational. STEP 11D v2 complete. Performance Learning Layer complete (v2 collector + feedback loop). Product 009 PAUSED pending performance data from Products 001, 007, 008.
-**Next action:** (1) Upload Products 007/008 if not yet done. (2) Run `/tiktok collect` — save TikTok screenshots + CSV export to `data/tiktok-analytics/[ID]/`, agent reads automatically. (3) Run `/tiktok analyze` — writes `data/learning_report.json`. (4) Run `/tiktok` — STEP 0 reads `learning_report.json` and gates the run (PAUSE/PROCEED/CHANGE STRATEGY).
+**Phase:** Automated TikTok collector built. NOT YET TESTED. Product 009 PAUSED pending valid analytics data.
+
+**Next action (tomorrow — start here):**
+
+Step 1 — Fix 002B/C/D skip logic (code fix, ~15 min):
+   In `scroll_and_find_video()` skip path: replace `el.evaluate()` with `el.bounding_box()["y"] + page.evaluate("() => window.scrollY")`.
+   Add height filter: skip elements where `bbox["height"] > 100` (container divs). Only count leaf elements.
+   Use 50px Y tolerance. This prevents multiple DOM elements per card from inflating the skip counter.
+
+Step 2 — USER ACTION: Check TikTok caption for 007C:
+   Open TikTok Creator Center → find the 007C video → confirm caption contains "007C".
+   If missing, edit caption to include "כתבו 007C בתגובות". No code change needed.
+
+Step 3 — Investigate 003 NOT_FOUND:
+   Run collector with browser visible. Watch what happens during 003A search (scroll 10–20).
+   Hypothesis: date filter, pagination limit, or 003 videos need different content tab view.
+   Also confirm 003 videos are published (not draft/private) on TikTok.
+
+Step 4 — Fix XHR capture (DevTools inspection, ~30–60 min):
+   Open TikTok Creator Center in browser. Navigate to any video analytics tab.
+   Open browser DevTools → Network tab → filter XHR/fetch.
+   Record actual URL patterns that fire when analytics loads.
+   Update `ANALYTICS_URL_FRAGMENTS` in `tiktok_analytics_collect.py` (lines 61–69).
+
+Step 5 — Re-run collector:
+   python scripts/tiktok_analytics_collect.py --product-id 002,003,007,008
+   Goal: 15+/16 found, metrics populated in CSV.
+
+Step 6 — Run QA + analyze:
+   python scripts/tiktok_collect_qa.py --product-id 002,003,007,008
+   /tiktok analyze
 
 **Products:**
 | ID | Product | Status |
 |----|---------|--------|
-| 001 | Astronaut Galaxy Projector | ✅ UPLOADED |
-| 002 | 360° Magnetic Car Phone Mount | ✅ READY TO UPLOAD |
+| 001 | Astronaut Galaxy Projector | ✅ UPLOADED — analytics NOT YET COLLECTED |
+| 002 | 360° Magnetic Car Phone Mount | ✅ UPLOADED — analytics NOT YET COLLECTED |
 | 003 | Mini Bag Sealer | ✅ READY TO UPLOAD |
 | 004 | Mini Mist Fan | ❌ BLOCKED (unconfirmed sales/price) |
 | 005 | Electric Lint Remover | ❌ BLOCKED (unconfirmed sales/rating/price) |
 | 006 | — | ❌ FAILED — all 5 candidates rejected at STEP 3A |
-| 007 | מארגן גב המושב עם שולחן מתקפל (Car Seat Back Organizer, ₪39, 4,000+ sold) | ✅ APPROVED — 4 videos + affiliate links ready to upload |
-| 008 | מעמד שולחני 360° (360° Phone/Tablet Stand, ₪40.29, 2,000+ sold) | ✅ APPROVED TO UPLOAD — All 5 gates complete + CEO approved. Upload order: B→D→C→A |
+| 007 | מארגן גב המושב עם שולחן מתקפל (Car Seat Back Organizer, ₪39, 4,000+ sold) | ✅ UPLOADED — analytics NOT YET COLLECTED |
+| 008 | מעמד שולחני 360° (360° Phone/Tablet Stand, ₪40.29, 2,000+ sold) | ✅ UPLOADED — analytics NOT YET COLLECTED |
+| 009 | — | ⏸️ PAUSED — waiting for analytics data from 001/002/007/008 |
 
 ```
 ✅ Architecture designed
@@ -380,6 +410,81 @@
    Required data: first_2_second_retention for Products 001, 007, 008 via /tiktok collect.
    Required sequence: upload 007/008 → /tiktok collect → /tiktok analyze → check Step E decision → /tiktok.
 
+	— 2026-06-19 CEO Final Audit + Automated Collector Scripts —
+
+📌 CEO FINAL AUDIT — PERFORMANCE LEARNING LOOP (2026-06-19):
+   Full audit of: /tiktok collect v2 → video_results.csv → /tiktok analyze → learning_report.json → STEP 0
+   Scope: Products 001, 002, 007, 008.
+
+✅ BUG 1 FIXED — tiktok-analyze.md Phase 1 (CRITICAL):
+   Phase 1 asked for manual data input even after /tiktok collect v2 had already written video_results.csv.
+   Fix: Added CSV-FIRST CHECK at top of Phase 1.
+   If rows exist for the requested products → skip Phase 1 entirely, proceed to Phase 2 using CSV rows.
+   If no rows exist → prompt to run /tiktok collect first; manual entry only if user explicitly requests it.
+
+✅ BUG 2 FIXED — tiktok-analyze.md STEP A (CRITICAL):
+   STEP A wrote a v1 CSV header (21 columns) into a v2 file (33 columns) when doing fallback write.
+   Fix: Added SKIP CHECK at top of STEP A.
+   If matching rows already exist from /tiktok collect v2 → skip entirely, do not append duplicate rows.
+   When fallback write IS needed → write v2 header (33 columns), not v1 (21 columns).
+
+✅ BUG 3 FIXED — tiktok-collect.md field 18 tracking_id example (LOW):
+   Example showed "TikTok007A" but actual format is "product007_A".
+   Fix: Updated example in schema and COLLECTOR → ANALYZER FIELD MAP comment.
+
+📌 AUTOMATED TIKTOK ANALYTICS COLLECTOR — BUILT 2026-06-19:
+   Three new scripts built. Syntax-verified. Product detection smoke-tested. NOT tested against live TikTok.
+
+   scripts/tiktok_session_login.py (120 lines):
+   One-time login helper. Opens visible Chrome. User logs in manually (any method, 2FA OK).
+   Saves session to data/tiktok-session.json (gitignored). Run once, valid ~30 days.
+
+   scripts/tiktok_analytics_collect.py (744 lines):
+   Main collector. Auto-detects ALL products from data/*-video-config.json.
+   Detected: 001/002/003/004/005/007/008 (28 variants total).
+   Matches videos on TikTok by CTA code (007A, 008B, etc.) via text-based Playwright selector.
+   Intercepts XHR analytics responses — extracts views, likes, comments, saves, shares,
+   average_watch_time, retention_rate, watched_full_video_rate, first_2_second_retention.
+   Prompts manually for 4 fields: cta_code_comments + 3 affiliate fields.
+   Writes/merges data/video_results.csv (33-column v2). No duplicate rows. NOT_FOUND for missing variants.
+   Saves screenshots to data/tiktok-analytics/product[NNN]/ per variant.
+   Usage: python scripts/tiktok_analytics_collect.py
+          python scripts/tiktok_analytics_collect.py --product-id 007
+          python scripts/tiktok_analytics_collect.py --update
+
+   scripts/tiktok_collect_qa.py (518 lines):
+   Standalone 5-check PASS/WARN/FAIL QA suite. No Playwright required.
+   Check 1: Session file — cookies present, TikTok domain, not expired
+   Check 2: Video matching — all expected variants in CSV, none NOT_FOUND
+   Check 3: Data extraction — views/saves in range, first_2_second_retention 0–1
+   Check 4: CSV schema — exact 33-column v2 header, type validation
+   Check 5: Analyzer handoff — all required fields populated on CONFIRMED/PENDING rows
+   Usage: python scripts/tiktok_collect_qa.py
+          python scripts/tiktok_collect_qa.py --product-id 007 --strict
+
+📌 CEO CHECKPOINT AUDIT RESULT (2026-06-19):
+   CURRENT SYSTEM STATUS: FAIL
+   Products audited: 001, 002, 007, 008 — ALL FAIL (same systemic blockers)
+
+   BLOCKER 1 — data/tiktok-session.json: MISSING. Login script was not completed.
+               Fix: Run tiktok_session_login.py to completion. Time: 5 min.
+   BLOCKER 2 — XHR analytics capture: UNTESTED against live TikTok.
+               URL patterns (retain_user_ratio, /api/item/, etc.) are assumed, not confirmed.
+               Risk: all 9 metrics write as empty strings if patterns don't match.
+               Fix: Run collector, inspect captured URLs, adjust patterns. Time: 30–120 min.
+   BLOCKER 3 — Video matching by CTA code: UNTESTED.
+               page.locator("text=007A") may not match TikTok's Creator Center DOM.
+               Fix: Test, inspect DOM, adjust selector. Time: 30–60 min.
+   BLOCKER 4 — first_2_second_retention: HIGH RISK.
+               TikTok renders retention curve as HTML Canvas. XHR source unconfirmed.
+               If canvas-only: this field is always empty; analyzer cannot diagnose 2-sec drop-off.
+               Fix: Test. If canvas-only, requires separate extraction strategy. Time: 60–180 min.
+
+   METRIC COLLECTION STATUS (all 9 metrics): UNCONFIRMED — code written, not tested.
+   data/video_results.csv: MISSING (not yet created).
+   data/learning_report.json: MISSING (analyzer not yet run).
+   Product 009: BLOCKED until analyzer outputs PROCEED with real data.
+
 	— 2026-06-19 /tiktok collect v2 + Full Learning Feedback Loop —
 📌 /tiktok collect UPGRADED TO v2 (2026-06-19):
    Collection method changed from manual-entry-only to screenshot-based extraction.
@@ -406,6 +511,66 @@
      assigns analyzer-recommended hook to Variant A in STEP 6; carries first_frame_requirement to STEP 6 storyboard.
    Result: collected TikTok data now directly changes every future /tiktok product selection, hook assignment,
    price targeting, and first-frame storyboard requirement.
+
+	— 2026-06-21 First Live Collector Test —
+
+📌 FIRST LIVE COLLECTOR RUN (2026-06-21):
+   Scope: Products 002, 003, 007, 008 — 16 variants.
+   Result: 8/16 found. 0/16 metrics extracted.
+
+✅ LOGIN SCRIPT FIXED (tiktok_session_login.py):
+   Bug 1: input() caused EOFError when run from Claude Code (non-interactive stdin).
+   Bug 2: URL-polling fired a false positive immediately — URL contained "creator-center" before
+          TikTok JS could redirect to login page. Saved unauthenticated session (3 cookies).
+   Fix: Cookie-based auth detection. Polls context.cookies() every 5s for sessionid/sid_guard/uid_tt.
+        Only fires when real auth cookies appear. Session now saves 73 cookies with full auth.
+
+✅ COLLECTOR STDIN BLOCKING FIXED (tiktok_analytics_collect.py):
+   Bug: prompt_manual_fields() called input() for 4 fields — blocked in non-interactive mode.
+   Fix: prompt_manual_fields() now returns blank strings unconditionally. No prompting.
+        Manual queue block removed. All optional fields (cta_code_comments, affiliate data) = blank.
+
+✅ BARE-CODE MATCHING ADDED (tiktok_analytics_collect.py):
+   Product 002 CTA: "כתבי 002 בתגובות" — no variant letter suffix (pre-June-14 product).
+   Fix: detect_all_products() now detects bare codes via regex; adds bare_index (A=0, B=1, C=2, D=3).
+        scroll_and_find_video() has new skip_count parameter for bare-code products.
+        002A found correctly (skip_count=0 fast path). 002B/C/D still NOT FOUND (skip path bug, see below).
+
+✅ SCROLL TIMING INCREASED: 0.7s → 2.0s between scrolls.
+
+❌ OPEN BLOCKER A — 002B/C/D skip logic broken:
+   el.evaluate() in skip path likely throws on stale/restricted elements → exception silently caught →
+   skipped counter never increments → target never found.
+   Additional issue: page.locator("text=002").all() returns multiple DOM elements per video card
+   (card div + caption div + text span), each at different Y positions, inflating the skip counter.
+   Fix needed: replace el.evaluate() with el.bounding_box()["y"] + page.evaluate("() => window.scrollY").
+   Add height filter: skip elements where bbox["height"] > 100px (container divs).
+   File: tiktok_analytics_collect.py → scroll_and_find_video() skip path.
+
+❌ OPEN BLOCKER B — 003A/B/C/D NOT FOUND:
+   Captions are correct (003A/B/C/D confirmed in upload package). 2.0s timing had no effect.
+   Root cause unknown. Hypotheses: (1) TikTok content tab date filter excludes June 14 videos,
+   (2) pagination limit reached before 003 videos, (3) 003 videos not in published state.
+   Fix needed: open browser manually while collector runs, observe what happens at scroll 10–20.
+   Also: confirm 003 videos are published (not draft/private) in TikTok Creator Center.
+
+❌ OPEN BLOCKER C — 007C NOT FOUND (user action required):
+   007A/B/D all found correctly. 007C caption likely typed without "007C" during manual upload.
+   Fix: open TikTok Creator Center → find 007C video → verify caption → edit if missing.
+   No code fix needed.
+
+❌ OPEN BLOCKER D — XHR capture returns no data:
+   All 8 found videos show views=-, 2s_ret=-. ANALYTICS_URL_FRAGMENTS not matching real endpoints.
+   Fix: open TikTok video analytics in browser with DevTools Network tab open.
+   Record actual XHR/fetch URL patterns that fire. Update ANALYTICS_URL_FRAGMENTS in collector.
+
+   Current ANALYTICS_URL_FRAGMENTS (lines 61–69, unconfirmed):
+   "/api/item/", "item_id", "retain_user", "video_analytics", "creator/analytics",
+   "video_detail", "play_data"
+
+📋 CSV status: data/video_results.csv written — 16 rows, 33-col v2 schema ✅, all metrics blank.
+📋 data/learning_report.json: MISSING — analyzer not yet run.
+📋 Product 009: BLOCKED — requires analyzer PROCEED output with real data.
 
 	— 2026-06-17 TODO — Trend Source Audit —
 ⚠️ RISK: STEP 1 shortlist may be drifting from TikTok trend discovery toward AliExpress bestseller discovery
@@ -464,7 +629,10 @@
 | `TIKTOK_AGENT_PLAN.md` | ✅ Approved | Full project plan. Updated to reflect MP4 output, new folders, new flow, no screen recording. |
 | `.claude/commands/tiktok.md` | ✅ Approved | Morning agent prompt. Steps 0–12. STEP 11D v2 (3fps, 14 criteria, remediation output). |
 | `.claude/commands/tiktok-analyze.md` | ✅ Approved | Evening analyzer. Phase 2 + 5 new modules (C.F–C.J) + Step E Product 009 Decision Layer. |
-| `.claude/commands/tiktok-collect.md` | ✅ Approved | NEW: Performance Data Collector Agent. Enters TikTok Analytics stats, migrates CSV to v2. |
+| `.claude/commands/tiktok-collect.md` | ✅ Approved | Performance Data Collector Agent. v2: screenshot-based extraction. Bugs 1–3 patched 2026-06-19. |
+| `scripts/tiktok_session_login.py` | ✅ Written — NOT YET RUN | One-time login. Opens Chrome, saves data/tiktok-session.json. Run once per ~30 days. |
+| `scripts/tiktok_analytics_collect.py` | ✅ Written — NOT YET TESTED | Auto-collector. 28 variants / 7 products. XHR capture + CSV write. Test tomorrow. |
+| `scripts/tiktok_collect_qa.py` | ✅ Written — NOT YET TESTED | 5-check PASS/FAIL QA suite. Run after collector. |
 | `scripts/generate_assets_spec.md` | ✅ Approved | Complete spec for asset collection script. |
 | `scripts/generate_videos_spec.md` | ✅ Approved | Complete spec for video generator script. |
 
