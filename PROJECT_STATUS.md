@@ -1,6 +1,6 @@
 # TikTok Affiliate Agent — Project Status
 
-**Last updated:** 2026-06-21 (end of day)
+**Last updated:** 2026-06-29 (analytics collector fix session)
 **Owner:** Lilach  
 **Working directory:** `C:\Automation\TikTok\`
 
@@ -8,50 +8,98 @@
 
 ## Current Status
 
-**Phase:** Automated TikTok collector built. NOT YET TESTED. Product 009 PAUSED pending valid analytics data.
+**Phase:** Analytics collector active. 007A/B/D and 008A-D metrics confirmed. 002A confirmed (views=315). 002B-D and 003A-D matching fix in progress — identity-confirmation rule blocking data re-entry.
 
-**Next action (tomorrow — start here):**
+**DATA INTEGRITY RULE IN FORCE (2026-06-29 PM):** Incorrect data is worse than missing data. Metrics may only be written when the matched video's identity is confirmed. Never record metrics from an unconfirmed match.
 
-Step 1 — Fix 002B/C/D skip logic (code fix, ~15 min):
-   In `scroll_and_find_video()` skip path: replace `el.evaluate()` with `el.bounding_box()["y"] + page.evaluate("() => window.scrollY")`.
-   Add height filter: skip elements where `bbox["height"] > 100` (container divs). Only count leaf elements.
-   Use 50px Y tolerance. This prevents multiple DOM elements per card from inflating the skip counter.
+**Next action (start here):**
+
+Step 1 — Fix `search_box_find` identity confirmation (code fix, ~30 min):
+   Remove all "first visible anchor" fallback from `search_box_find()`.
+   New post-filter confirmation logic:
+   - Try CTA selector (`text=cta_code`, `[aria-label*=cta_code]`) → confirmed if found
+   - If CTA is truncated (no match): count visible video-row links in content area (bbox.x > 300, bbox.width > 80)
+   - If exactly 1 video row visible → hook_text uniquely identifies it → scrape metrics
+   - If 0 or 2+ rows → return `False, {}` (NOT FOUND — identity unconfirmed)
+   Also before re-running: reset 002B-D and 003A-D rows in `video_results.csv` to NOT_FOUND (current values were scraped from sidebar nav element = wrong data).
+   Known limitation: 002B and 003B share the hook text "ראיתי את זה..." — search returns 2 results → both will remain NOT FOUND until captions are made unique.
 
 Step 2 — USER ACTION: Check TikTok caption for 007C:
-   Open TikTok Creator Center → find the 007C video → confirm caption contains "007C".
+   Open TikTok Creator Center → find 007C video → confirm caption contains "007C".
    If missing, edit caption to include "כתבו 007C בתגובות". No code change needed.
 
-Step 3 — Investigate 003 NOT_FOUND:
-   Run collector with browser visible. Watch what happens during 003A search (scroll 10–20).
-   Hypothesis: date filter, pagination limit, or 003 videos need different content tab view.
-   Also confirm 003 videos are published (not draft/private) on TikTok.
+Step 3 — Rerun 002 and 003 after Step 1 fix:
+   `python scripts/tiktok_analytics_collect.py --product-id 002,003 --update`
+   Goal: correct metrics for all variants where identity can be confirmed.
 
-Step 4 — Fix XHR capture (DevTools inspection, ~30–60 min):
-   Open TikTok Creator Center in browser. Navigate to any video analytics tab.
-   Open browser DevTools → Network tab → filter XHR/fetch.
-   Record actual URL patterns that fire when analytics loads.
-   Update `ANALYTICS_URL_FRAGMENTS` in `tiktok_analytics_collect.py` (lines 61–69).
+Step 4 — USER ACTION (optional): Fix shared hook text for 002B/003B:
+   Both videos use identical hook text "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים..."
+   TikTok Studio search returns both when either is queried — identity unconfirmable.
+   To enable automated collection: edit one caption so the hook texts differ.
 
-Step 5 — Re-run collector:
-   python scripts/tiktok_analytics_collect.py --product-id 002,003,007,008
-   Goal: 15+/16 found, metrics populated in CSV.
-
-Step 6 — Run QA + analyze:
-   python scripts/tiktok_collect_qa.py --product-id 002,003,007,008
-   /tiktok analyze
+Step 5 — Future (out of current scope): Fix XHR capture for watch_time / retention / 2s_ret.
+   Open TikTok Creator Center in browser with DevTools → Network tab → filter XHR/fetch.
+   Record actual URL patterns that fire when video analytics loads.
+   Update `ANALYTICS_URL_FRAGMENTS` in `tiktok_analytics_collect.py`.
 
 **Products:**
 | ID | Product | Status |
 |----|---------|--------|
 | 001 | Astronaut Galaxy Projector | ✅ UPLOADED — analytics NOT YET COLLECTED |
-| 002 | 360° Magnetic Car Phone Mount | ✅ UPLOADED — analytics NOT YET COLLECTED |
-| 003 | Mini Bag Sealer | ✅ READY TO UPLOAD |
+| 002 | Plug Adapter (₪23, 10,000+ sold) | ✅ UPLOADED — 002A: views=315 ✅ \| 002B-D: data reset pending (identity unconfirmed) |
+| 003 | Mini Bag Sealer (₪8, 100,000+ sold) | ✅ UPLOADED — 003A-D: data reset pending (identity unconfirmed) |
 | 004 | Mini Mist Fan | ❌ BLOCKED (unconfirmed sales/price) |
 | 005 | Electric Lint Remover | ❌ BLOCKED (unconfirmed sales/rating/price) |
 | 006 | — | ❌ FAILED — all 5 candidates rejected at STEP 3A |
-| 007 | מארגן גב המושב עם שולחן מתקפל (Car Seat Back Organizer, ₪39, 4,000+ sold) | ✅ UPLOADED — analytics NOT YET COLLECTED |
-| 008 | מעמד שולחני 360° (360° Phone/Tablet Stand, ₪40.29, 2,000+ sold) | ✅ UPLOADED — analytics NOT YET COLLECTED |
-| 009 | — | ⏸️ PAUSED — waiting for analytics data from 001/002/007/008 |
+| 007 | מארגן גב המושב עם שולחן מתקפל (Car Seat Back Organizer, ₪39) | ✅ UPLOADED — 007A: 120 views ✅ \| 007B: 91 ✅ \| 007C: NOT FOUND (caption edit needed) \| 007D: 145 ✅ |
+| 008 | מעמד שולחני 360° (360° Phone/Tablet Stand, ₪40.29) | ✅ UPLOADED — all 4 confirmed ✅ (A:3, B:114, C:133, D:2 views) |
+| 009 | — | ⏸️ PAUSED — waiting for analytics data from 002/007/008 |
+
+```
+	— 2026-06-28/29 Analytics Collector Fix Session —
+
+✅ Fix 1 — elementFromPoint DOM scraping (complete):
+   Root cause: TikTok Studio uses split-column layout — title <A> and numeric cells (Views/Likes/Comments)
+   live in separate DOM subtrees. Ancestor-walking never reaches the data cells.
+   Fix: _scrape_row(el) now scans across the viewport at rowY using elementFromPoint(x, rowY).
+   Deduplication by DOM element reference (Set). scrollIntoView({block: 'center'}) called first.
+   Helper _parse_tiktok_count() added: converts "1.2K"→"1200", "133"→"133".
+
+✅ URL fix — tiktokstudio vs creator-center:
+   TikTok changed content URL from creator-center/content to tiktokstudio/content.
+   Updated CONTENT_TAB_URL in tiktok_analytics_collect.py. Added exception handling for redirect.
+
+✅ Fix 2a — Sticky header clamp (complete):
+   After scrollIntoView, elements could land at rowY < 180 (inside fixed sticky header).
+   elementFromPoint at low rowY returns header overlay elements, not data cells.
+   Fix: second evaluate checks rect.top < 180 → window.scrollBy(0, -(200 - t)) to clear the header.
+
+✅ Fix 2b — search_box_find() added (partial — identity confirmation fix still needed):
+   Root cause: TikTok Studio content list truncates captions. CTA codes at the end
+   ("003A", "002") are cut off — text= selectors fail.
+   search_box_find(page, hook_text, cta_code) added: types first 20 chars of hook_text
+   into TikTok Studio search box to filter the list before CTA match.
+   Integrated as primary finder in collect_one_variant() when hook_text is set.
+   scroll_and_find_video() is now fallback when hook_text is empty.
+
+⚠️ BLOCKER — search_box_find fallback rejected by PM (2026-06-29):
+   Fallback "first visible anchor with x > 300" found sidebar nav element (x=209) for all
+   002B-D and 003A-D variants. Scraped metrics from wrong element — all showed "views=3, likes=1".
+   PM rule: Incorrect data is worse than missing data.
+   Fix required: remove fallback entirely; confirm identity by CTA match OR unique single result.
+
+📋 Run results as of 2026-06-29:
+   007A: 120 views ✅ | 007B: 91 ✅ | 007C: NOT FOUND ❌ | 007D: 145 ✅
+   008A: 3 ✅ | 008B: 114 ✅ | 008C: 133 ✅ | 008D: 2 ✅
+   002A: 315 views ✅ (CTA "002" matched after search filter)
+   002B-D: IDENTITY UNCONFIRMED ❌ (sidebar element scraped — data must be reset to NOT_FOUND)
+   003A-D: IDENTITY UNCONFIRMED ❌ (sidebar element scraped — data must be reset to NOT_FOUND)
+
+📋 CSV status: data/video_results.csv — 16 rows, 33-col v2 schema ✅
+   007/008: views confirmed, engagement rates computed
+   002A: views=315 confirmed | 002B-D and 003A-D: pending data reset + re-collection
+   watch_time, retention, 2s_ret: ALL blank (Blocker D — XHR, separate fix, out of current scope)
+```
 
 ```
 ✅ Architecture designed

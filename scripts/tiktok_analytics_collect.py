@@ -55,7 +55,7 @@ DESKTOP_UA = (
     "Chrome/124.0.0.0 Safari/537.36"
 )
 
-CONTENT_TAB_URL = "https://www.tiktok.com/creator-center/content"
+CONTENT_TAB_URL = "https://www.tiktok.com/tiktokstudio/content"
 
 # Partial URL fragments that appear in TikTok analytics XHR responses
 ANALYTICS_URL_FRAGMENTS = [
@@ -355,7 +355,96 @@ def parse_captures(captures):
 
 # ── TikTok navigation ──────────────────────────────────────────────────────
 
-def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0):
+def _parse_tiktok_count(text):
+    """'1.2K' → '1200', '133' → '133'. Empty string on failure."""
+    text = text.strip().replace(",", "")
+    if text.endswith(("K", "k")):
+        try:
+            return str(int(float(text[:-1]) * 1_000))
+        except ValueError:
+            return ""
+    if text.endswith(("M", "m")):
+        try:
+            return str(int(float(text[:-1]) * 1_000_000))
+        except ValueError:
+            return ""
+    try:
+        return str(int(float(text)))
+    except ValueError:
+        return ""
+
+
+def _scrape_row(el):
+    """
+    Extract Views/Likes/Comments from the content-list row containing el.
+
+    TikTok Creator Center uses a split-column layout: the title <A> and the
+    numeric cells are in separate DOM subtrees, so ancestor-walking fails.
+    Strategy: scroll el into the center of the viewport, then scan elements
+    across the viewport width at el's Y using elementFromPoint(). Deduplicates
+    by DOM element reference (not proximity) to avoid double-counting.
+    The first three unique numeric elements found (left-to-right) are
+    Views, Likes, Comments.
+    Returns {"views", "likes", "comments"} as strings; empty strings on failure.
+    """
+    try:
+        # Ensure el is in viewport center; then nudge if it landed in the
+        # fixed sticky-header zone (< 180px from top), which causes
+        # elementFromPoint to hit the header overlay instead of data cells.
+        try:
+            el.evaluate("el => el.scrollIntoView({block: 'center', inline: 'nearest'})")
+            time.sleep(0.4)
+            el.evaluate("""el => {
+                const t = el.getBoundingClientRect().top;
+                if (t < 180) window.scrollBy(0, -(200 - Math.round(t)));
+            }""")
+            time.sleep(0.3)
+        except Exception:
+            pass
+
+        raw = el.evaluate(r"""el => {
+            const rect = el.getBoundingClientRect();
+            const rowY = rect.top + rect.height / 2;
+            const W = window.innerWidth;
+            const H = window.innerHeight;
+
+            // Scan right half of viewport at the row's Y position.
+            // Deduplicate by DOM element reference so the same element
+            // is only counted once regardless of how many scan steps hit it.
+            const seenEls = new Set();
+            const nums = [];
+            for (let x = Math.round(W * 0.35); x < W - 30; x += 20) {
+                const target = document.elementFromPoint(x, rowY);
+                if (!target || seenEls.has(target)) continue;
+                const text = target.innerText.trim().split('\n')[0].trim();
+                if (!/^\d[\d,\.]*[KkMm]?$/.test(text) || text.length > 10) {
+                    seenEls.add(target);
+                    continue;
+                }
+                seenEls.add(target);
+                nums.push({x: Math.round(x), text});
+            }
+            return {rowY: Math.round(rowY), H, W, nums};
+        }""")
+
+        found = raw.get("nums", [])
+        texts = [s["text"] for s in found]
+        print(f"    _scrape_row: rowY={raw.get('rowY')} H={raw.get('H')} W={raw.get('W')}  raw_nums={texts}")
+
+        nums = [_parse_tiktok_count(t) for t in texts]
+        result = {
+            "views":    nums[0] if len(nums) > 0 else "",
+            "likes":    nums[1] if len(nums) > 1 else "",
+            "comments": nums[2] if len(nums) > 2 else "",
+        }
+        print(f"    _scrape_row: → views={result['views']} likes={result['likes']} comments={result['comments']}")
+        return result
+    except Exception as exc:
+        print(f"    _scrape_row: exception — {exc}")
+        return {"views": "", "likes": "", "comments": ""}
+
+
+def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0, hook_text=""):
     """
     Scroll through Creator Center Content tab searching for a video by CTA code.
 
@@ -365,7 +454,11 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0):
            where all variants share the same search term (e.g. "002").
            A=0, B=1, C=2, D=3.
 
-    Returns True (and clicks the target) or False (not found).
+    hook_text: unused in this function (used by search_box_find). Kept for
+      signature compatibility with collect_one_variant.
+
+    Returns (True, row_metrics_dict) on success, (False, {}) if not found.
+    row_metrics_dict has keys: views, likes, comments (scraped from the list row).
     """
     selectors = [
         f"text={cta_code}",
@@ -381,13 +474,14 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0):
                     el = page.locator(sel).first
                     if el.is_visible(timeout=800):
                         print(f"    Found after {scroll_i} scroll(s)")
+                        row_m = _scrape_row(el)
                         el.click()
-                        return True
+                        return True, row_m
                 except Exception:
                     pass
             page.evaluate("window.scrollBy(0, window.innerHeight * 0.8)")
-            time.sleep(2.0)  # Fix 2: was 0.7 — allow lazy-loaded cards to render
-        return False
+            time.sleep(2.0)
+        return False, {}
 
     # Skip path — count unique video cards by absolute page Y, skip first N (bare codes)
     # Uses el.bounding_box() instead of el.evaluate() to avoid cross-frame JS exceptions.
@@ -397,7 +491,10 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0):
     skipped = 0
 
     for scroll_i in range(max_scrolls):
-        scroll_y = page.evaluate("() => window.scrollY")
+        try:
+            scroll_y = page.evaluate("() => window.scrollY")
+        except Exception:
+            scroll_y = 0
         for sel in selectors:
             try:
                 for el in page.locator(sel).all():
@@ -418,15 +515,16 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0):
                             skipped += 1
                             continue
                         print(f"    Found after {scroll_i} scroll(s) (skipped {skipped})")
+                        row_m = _scrape_row(el)
                         el.click()
-                        return True
+                        return True, row_m
                     except Exception:
                         pass
             except Exception:
                 pass
         page.evaluate("window.scrollBy(0, window.innerHeight * 0.8)")
         time.sleep(2.0)
-    return False
+    return False, {}
 
 
 def click_analytics_tab(page):
@@ -445,13 +543,72 @@ def click_analytics_tab(page):
             pass
 
 
+def search_box_find(page, hook_text, cta_code):
+    """
+    Use TikTok Studio's 'Search post description' input to filter the content
+    list by the first 20 chars of hook_text (always visible in the caption),
+    then click the first video in the filtered results.
+
+    Avoids Playwright text= locators with Hebrew/RTL text, which are unreliable.
+    Returns (True, row_metrics) or (False, {}).
+    """
+    query = hook_text[:20].strip() if hook_text else ""
+    if not query:
+        return False, {}
+
+    try:
+        box = page.locator("input[placeholder*='Search']").first
+        if not box.is_visible(timeout=3_000):
+            print("    search_box_find: search input not visible")
+            return False, {}
+
+        box.click()
+        box.fill(query)
+        time.sleep(2.5)  # wait for TikTok to filter results
+
+        # 1. Try CTA code selector — may work when filtered list is short
+        for sel in [f"text={cta_code}", f"[aria-label*='{cta_code}']"]:
+            try:
+                el = page.locator(sel).first
+                if el.is_visible(timeout=2_000):
+                    print(f"    search_box_find: cta match [{sel[:25]}]")
+                    row_m = _scrape_row(el)
+                    el.click()
+                    return True, row_m
+            except Exception:
+                pass
+
+        # 2. Fallback: click first video-row anchor in the main content area.
+        #    TikTok Studio sidebar ends at ~x=250; content list starts beyond that.
+        #    Require x > 300 to skip sidebar nav links; width > 80 to skip icon buttons.
+        for el in page.locator("a").all():
+            try:
+                if not el.is_visible(timeout=300):
+                    continue
+                bbox = el.bounding_box()
+                if bbox and bbox["x"] > 300 and bbox["width"] > 80:
+                    print(f"    search_box_find: fallback anchor x={bbox['x']:.0f}")
+                    row_m = _scrape_row(el)
+                    el.click()
+                    return True, row_m
+            except Exception:
+                pass
+
+        print("    search_box_find: no clickable video found after filter")
+        return False, {}
+    except Exception as exc:
+        print(f"    search_box_find: exception — {exc}")
+        return False, {}
+
+
 # ── Per-variant collection ─────────────────────────────────────────────────
 
-def collect_one_variant(page, cta_code, skip_count=0):
+def collect_one_variant(page, cta_code, skip_count=0, hook_text=""):
     """
     Navigate to and collect metrics for the video identified by cta_code.
 
-    skip_count: passed through to scroll_and_find_video for bare-code products.
+    hook_text: passed through to scroll_and_find_video as primary selector.
+    skip_count: passed through for bare-code products without hook_text.
 
     Returns a dict:
       {"not_found": True}               — video not found on TikTok
@@ -459,15 +616,28 @@ def collect_one_variant(page, cta_code, skip_count=0):
     """
     captures = install_capture(page)
 
-    # Reset to content list
+    # Reset to content list — TikTok may redirect creator-center → tiktokstudio
     try:
         page.goto(CONTENT_TAB_URL, wait_until="domcontentloaded", timeout=30_000)
-        time.sleep(3)
-    except PWTimeout:
-        print(f"    Timeout navigating to content tab")
-        return {"not_found": True}
+    except Exception as nav_err:
+        err_str = str(nav_err)
+        if "interrupted" in err_str and "tiktokstudio" in err_str:
+            time.sleep(2)  # let the redirect complete
+        elif "Timeout" in err_str or "timeout" in err_str:
+            print(f"    Timeout navigating to content tab")
+            return {"not_found": True}
+        else:
+            print(f"    Nav error: {err_str[:120]}")
+            return {"not_found": True}
+    time.sleep(3)
 
-    if not scroll_and_find_video(page, cta_code, skip_count=skip_count):
+    if hook_text:
+        found, row_metrics = search_box_find(page, hook_text, cta_code)
+        if not found:
+            found, row_metrics = scroll_and_find_video(page, cta_code, skip_count=skip_count)
+    else:
+        found, row_metrics = scroll_and_find_video(page, cta_code, skip_count=skip_count)
+    if not found:
         return {"not_found": True}
 
     # Wait for video detail to load and analytics XHR to fire
@@ -493,6 +663,10 @@ def collect_one_variant(page, cta_code, skip_count=0):
         pass
 
     metrics = parse_captures(captures)
+    # Fill views/likes/comments from DOM row scrape where XHR returned nothing
+    for field in ("views", "likes", "comments"):
+        if not metrics.get(field):
+            metrics[field] = row_metrics.get(field, "")
     metrics["not_found"] = False
     return metrics
 
@@ -702,7 +876,8 @@ def main():
             label = f"{pid}{letter}" if vinfo.get("bare_index") is not None else cta_code
             print(f"[{label}] Collecting...")
 
-            raw = collect_one_variant(page, cta_code, skip_count=skip_count)
+            raw = collect_one_variant(page, cta_code, skip_count=skip_count,
+                                       hook_text=vinfo.get("hook_text", ""))
 
             # Base row from project files
             row = {

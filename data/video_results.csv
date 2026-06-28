@@ -1,17 +1,17 @@
 product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission,hook_text,shares,average_watch_time,retention_rate,watched_full_video_rate,first_2_second_retention,cta_code_comments,engagement_rate,save_rate,comment_rate,share_rate,cta_comment_rate
-002,002A,Price Shock,,23,,,,,,comment,,,2026-06-14,,188.0,CONFIRMED,product002_A,,,,לא תאמיני כמה זה עולה בעלי אקספרס...,,,,,,,,,,,
-002,002B,Curiosity,,23,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product002_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-002,002C,Problem/Solution,,23,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product002_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירות,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-002,002D,TikTok Discovery,,23,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product002_D,,,,כולן מדברות על זה ואני סוף סוף הזמנתי...,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-003,003A,Price Shock,,8,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product003_A,,,,לא האמנתי שזה סוגר שקיות בשניות...,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-003,003B,Curiosity,,8,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product003_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-003,003C,Problem/Solution,,8,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product003_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירים,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-003,003D,TikTok Discovery,,8,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-14,,,NOT_FOUND,product003_D,,,,כולם מדברים על זה וסוף סוף הזמנתי...,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-007,007A,Price Shock,,39,,,,,,comment,,,2026-06-17,,116.1,CONFIRMED,product007_A,,,,₪39 למארגן גב מושב עם שולחן מתקפל?,,,,,,,,,,,
-007,007B,Curiosity,,39,,,,,,comment,,,2026-06-17,,116.1,CONFIRMED,product007_B,,,,רוב האנשים לא יודעים שזה קיים ברכב,,,,,,,,,,,
+002,002A,Price Shock,,23,315,2,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product002_A,,,,לא תאמיני כמה זה עולה בעלי אקספרס...,,,,,,,0.0063,0.0000,0.0000,0.0000,0.0000
+002,002B,Curiosity,,23,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product002_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+002,002C,Problem/Solution,,23,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product002_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירות,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+002,002D,TikTok Discovery,,23,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product002_D,,,,כולן מדברות על זה ואני סוף סוף הזמנתי...,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+003,003A,Price Shock,,8,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product003_A,,,,לא האמנתי שזה סוגר שקיות בשניות...,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+003,003B,Curiosity,,8,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product003_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+003,003C,Problem/Solution,,8,3,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product003_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירים,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+003,003D,TikTok Discovery,,8,2,1,0,,,comment,,,2026-06-14,,357.0,CONFIRMED,product003_D,,,,כולם מדברים על זה וסוף סוף הזמנתי...,,,,,,,0.5000,0.0000,0.0000,0.0000,0.0000
+007,007A,Price Shock,,39,120,0,0,,,comment,,,2026-06-17,,284.3,CONFIRMED,product007_A,,,,₪39 למארגן גב מושב עם שולחן מתקפל?,,,,,,,0.0000,0.0000,0.0000,0.0000,0.0000
+007,007B,Curiosity,,39,91,2,0,,,comment,,,2026-06-17,,284.3,CONFIRMED,product007_B,,,,רוב האנשים לא יודעים שזה קיים ברכב,,,,,,,0.0220,0.0000,0.0000,0.0000,0.0000
 007,007C,Problem/Solution,,39,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,comment,,,2026-06-17,,,NOT_FOUND,product007_C,,,,הגב של המושב ברכב שלי היה בלאגן מוחלט,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,NOT_FOUND,,,,,,
-007,007D,TikTok Discovery,,39,,,,,,comment,,,2026-06-17,,116.2,CONFIRMED,product007_D,,,,טיקטוק הכניס לי ₪39 לסל,,,,,,,,,,,
-008,008A,,,40.29,,,,,,comment,,,2026-06-17,,116.2,CONFIRMED,product008_A,,,,מעמד אלומיניום ב-₪40?,,,,,,,,,,,
-008,008B,,,40.29,,,,,,comment,,,2026-06-17,,116.2,CONFIRMED,product008_B,,,,מה הדבר הזה שהפך לי את השולחן?,,,,,,,,,,,
-008,008C,,,40.29,,,,,,comment,,,2026-06-17,,116.2,CONFIRMED,product008_C,,,,שנים ישבתי כפוף מול הנייד,,,,,,,,,,,
-008,008D,,,40.29,,,,,,comment,,,2026-06-17,,116.2,CONFIRMED,product008_D,,,,ראיתי בטיקטוק ולא הבנתי — עד שקניתי,,,,,,,,,,,
+007,007D,TikTok Discovery,,39,145,1,0,,,comment,,,2026-06-17,,284.3,CONFIRMED,product007_D,,,,טיקטוק הכניס לי ₪39 לסל,,,,,,,0.0069,0.0000,0.0000,0.0000,0.0000
+008,008A,,,40.29,3,1,0,,,comment,,,2026-06-17,,284.4,CONFIRMED,product008_A,,,,מעמד אלומיניום ב-₪40?,,,,,,,0.3333,0.0000,0.0000,0.0000,0.0000
+008,008B,,,40.29,114,1,0,,,comment,,,2026-06-17,,284.4,CONFIRMED,product008_B,,,,מה הדבר הזה שהפך לי את השולחן?,,,,,,,0.0088,0.0000,0.0000,0.0000,0.0000
+008,008C,,,40.29,133,1,0,,,comment,,,2026-06-17,,284.4,CONFIRMED,product008_C,,,,שנים ישבתי כפוף מול הנייד,,,,,,,0.0075,0.0000,0.0000,0.0000,0.0000
+008,008D,,,40.29,2,1,0,,,comment,,,2026-06-17,,284.4,CONFIRMED,product008_D,,,,ראיתי בטיקטוק ולא הבנתי — עד שקניתי,,,,,,,0.5000,0.0000,0.0000,0.0000,0.0000
