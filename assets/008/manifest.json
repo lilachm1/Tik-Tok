@@ -1,0 +1,146 @@
+{
+  "product_id": "008",
+  "source_url": "https://www.aliexpress.com/item/1005006285768946.html",
+  "collected_at": "2026-06-17T23:58:34",
+  "summary": {
+    "total_assets": 13,
+    "image_count": 9,
+    "screenshot_count": 3,
+    "scroll_type": "video",
+    "scroll_frame_count": 0,
+    "qa_passed": true,
+    "retry_count": 0
+  },
+  "assets": [
+    {
+      "file_path": "images/001_main.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S67d415bb406c414d88002aa71e720d0bu.jpg",
+      "index": 1,
+      "is_main": true,
+      "file_size_kb": 133
+    },
+    {
+      "file_path": "images/002_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S5d6b57471221419b88d65ff5326a59a3v.jpg",
+      "index": 2,
+      "is_main": false,
+      "file_size_kb": 92
+    },
+    {
+      "file_path": "images/003_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sed1ce9201ef749c6925e56eaa2a23fa7P.jpg",
+      "index": 3,
+      "is_main": false,
+      "file_size_kb": 165
+    },
+    {
+      "file_path": "images/004_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sc4d9fb027e914f078ee7559e4bb64c1d8.jpg",
+      "index": 4,
+      "is_main": false,
+      "file_size_kb": 105
+    },
+    {
+      "file_path": "images/005_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Scd238cb7a6734bd983ffaa28bfd27119T.jpg",
+      "index": 5,
+      "is_main": false,
+      "file_size_kb": 128
+    },
+    {
+      "file_path": "images/006_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Se44f9e96f3b144a6a19e5073fefbffe5R.jpg",
+      "index": 6,
+      "is_main": false,
+      "file_size_kb": 118
+    },
+    {
+      "file_path": "images/007_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S4fd525b218a94494aa4431b5d4fab320c.jpg",
+      "index": 7,
+      "is_main": false,
+      "file_size_kb": 76
+    },
+    {
+      "file_path": "images/008_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sf80c6507e6f5492f967e475a41e5a75ej.jpg",
+      "index": 8,
+      "is_main": false,
+      "file_size_kb": 51
+    },
+    {
+      "file_path": "images/009_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1001,
+      "height": 1001,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S914d172638ae48c2ac676c81b14540c4S.jpg",
+      "index": 9,
+      "is_main": false,
+      "file_size_kb": 80
+    },
+    {
+      "file_path": "screenshots/main.png",
+      "asset_type": "screenshot_main",
+      "width": 451,
+      "height": 383,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 169
+    },
+    {
+      "file_path": "screenshots/price.png",
+      "asset_type": "screenshot_price",
+      "width": 535,
+      "height": 123,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 10
+    },
+    {
+      "file_path": "screenshots/rating.png",
+      "asset_type": "screenshot_rating",
+      "width": 1001,
+      "height": 1630,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 390
+    },
+    {
+      "file_path": "scroll/scroll.mp4",
+      "asset_type": "scroll_video",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 448
+    }
+  ]
+}

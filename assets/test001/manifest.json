@@ -1,0 +1,286 @@
+{
+  "product_id": "test001",
+  "source_url": "https://he.aliexpress.com/item/1005006956233010.html",
+  "collected_at": "2026-06-11T22:01:45",
+  "summary": {
+    "total_assets": 27,
+    "image_count": 12,
+    "screenshot_count": 3,
+    "scroll_type": "frames",
+    "scroll_frame_count": 12,
+    "qa_passed": true,
+    "retry_count": 0
+  },
+  "assets": [
+    {
+      "file_path": "images/001_main.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S41416243ca244ee4b5ff2e8618f0371fK.jpg",
+      "index": 1,
+      "is_main": true,
+      "file_size_kb": 100
+    },
+    {
+      "file_path": "images/002_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sae9d9201ffe84704adc769a852626555D.jpg",
+      "index": 2,
+      "is_main": false,
+      "file_size_kb": 172
+    },
+    {
+      "file_path": "images/003_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S9252d42652344cdb8e7cc14ad17c55f7q.jpg",
+      "index": 3,
+      "is_main": false,
+      "file_size_kb": 76
+    },
+    {
+      "file_path": "images/004_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S796e623a41d442d0aaca5f537c44b506a.jpg",
+      "index": 4,
+      "is_main": false,
+      "file_size_kb": 60
+    },
+    {
+      "file_path": "images/005_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S14f5f047b47b45469499090a957a5354T.jpg",
+      "index": 5,
+      "is_main": false,
+      "file_size_kb": 113
+    },
+    {
+      "file_path": "images/006_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S80118954d3074582b17ff02b68b83cc5c.jpg",
+      "index": 6,
+      "is_main": false,
+      "file_size_kb": 155
+    },
+    {
+      "file_path": "images/007_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Scfbb57cc103245e3894e699d7c318019S.jpg",
+      "index": 7,
+      "is_main": false,
+      "file_size_kb": 57
+    },
+    {
+      "file_path": "images/008_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S5de9893e142b46598062d5cdba8b5113O.jpg",
+      "index": 8,
+      "is_main": false,
+      "file_size_kb": 53
+    },
+    {
+      "file_path": "images/009_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sd9bbdff340be4d558a70437daeb168e7L.jpg",
+      "index": 9,
+      "is_main": false,
+      "file_size_kb": 52
+    },
+    {
+      "file_path": "images/010_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S73d2b9d23097485481c99f0cd8235a54z.jpg",
+      "index": 10,
+      "is_main": false,
+      "file_size_kb": 54
+    },
+    {
+      "file_path": "images/011_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S1bf8d7d58d8d47ee983bfe18d19d0e928.jpg",
+      "index": 11,
+      "is_main": false,
+      "file_size_kb": 41
+    },
+    {
+      "file_path": "images/012_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sf5a046f2b37c44cbb5e51aef9aef1a07I.jpg",
+      "index": 12,
+      "is_main": false,
+      "file_size_kb": 55
+    },
+    {
+      "file_path": "screenshots/main.png",
+      "asset_type": "screenshot_main",
+      "width": 451,
+      "height": 383,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 142
+    },
+    {
+      "file_path": "screenshots/price.png",
+      "asset_type": "screenshot_price",
+      "width": 535,
+      "height": 53,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 4
+    },
+    {
+      "file_path": "screenshots/rating.png",
+      "asset_type": "screenshot_rating",
+      "width": 1001,
+      "height": 1588,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 379
+    },
+    {
+      "file_path": "scroll/scroll_001.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 225
+    },
+    {
+      "file_path": "scroll/scroll_002.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 92
+    },
+    {
+      "file_path": "scroll/scroll_003.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 202
+    },
+    {
+      "file_path": "scroll/scroll_004.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 88
+    },
+    {
+      "file_path": "scroll/scroll_005.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 249
+    },
+    {
+      "file_path": "scroll/scroll_006.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 422
+    },
+    {
+      "file_path": "scroll/scroll_007.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 534
+    },
+    {
+      "file_path": "scroll/scroll_008.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 345
+    },
+    {
+      "file_path": "scroll/scroll_009.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 54
+    },
+    {
+      "file_path": "scroll/scroll_010.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 353
+    },
+    {
+      "file_path": "scroll/scroll_011.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 542
+    },
+    {
+      "file_path": "scroll/scroll_012.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 608
+    }
+  ]
+}

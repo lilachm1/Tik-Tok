@@ -1,0 +1,236 @@
+{
+  "product_id": "001",
+  "source_url": "https://www.aliexpress.com/item/1005005980338736.html",
+  "collected_at": "2026-06-11T23:21:44",
+  "summary": {
+    "total_assets": 22,
+    "image_count": 7,
+    "screenshot_count": 3,
+    "scroll_type": "frames",
+    "scroll_frame_count": 12,
+    "qa_passed": true,
+    "retry_count": 0
+  },
+  "assets": [
+    {
+      "file_path": "images/001_main.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sbc21ec817e3c41d9beafdf1c07b5ffdfW.jpg",
+      "index": 1,
+      "is_main": true,
+      "file_size_kb": 172
+    },
+    {
+      "file_path": "images/002_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S66b1bda503a84f548172b86c7c0ab9c6b.jpg",
+      "index": 2,
+      "is_main": false,
+      "file_size_kb": 165
+    },
+    {
+      "file_path": "images/003_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S3eb6cb31058945ddb566c5ea144e2a49c.jpg",
+      "index": 3,
+      "is_main": false,
+      "file_size_kb": 196
+    },
+    {
+      "file_path": "images/004_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1500,
+      "height": 1500,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S6776251874924d6e9e49b5125fa9cb6fz.jpg",
+      "index": 4,
+      "is_main": false,
+      "file_size_kb": 434
+    },
+    {
+      "file_path": "images/005_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sf0f4e34a36b84b8893dd3b60ff339831L.jpg",
+      "index": 5,
+      "is_main": false,
+      "file_size_kb": 190
+    },
+    {
+      "file_path": "images/006_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S7f2c2178a02947ddb371a11cebeae70eV.jpg",
+      "index": 6,
+      "is_main": false,
+      "file_size_kb": 122
+    },
+    {
+      "file_path": "images/007_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S5c04d631f1c042f38a0a2727868b186a0.jpg",
+      "index": 7,
+      "is_main": false,
+      "file_size_kb": 52
+    },
+    {
+      "file_path": "screenshots/main.png",
+      "asset_type": "screenshot_main",
+      "width": 451,
+      "height": 383,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 188
+    },
+    {
+      "file_path": "screenshots/price.png",
+      "asset_type": "screenshot_price",
+      "width": 535,
+      "height": 53,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 3
+    },
+    {
+      "file_path": "screenshots/rating.png",
+      "asset_type": "screenshot_rating",
+      "width": 1001,
+      "height": 1337,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 224
+    },
+    {
+      "file_path": "scroll/scroll_001.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 58
+    },
+    {
+      "file_path": "scroll/scroll_002.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 223
+    },
+    {
+      "file_path": "scroll/scroll_003.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 231
+    },
+    {
+      "file_path": "scroll/scroll_004.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 46
+    },
+    {
+      "file_path": "scroll/scroll_005.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 338
+    },
+    {
+      "file_path": "scroll/scroll_006.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 655
+    },
+    {
+      "file_path": "scroll/scroll_007.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 682
+    },
+    {
+      "file_path": "scroll/scroll_008.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 280
+    },
+    {
+      "file_path": "scroll/scroll_009.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 118
+    },
+    {
+      "file_path": "scroll/scroll_010.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 327
+    },
+    {
+      "file_path": "scroll/scroll_011.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 495
+    },
+    {
+      "file_path": "scroll/scroll_012.png",
+      "asset_type": "scroll_frame",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 706
+    }
+  ]
+}

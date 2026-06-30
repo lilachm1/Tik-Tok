@@ -1,0 +1,156 @@
+{
+  "product_id": "007",
+  "source_url": "https://www.aliexpress.com/item/4001145808790.html",
+  "collected_at": "2026-06-17T22:38:36",
+  "summary": {
+    "total_assets": 14,
+    "image_count": 10,
+    "screenshot_count": 3,
+    "scroll_type": "video",
+    "scroll_frame_count": 0,
+    "qa_passed": true,
+    "retry_count": 0
+  },
+  "assets": [
+    {
+      "file_path": "images/001_main.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S462ccc597eca44e4bb172c4dad9fac11J.jpg",
+      "index": 1,
+      "is_main": true,
+      "file_size_kb": 131
+    },
+    {
+      "file_path": "images/002_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S67f8a45818194601b38a604cadab0afbh.jpg",
+      "index": 2,
+      "is_main": false,
+      "file_size_kb": 98
+    },
+    {
+      "file_path": "images/003_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S27bd68c61a4346c7a2c316add520aed7O.jpg",
+      "index": 3,
+      "is_main": false,
+      "file_size_kb": 127
+    },
+    {
+      "file_path": "images/004_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S419c4117608a42f7ad2c31a5b4b771a9q.jpg",
+      "index": 4,
+      "is_main": false,
+      "file_size_kb": 90
+    },
+    {
+      "file_path": "images/005_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 691,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sf743627a63a64ff898cb49f10f924c71e.jpg",
+      "index": 5,
+      "is_main": false,
+      "file_size_kb": 112
+    },
+    {
+      "file_path": "images/006_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S9f21450cf3aa4e829a1a3d5fbfbc7a53A.jpg",
+      "index": 6,
+      "is_main": false,
+      "file_size_kb": 92
+    },
+    {
+      "file_path": "images/007_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1000,
+      "height": 1000,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sa6064d37f703465cabd475d78a9bc0d6a.jpg",
+      "index": 7,
+      "is_main": false,
+      "file_size_kb": 70
+    },
+    {
+      "file_path": "images/008_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S1e2b5c56c5184c38b68a48952c833dcdW.jpg",
+      "index": 8,
+      "is_main": false,
+      "file_size_kb": 60
+    },
+    {
+      "file_path": "images/009_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S59be2ec1d141443e9950331c095803338.jpg",
+      "index": 9,
+      "is_main": false,
+      "file_size_kb": 59
+    },
+    {
+      "file_path": "images/010_detail.jpg",
+      "asset_type": "product_image",
+      "width": 800,
+      "height": 800,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S00f8b07244d54ed592012da058afcc6ee.jpg",
+      "index": 10,
+      "is_main": false,
+      "file_size_kb": 63
+    },
+    {
+      "file_path": "screenshots/main.png",
+      "asset_type": "screenshot_main",
+      "width": 451,
+      "height": 383,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 150
+    },
+    {
+      "file_path": "screenshots/price.png",
+      "asset_type": "screenshot_price",
+      "width": 535,
+      "height": 53,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 3
+    },
+    {
+      "file_path": "screenshots/rating.png",
+      "asset_type": "screenshot_rating",
+      "width": 1001,
+      "height": 770,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 183
+    },
+    {
+      "file_path": "scroll/scroll.mp4",
+      "asset_type": "scroll_video",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 504
+    }
+  ]
+}

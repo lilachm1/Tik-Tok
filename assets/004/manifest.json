@@ -1,0 +1,96 @@
+{
+  "product_id": "004",
+  "source_url": "https://www.aliexpress.com/item/1005007287191340.html",
+  "collected_at": "2026-06-15T13:28:20",
+  "summary": {
+    "total_assets": 8,
+    "image_count": 7,
+    "screenshot_count": 0,
+    "scroll_type": "video",
+    "scroll_frame_count": 0,
+    "qa_passed": true,
+    "retry_count": 1
+  },
+  "assets": [
+    {
+      "file_path": "images/001_main.jpg",
+      "asset_type": "product_image",
+      "width": 880,
+      "height": 880,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sb7f6dd6f36ab431db1c9c1904ba9791eP.png",
+      "index": 1,
+      "is_main": true,
+      "file_size_kb": 49
+    },
+    {
+      "file_path": "images/002_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1024,
+      "height": 1024,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/See3545d5c8384e4c8b8fcbd9510d9f99q.png",
+      "index": 2,
+      "is_main": false,
+      "file_size_kb": 55
+    },
+    {
+      "file_path": "images/003_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1152,
+      "height": 896,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sf3272e722c5a4b2bbffd17cb1958eaaaH.png",
+      "index": 3,
+      "is_main": false,
+      "file_size_kb": 75
+    },
+    {
+      "file_path": "images/004_detail.jpg",
+      "asset_type": "product_image",
+      "width": 1024,
+      "height": 1024,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/S136cdd91e1b740c898a1fc931f5176ada.png",
+      "index": 4,
+      "is_main": false,
+      "file_size_kb": 53
+    },
+    {
+      "file_path": "images/005_detail.jpg",
+      "asset_type": "product_image",
+      "width": 361,
+      "height": 360,
+      "source_url": "https://ae01.alicdn.com/kf/S01523ef93482448d8c33d410344d6a9eI/361x360.png",
+      "index": 5,
+      "is_main": false,
+      "file_size_kb": 19
+    },
+    {
+      "file_path": "images/006_detail.jpg",
+      "asset_type": "product_image",
+      "width": 900,
+      "height": 900,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sa069bd98105c424990b67413ab7554f6l.jpg",
+      "index": 6,
+      "is_main": false,
+      "file_size_kb": 142
+    },
+    {
+      "file_path": "images/007_detail.jpg",
+      "asset_type": "product_image",
+      "width": 2448,
+      "height": 2448,
+      "source_url": "https://ae-pic-a1.aliexpress-media.com/kf/Sea15d4b3b0504c13a7aec93acd3c93c98.jpg",
+      "index": 7,
+      "is_main": false,
+      "file_size_kb": 1104
+    },
+    {
+      "file_path": "scroll/scroll.mp4",
+      "asset_type": "scroll_video",
+      "width": 1280,
+      "height": 800,
+      "source_url": null,
+      "index": null,
+      "is_main": false,
+      "file_size_kb": 318
+    }
+  ]
+}
