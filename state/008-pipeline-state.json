@@ -1,0 +1,137 @@
+{
+  "product_id": "008",
+  "created": "2026-06-17",
+  "last_updated": "2026-06-17",
+  "status": "COMPLETED",
+  "step": "STEP_2",
+  "shortlist": [
+    {
+      "rank": 1,
+      "name": "Solar Garden Path / Decorative Stake Lights",
+      "score": 53,
+      "category": "Garden Supplies",
+      "commission_rate": 9,
+      "estimated_price_ils": 47,
+      "status": "REJECTED",
+      "rejection_reason": "No live matching decorative solar path/stake light listing found. One live listing (1005005972760920) was product-type mismatch (security floodlight with motion sensor, not decorative path/stake lights; also sale price ₪16.62 expiring June 20 = unreliable for content). Two matching listing attempts dead.",
+      "listings_tried": [
+        {
+          "item_id": "1005005972760920",
+          "url": "https://www.aliexpress.com/item/1005005972760920.html",
+          "result": "HARD_BLOCK",
+          "reason": "STEP 3A LIVE but product type mismatch — security wall floodlight with motion sensor, not decorative garden path/stake lights. Also: current sale price ₪16.62 expires June 20 (3 days); real price ₪75.19. Sale-price hook would mislead viewers after expiry.",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005006918114295",
+          "url": "https://www.aliexpress.com/item/1005006918114295.html",
+          "result": "HVM_URL_VALIDATION_FAILED",
+          "reason": "STEP 3A DEAD — page_not_found",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005005490087963",
+          "url": "https://www.aliexpress.com/item/1005005490087963.html",
+          "result": "HVM_URL_VALIDATION_FAILED",
+          "reason": "STEP 3A DEAD — page_not_found",
+          "hvm_data": null
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Wearable Bladeless Neck Fan (USB Rechargeable, Hands-Free)",
+      "score": 50,
+      "category": "Home Appliances / Sports",
+      "commission_rate": 7,
+      "estimated_price_ils": 58,
+      "status": "REJECTED",
+      "rejection_reason": "5 listing attempts — no viable listing found within search budget. 2 DEAD, 2 HARD BLOCK (sold < 500 or price > ₪120). Soft reject flag also noted (type overlap with Product 004).",
+      "listings_tried": [
+        {
+          "item_id": "3256808790545528",
+          "url": "https://www.aliexpress.com/item/3256808790545528.html",
+          "result": "HARD_BLOCK",
+          "reason": "STEP 3A LIVE: sold 21 (< 500 threshold) + price ₪168.37 (> ₪120 hard reject). Premium semiconductor cooling device.",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005003025902929",
+          "url": "https://www.aliexpress.com/item/1005003025902929.html",
+          "result": "HARD_BLOCK",
+          "reason": "STEP 3A LIVE: sold 5 (< 500 threshold) + commission ₪1.13 (< ₪1.50 minimum at 7%). Foldable handheld fan, not wearable neck fan.",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005004538175523",
+          "url": "https://www.aliexpress.com/item/1005004538175523.html",
+          "result": "HVM_URL_VALIDATION_FAILED",
+          "reason": "STEP 3A DEAD — page_not_found",
+          "hvm_data": null
+        },
+        {
+          "item_id": "1005002891838064",
+          "url": "https://www.aliexpress.com/item/1005002891838064.html",
+          "result": "HVM_URL_VALIDATION_FAILED",
+          "reason": "STEP 3A DEAD — page_not_found",
+          "hvm_data": null
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "Adjustable Foldable Desktop Phone/Tablet Stand (360°)",
+      "score": 48,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 40,
+      "status": "SELECTED",
+      "rejection_reason": null,
+      "listings_tried": [
+        {
+          "item_id": "1005006285768946",
+          "url": "https://www.aliexpress.com/item/1005006285768946.html",
+          "result": "PASS",
+          "reason": "STEP 3A LIVE: sold 2,000+, rating 4.9★, price ₪40.29 (regular), in stock. All hard blocks pass.",
+          "hvm_data": null
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "Stick-On Phone Card Wallet (Adhesive, 3-Card)",
+      "score": 43,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 27,
+      "status": "PENDING",
+      "rejection_reason": null,
+      "listings_tried": []
+    },
+    {
+      "rank": 5,
+      "name": "Magnetic Cable Management Clips (Pack)",
+      "score": 42,
+      "category": "Mobile Phone Accessories",
+      "commission_rate": 9,
+      "estimated_price_ils": 24,
+      "status": "PENDING",
+      "rejection_reason": null,
+      "listings_tried": []
+    }
+  ],
+  "active_candidate": { "rank": 3, "name": "Adjustable Foldable Desktop Phone/Tablet Stand (360°)" },
+  "selected_listing": {
+    "item_id": "1005006285768946",
+    "url": "https://www.aliexpress.com/item/1005006285768946.html",
+    "product_name": "360° Rotatable Adjustable Foldable Desktop Phone/Tablet Stand (4.7–12 inch)",
+    "price_ils": 40.29,
+    "sold_count": "2000+",
+    "rating": 4.9,
+    "category": "Mobile Phone Accessories",
+    "commission_rate": 9
+  },
+  "hvm_pending": null,
+  "step": "STEP_12",
+  "resume_note": "COMPLETE. 4 videos generated and QA passed. Output: output/2026-06-17-product-008.md + output/2026-06-17-product-008-upload_package.md. Pending: affiliate link generation at portals.aliexpress.com."
+}

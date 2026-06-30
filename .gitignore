@@ -1,0 +1,17 @@
+GitHub token.txt
+matziotil@gmail.com.txt
+scripts/debug_*.png
+debug_*.png
+scripts/*.bak
+scripts/qa_*.png
+scripts/step11d_*.png
+data/tiktok-session.json
+scripts/__pycache__/
+__pycache__/
+*.pyc
+
+# Large/regenerable binaries — not suited to git (regenerate via generate_assets.py /
+# generate_videos.py from the AliExpress URLs + video-configs already in data/).
+videos/*.mp4
+assets/
+output/identify_*/

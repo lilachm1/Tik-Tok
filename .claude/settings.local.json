@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item *)",
+      "WebSearch",
+      "WebFetch(domain:www.aliexpress.com)",
+      "WebFetch(domain:he.aliexpress.com)",
+      "WebFetch(domain:de.aliexpress.com)",
+      "Bash(python *)",
+      "Bash(ffmpeg -i \"C:/Automation/TikTok/videos/2026-06-17-product-007-A.mp4\" -vf \"select=eq\\(n\\\\,45\\)\" -vframes 1 \"C:/Automation/TikTok/scripts/debug_rtl_preview_A.png\" -y)",
+      "Bash(ffmpeg -i \"C:/Automation/TikTok/videos/2026-06-17-product-007-A.mp4\" -ss 00:00:01.5 -vframes 1 -update 1 \"C:/Automation/TikTok/scripts/debug_rtl_preview_A.png\" -y)",
+      "PowerShell(python C:/Automation/TikTok/scripts/generate_videos.py --product-id 008 --date 2026-06-17 2>&1)",
+      "Artifact",
+      "Bash(python3 -c ' *)",
+      "PowerShell(Get-Process *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git remote *)",
+      "Bash(pip install:*)",
+      "Bash(playwright install:*)",
+      "Bash(tee:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}

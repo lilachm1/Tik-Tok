@@ -1,0 +1,49 @@
+{
+  "product_id": "008",
+  "date": "2026-06-17",
+  "price_ils": 40.29,
+  "sales_count": "2000",
+  "cta_id": "008",
+  "variants": [
+    {
+      "id": "A",
+      "segments": [
+        {"start": 0, "end": 3, "text": "מעמד אלומיניום ב-₪40?", "color": "yellow", "position": "top-center", "asset": "images/007_detail.jpg"},
+        {"start": 3, "end": 6, "text": "₪40.29 באלי אקספרס — פי 3 זול מחנויות", "color": "yellow", "position": "top-center", "asset": "images/003_detail.jpg"},
+        {"start": 6, "end": 9, "text": "מתקפל שטוח — שם בתיק, מוציא בשנייה", "color": "yellow", "position": "bottom"},
+        {"start": 9, "end": 13, "text": "2,000+ לקוחות קנו — דירוג 4.9 כוכבים", "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבו 008A בתגובות", "color": "red", "position": "bottom", "asset": "images/009_detail.jpg"}
+      ]
+    },
+    {
+      "id": "B",
+      "segments": [
+        {"start": 0, "end": 3, "text": "מה הדבר הזה שהפך לי את השולחן?", "color": "yellow", "position": "top-center", "asset": "images/004_detail.jpg"},
+        {"start": 3, "end": 6, "text": "מעמד שולחני מסתובב 360° — ₪40.29", "color": "yellow", "position": "top-center", "asset": "images/005_detail.jpg"},
+        {"start": 6, "end": 9, "text": "עמד בגובה המושלם — שתי ידיים פנויות", "color": "yellow", "position": "bottom"},
+        {"start": 9, "end": 13, "text": "2,000+ הזמנות — 4.9 כוכבים", "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבו 008B בתגובות", "color": "red", "position": "bottom", "asset": "images/007_detail.jpg"}
+      ]
+    },
+    {
+      "id": "C",
+      "segments": [
+        {"start": 0, "end": 3, "text": "שנים ישבתי כפוף מול הנייד", "color": "yellow", "position": "top-center", "asset": "images/008_detail.jpg"},
+        {"start": 3, "end": 6, "text": "הנייד שטוח על השולחן = כאבי גב וצוואר", "color": "yellow", "position": "top-center", "asset": "images/007_detail.jpg"},
+        {"start": 6, "end": 9, "text": "מסך בגובה העיניים — הגב ישר, הצוואר נח", "color": "yellow", "position": "bottom"},
+        {"start": 9, "end": 13, "text": "2,000+ כבר שינו את הישיבה שלהם — 4.9 כוכבים", "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבו 008C בתגובות", "color": "red", "position": "bottom", "asset": "images/003_detail.jpg"}
+      ]
+    },
+    {
+      "id": "D",
+      "segments": [
+        {"start": 0, "end": 3, "text": "ראיתי בטיקטוק ולא הבנתי — עד שקניתי", "color": "yellow", "position": "top-center", "asset": "images/009_detail.jpg"},
+        {"start": 3, "end": 6, "text": "מעמד שולחני 360° — ₪40.29 בלבד", "color": "yellow", "position": "top-center", "asset": "images/004_detail.jpg"},
+        {"start": 6, "end": 9, "text": "מסתובב 360° — מסביר בלי מילים", "color": "yellow", "position": "bottom"},
+        {"start": 9, "end": 13, "text": "2,000+ הזמנות — 4.9 כוכבים", "color": "yellow", "position": "bottom"},
+        {"start": 13, "end": 15, "text": "כתבו 008D בתגובות", "color": "red", "position": "bottom", "asset": "images/008_detail.jpg"}
+      ]
+    }
+  ]
+}

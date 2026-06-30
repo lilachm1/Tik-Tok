@@ -1,0 +1,54 @@
+{
+  "product_id": "003",
+  "date": "2026-06-14",
+  "price_ils": 8,
+  "sales_count": "100000",
+  "cta_id": "003",
+  "aliexpress_url": "https://www.aliexpress.com/item/1005006860946828.html",
+  "variants": [
+    {
+      "id": "A",
+      "hook_type": "Price Shock",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "לא האמנתי שזה סוגר שקיות בשניות...",   "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "שומר על החטיפים טריים ופריכים",          "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",             "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 003A בתגובות",                      "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "B",
+      "hook_type": "Curiosity",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...", "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                          "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "סוגר כל שקית תוך שנייה",                    "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",                  "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 003B בתגובות",                           "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "C",
+      "hook_type": "Problem/Solution",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "מצאתי את הפתרון לבעיה שכולנו מכירים", "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                    "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "בלי עוד חטיפים מתיישנים",              "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",            "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 003C בתגובות",                     "color": "red",    "position": "bottom"     }
+      ]
+    },
+    {
+      "id": "D",
+      "hook_type": "TikTok Discovery",
+      "segments": [
+        { "start": 0,  "end": 2,  "text": "כולם מדברים על זה וסוף סוף הזמנתי...", "color": "white",  "position": "top-center" },
+        { "start": 2,  "end": 5,  "text": "רק 8₪ בעלי אקספרס",                     "color": "yellow", "position": "center"     },
+        { "start": 5,  "end": 9,  "text": "עובד על כל שקית ניילון",                "color": "white",  "position": "center"     },
+        { "start": 9,  "end": 13, "text": "100,000 אנשים כבר הזמינו!",             "color": "white",  "position": "center"     },
+        { "start": 13, "end": 15, "text": "כתבו 003D בתגובות",                      "color": "red",    "position": "bottom"     }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+
+● Done. Everything is installed:
+
+  C:\Automation\TikTok\
+  ├── .claude\
+  │   └── commands\
+  │       ├── tiktok.md            ✅ created
+  │       └── tiktok-analyze.md    ✅ created
+  ├── TIKTOK_AGENT_PLAN.md         ✅ exists
+  ├── output\                      ✅ exists
+  ├── analysis\                    ✅ exists
+  └── data\                        ✅ exists
+
+  To use: open Claude Code from C:\Automation\TikTok\ — then /tiktok and /tiktok analyze will be available.
+
+  One last thing: before your first real run, open tiktok.md and set CURRENT_PRODUCT_ID: 001 to whatever number you want
+  to start from.
