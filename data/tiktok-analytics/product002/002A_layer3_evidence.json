@@ -1,0 +1,59 @@
+{
+  "variant": "002A",
+  "views": "153",
+  "first_2_second_retention": 0.26,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "לא תאמיני כמה זה עולה בעלי אקספרס...",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002A_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0s/0.5s/1s/1.5s frames are the identical static AliExpress hero-render of the car phone mount (same crop, same lighting, same 'Vacuum Magnet' English badge overlay) -- zero motion for the first 1.5s. At 2s there is a single hard cut to a second static image (a screenshot of the AliExpress listing page itself, price '22.67' visible), which then holds identically through 2.5s and 3s. So the entire 0-3s window is two static stills joined by one hard cut -- no camera movement, no product movement, no animation in either half."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (a magnetic car phone/dashboard mount) is clearly visible and explicitly labeled 'Vacuum Magnet' with feature badges ('Black Technology', 'Strong Adsorption', 'Multi-angle Adjustment') at 0s -- unambiguous from frame 1."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "The opening image (0-1.5s) is a glossy CGI-style AliExpress hero shot with English marketing badges baked in -- exactly the kind of image used on the product's own AliExpress listing, not organic TikTok footage. The 2-3s frame is even more literal: it is a screenshot of the actual AliExpress app/website UI (green 'Express' / 'Choice' badges, strikethrough price, 'מסירה: יוני 22' delivery-date text) with the Hebrew price overlay 'רק 23₪ בעלי אקספרס' burned on top of it. This is not just catalog-feel, it is a literal AliExpress screenshot."
+    },
+    "d": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text 'לא תאמיני כמה זה עולה בעלי אקספרס...' (Price Shock variant) poses a concrete, specific curiosity question about price rather than a vague generic claim, and the ellipsis withholds a specific number that the 2-3s frame then delivers (the AliExpress screenshot shows the actual price). It is a recognizable price-reveal hook type, not content-free filler."
+    },
+    "e": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook promises a reveal of 'how much this costs on AliExpress' and the 2-3s frame literally shows an AliExpress price screenshot with the price -- text and image are consistent with each other, even though the number technically lands right at/after the 2s boundary rather than inside it."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'לא תאמיני כמה זה עולה בעלי אקספרס' is casual, natural spoken Hebrew (this exact price-shock phrasing pattern is common in authentic Israeli TikTok content), not a stilted or literally-translated construction. Separately worth flagging (not part of this cause's definition): 'תאמיני' is the feminine-only second-person form, which conflicts with the project's own gender-neutral copy rule -- but that is an audience-exclusivity issue, not a translated/stilted-Hebrew issue."
+    }
+  },
+  "step11d_divergence_note": "NO STEP 11D SCORE EXISTS FOR THIS PRODUCT -- not a divergence, an absence. Confirmed by reading output/2026-06-14-product-002-upload_package.md directly: the file contains only a single product-level 'STEP 3C: PASS' line and has no 'STEP 11D:' verdict/score anywhere for any of the four variants (unlike product 008's upload package, which records STEP 11D PASS/WARNING/FAIL + score per variant). This upload package predates or simply never received STEP 11D scoring. So there is no pre-launch prediction to compare against real retention for 002A -- the correct finding is 'N/A / no prediction was ever made', not a false PASS. Real-world result: WEAK retention (26% at 2s, n=153 views), and the frame evidence shows the opening is two static stills (product render, then a literal AliExpress screenshot) joined by one hard cut -- exactly the kind of catalog-feeling opening that would very plausibly have failed a STEP 11D check had one existed."
+}

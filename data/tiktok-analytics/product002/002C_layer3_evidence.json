@@ -1,0 +1,59 @@
+{
+  "variant": "002C",
+  "views": "390",
+  "first_2_second_retention": 0.28,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "מצאתי את הפתרון לבעיה שכולנו מכירות",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002C_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Same shared asset again: 0s/1s/1.5s show the identical static AliExpress hero-render (product + English badges), hard cut at 2s to the identical static AliExpress listing screenshot, held through 2.5s/3s. No motion inside either half in the full 0-3s window."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "Product (magnetic car phone mount) is clearly visible and labeled at 0s, identical to the other three variants."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Identical to 002A/002B: CGI-style AliExpress hero render with English badges (0-1.5s) cutting to a literal AliExpress listing-page screenshot (2-3s, Express/Choice badge, strikethrough price, delivery-date text). Reads as marketplace material regardless of the Problem/Solution hook text layered on top."
+    },
+    "d": {
+      "rating": "LIKELY",
+      "evidence": "Hook text 'מצאתי את הפתרון לבעיה שכולנו מכירות' ('I found the solution to a problem we all know') never states what the problem actually is -- no specific pain point (e.g. phone sliding off the dashboard, losing signal, etc.), no number, no concrete surprise. 'A problem we all know' is a placeholder phrase that could preface literally any product; it carries a Problem/Solution structure but zero specific content."
+    },
+    "e": {
+      "rating": "LIKELY",
+      "evidence": "Hook promises a problem-and-solution narrative, but the frames never show or dramatize any problem at all -- 0-1.5s is a static, motionless product render, and 2-3s is just an AliExpress price screenshot. There is no before/after, no demonstration of a struggle being solved, nothing that visually corresponds to 'a problem we all know' -- the visual and the promised narrative arc don't connect."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'מצאתי את הפתרון לבעיה שכולנו מכירות' reads as natural, colloquial spoken Hebrew, not translated or stilted. Worth flagging separately (outside this cause's definition): 'מכירות' is the feminine-plural form ('we all [f] know'), an explicit female-only address consistent with the feminine forms used across all four 002 hook texts/captions -- a gender-neutrality issue per the project's own copy rules, but not a translation-quality issue."
+    }
+  },
+  "step11d_divergence_note": "NO STEP 11D SCORE EXISTS FOR THIS PRODUCT -- same confirmed absence across all four 002 variants (output/2026-06-14-product-002-upload_package.md has only a product-level 'STEP 3C: PASS', no per-variant STEP 11D verdict/score). Nothing to diverge from for 002C specifically. Real-world result: WEAK retention (28% at 2s, n=390 views, the largest sample of the four). Independent of STEP 11D, the frame evidence shows the same shared static asset (product render -> hard cut -> AliExpress screenshot) used across A/B/C/D, so the Problem/Solution hook text here is being laid over creative that visually contradicts its own premise (promises a problem/solution story, delivers a static price screenshot) -- this is a more content-level mismatch (cause e) than a novel visual problem specific to this variant."
+}

@@ -1,0 +1,59 @@
+{
+  "variant": "003B",
+  "views": "360",
+  "first_2_second_retention": 0.45,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003B_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Identical to 003A's opening: 0s, 0.5s, 1s and 1.5s frames are the same static lifestyle photo (white + pink bag-sealers, plant, placemat, fork) -- pixel-identical composition across all four sub-second frames, zero motion. Confirms 003A/003B/003C/003D all reuse the same underlying static shot / footage, only the hook-text overlay differs between variants."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The two bag-sealer units are clearly visible and centered in frame from 0s -- product identity is not ambiguous."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Same as 003A: by 2s the video cuts to a raw AliExpress listing-page screenshot showing 'אבטחה ופרטיות' (security & privacy), 'החזרות חינם' (free returns), 'מסירה: יוני 25' (delivery date) and a yellow urgency banner 'רק עד 8 בעלי אקספרס' -- a literal scraped marketplace screenshot inside the hook window, not just catalog-style lighting/composition."
+    },
+    "d": {
+      "rating": "LIKELY",
+      "evidence": "Hook text 'ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...' ('I saw this on TikTok and couldn't believe it exists...') is a pure generic curiosity-bait template -- it never names the product's function, a number, or a specific problem. This exact phrase could be pasted onto literally any product video unchanged."
+    },
+    "e": {
+      "rating": "UNLIKELY",
+      "evidence": "The text makes no specific promise beyond 'this exists' -- it doesn't claim a demonstrated action, so the static photo doesn't technically contradict it. (The bigger problem is the AliExpress-screenshot cut at 2s removing the product from view entirely, which is captured under (a)/(c) rather than a text/image mismatch.)"
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'ראיתי את זה בטיקטוק ולא האמנתי שזה קיים' is natural, colloquial spoken Hebrew, a very common authentic-sounding TikTok opener -- not translated or stilted."
+    }
+  },
+  "step11d_divergence_note": "No STEP 11D pre-launch QA data exists for product 003 (confirmed: output/2026-06-14-product-003-upload_package.md has a STEP 3C section but no STEP 11D section at all), so no prediction-vs-reality divergence can be computed for this variant. Real-world finding: this variant reuses the identical static-photo-then-AliExpress-screenshot footage as 003A, but pairs it with a fully generic hook ('I saw this on TikTok...'). Retention was MARGINAL (45% at 2s, 360 views) -- slightly better than 003A's WEAK 38%, plausibly because the vaguer text makes no promise the visuals fail to keep, even though the underlying visual weaknesses (a)/(c) are identical."
+}

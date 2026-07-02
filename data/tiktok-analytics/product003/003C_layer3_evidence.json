@@ -1,0 +1,59 @@
+{
+  "variant": "003C",
+  "views": "1",
+  "first_2_second_retention": 0.84,
+  "retention_classification": "STRONG",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "מצאתי את הפתרון לבעיה שכולנו מכירים",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003C_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Same static footage as 003A/003B: 0s, 0.5s, 1s and 1.5s frames are pixel-identical -- the same still lifestyle photo of the two bag-sealers, plant, placemat and fork, no motion whatsoever. This confirms the static-opening issue is a property of the shared creative asset, not variant-specific."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The bag-sealer units are clearly visible and identifiable from 0s."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "By 2s the video cuts to the same raw AliExpress listing-page screenshot as the other variants -- visible 'אבטחה ופרטיות', 'החזרות חינם', 'מסירה: יוני 25', and the yellow 'רק עד 8 בעלי אקספרס' banner. This is a genuine marketplace screenshot artifact, not a styling choice, and it appears inside the measured hook window for this variant too."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "Hook text 'מצאתי את הפתרון לבעיה שכולנו מכירים' ('I found the solution to a problem we all know') frames a relatable problem/solution narrative, which is a bit more specific than pure curiosity-bait, but it never names the actual problem or the product's function -- still fairly generic, could fit many household-gadget products."
+    },
+    "e": {
+      "rating": "POSSIBLE",
+      "evidence": "The text implies a solution/demonstration is coming ('I found the solution'), but the frames show only a static, undemonstrated product photo, then cut away to an unrelated AliExpress screenshot rather than showing the 'solution' in action."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'מצאתי את הפתרון לבעיה שכולנו מכירים' is fluent, natural spoken Hebrew -- reads as an authentic native phrasing, not translated or stilted."
+    }
+  },
+  "step11d_divergence_note": "No STEP 11D pre-launch QA data exists for product 003 (confirmed via the upload package containing STEP 3C but no STEP 11D section), so no prediction-vs-reality divergence applies here. IMPORTANT CAVEAT: this variant has only 1 total view, so its first_2_second_retention of 0.84 (STRONG) is a single data point (one viewer who happened to watch through 84% of the hook window) and is flagged LOW_CONFIDENCE for any retention-outcome correlation -- it should not be read as evidence that this variant's hook 'worked' or that its (a)/(c)/(e) issues were harmless. The visual/textual findings above (identical static-photo-into-AliExpress-screenshot footage, moderately generic hook text) are real, verifiable observations about creative quality independent of view count; they simply cannot be tied to a retention outcome at n=1."
+}

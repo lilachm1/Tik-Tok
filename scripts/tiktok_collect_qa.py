@@ -117,6 +117,32 @@ def _is_numeric(val):
 
 
 # ── Check 1 — Login / Session ──────────────────────────────────────────────
+#
+# Cookies TikTok actually needs to consider a session authenticated -- this
+# is the SAME set tiktok_session_login.py itself polls for as proof of
+# successful login, reused here rather than inventing a second, inconsistent
+# definition of "logged in" for this QA check.
+#
+# FIXED 2026-07-02 (false positive): this check used to scan EVERY tiktok.com
+# cookie for any expired one by name and FAIL on the first hit. That flagged
+# `msToken` -- a short-lived, auto-rotating anti-bot/telemetry token that is
+# EXPECTED to expire and get silently refreshed during normal browsing, not
+# a login credential -- while the real auth cookies in the exact same
+# session file (sessionid/sid_guard/uid_tt) were valid for months. A live
+# 16-variant backfill against the real account succeeded minutes before this
+# check reported the session as dead, which is what exposed the bug. Root
+# cause confirmed by dumping the file: a real, working session carries MORE
+# THAN ONE `msToken` entry (TikTok re-saves it under the same name as it
+# rotates), so a naive "any expired cookie" scan will always eventually snag
+# a stale copy even while the session is perfectly usable.
+#
+# This check now validates ONLY the cookies actually required for
+# authentication -- it is narrower, not weaker: it still FAILs, strictly, if
+# any required cookie is missing entirely, or every entry under that name is
+# expired. Transient/telemetry cookies are no longer inspected for expiry at
+# all, by design, not by omission.
+REQUIRED_AUTH_COOKIES = {"sessionid", "sid_guard", "uid_tt"}
+
 
 def check_1_session():
     issues = []
@@ -135,29 +161,38 @@ def check_1_session():
     if not cookies:
         issues.append("Session file has no cookies")
 
-    # Look for TikTok authentication cookies
     tiktok_domains = [c for c in cookies if "tiktok.com" in c.get("domain", "")]
     if not tiktok_domains:
         issues.append("No tiktok.com cookies found in session")
     else:
-        # Check for key auth cookies
-        names = {c["name"] for c in tiktok_domains}
-        auth_cookies = {"sessionid", "sid_tt", "tt_chain_token", "s_v_web_id"}
-        found_auth = names & auth_cookies
-        if not found_auth:
-            warnings.append(
-                f"No known auth cookies found (expected one of: {', '.join(sorted(auth_cookies))}). "
-                "Session may be incomplete."
-            )
-
-        # Check expiry
         now_epoch = datetime.now(tz=timezone.utc).timestamp()
-        expired = [
-            c["name"] for c in tiktok_domains
-            if c.get("expires", -1) > 0 and c["expires"] < now_epoch
-        ]
+        # A cookie name can appear more than once (TikTok re-saves rotating
+        # tokens under the same name as the session is used) -- treat a
+        # required cookie as valid if ANY entry under that name is
+        # unexpired; only fail it if every entry is expired, or the name
+        # never appears at all.
+        by_name = {}
+        for c in tiktok_domains:
+            by_name.setdefault(c["name"], []).append(c)
+
+        missing = []
+        expired = []
+        for required in sorted(REQUIRED_AUTH_COOKIES):
+            entries = by_name.get(required)
+            if not entries:
+                missing.append(required)
+                continue
+            all_expired = all(
+                e.get("expires", -1) > 0 and e["expires"] < now_epoch
+                for e in entries
+            )
+            if all_expired:
+                expired.append(required)
+
+        if missing:
+            issues.append(f"Missing required auth cookie(s): {', '.join(missing)}")
         if expired:
-            issues.append(f"Expired cookies: {', '.join(expired[:5])}")
+            issues.append(f"Required auth cookie(s) expired: {', '.join(expired)}")
 
     # Check file modification time as a rough staleness indicator
     mtime = datetime.fromtimestamp(SESSION_FILE.stat().st_mtime, tz=timezone.utc)
@@ -174,6 +209,7 @@ def check_1_session():
         return WARN, warnings
     return PASS, [
         f"Session file present ({len(cookies)} cookies, {len(tiktok_domains)} tiktok.com)",
+        f"Required auth cookies present & valid: {', '.join(sorted(REQUIRED_AUTH_COOKIES))}",
         f"File age: {age_days} day(s)",
     ]
 

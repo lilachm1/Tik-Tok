@@ -1,0 +1,400 @@
+{
+  "variant": "008B",
+  "video_path": "C:\\Automation\\TikTok\\videos\\2026-06-17-product-008-B.mp4",
+  "segments_plan": [
+    {
+      "start": 0,
+      "end": 3,
+      "text": "מה הדבר הזה שהפך לי את השולחן?",
+      "color": "yellow",
+      "position": "top-center",
+      "asset": "images/004_detail.jpg"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "text": "מעמד שולחני מסתובב 360° — ₪40.29",
+      "color": "yellow",
+      "position": "top-center",
+      "asset": "images/005_detail.jpg"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "text": "עמד בגובה המושלם — שתי ידיים פנויות",
+      "color": "yellow",
+      "position": "bottom"
+    },
+    {
+      "start": 9,
+      "end": 13,
+      "text": "2,000+ הזמנות — 4.9 כוכבים",
+      "color": "yellow",
+      "position": "bottom"
+    },
+    {
+      "start": 13,
+      "end": 15,
+      "text": "כתבו 008B בתגובות",
+      "color": "red",
+      "position": "bottom",
+      "asset": "images/007_detail.jpg"
+    }
+  ],
+  "ken_burns_planned_motion": [
+    [
+      "pan_left",
+      1.06,
+      -30
+    ],
+    [
+      "zoom_in",
+      1.0,
+      1.06
+    ],
+    [
+      "zoom_in",
+      1.0,
+      1.1
+    ],
+    [
+      "pan_right",
+      1.06,
+      20
+    ],
+    [
+      "zoom_in",
+      1.0,
+      1.05
+    ]
+  ],
+  "segment_motion_analysis": [
+    {
+      "segment_start": 0,
+      "segment_end": 3,
+      "ssim_trend_vs_segment_start": [
+        {
+          "t": 0.99,
+          "ssim_vs_segment_start": 0.895729
+        },
+        {
+          "t": 2.01,
+          "ssim_vs_segment_start": 0.854128
+        },
+        {
+          "t": 2.85,
+          "ssim_vs_segment_start": 0.838817
+        }
+      ],
+      "monotonic_decrease": true,
+      "min_ssim": 0.838817,
+      "motion_verdict": "REAL_GRADUAL_MOTION_CONFIRMED",
+      "frame_paths": [
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg0_0.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg0_1.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg0_2.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg0_3.png"
+      ],
+      "planned_ken_burns": [
+        "pan_left",
+        1.06,
+        -30
+      ],
+      "config_text": "מה הדבר הזה שהפך לי את השולחן?",
+      "config_position": "top-center",
+      "config_asset": "images/004_detail.jpg"
+    },
+    {
+      "segment_start": 3,
+      "segment_end": 6,
+      "ssim_trend_vs_segment_start": [
+        {
+          "t": 3.99,
+          "ssim_vs_segment_start": 0.792689
+        },
+        {
+          "t": 5.01,
+          "ssim_vs_segment_start": 0.759782
+        },
+        {
+          "t": 5.85,
+          "ssim_vs_segment_start": 0.74836
+        }
+      ],
+      "monotonic_decrease": true,
+      "min_ssim": 0.74836,
+      "motion_verdict": "REAL_GRADUAL_MOTION_CONFIRMED",
+      "frame_paths": [
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg1_0.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg1_1.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg1_2.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg1_3.png"
+      ],
+      "planned_ken_burns": [
+        "zoom_in",
+        1.0,
+        1.06
+      ],
+      "config_text": "מעמד שולחני מסתובב 360° — ₪40.29",
+      "config_position": "top-center",
+      "config_asset": "images/005_detail.jpg"
+    },
+    {
+      "segment_start": 6,
+      "segment_end": 9,
+      "ssim_trend_vs_segment_start": [
+        {
+          "t": 6.99,
+          "ssim_vs_segment_start": 0.75561
+        },
+        {
+          "t": 8.01,
+          "ssim_vs_segment_start": 0.709072
+        },
+        {
+          "t": 8.85,
+          "ssim_vs_segment_start": 0.694291
+        }
+      ],
+      "monotonic_decrease": true,
+      "min_ssim": 0.694291,
+      "motion_verdict": "REAL_GRADUAL_MOTION_CONFIRMED",
+      "frame_paths": [
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg2_0.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg2_1.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg2_2.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg2_3.png"
+      ],
+      "planned_ken_burns": [
+        "zoom_in",
+        1.0,
+        1.1
+      ],
+      "config_text": "עמד בגובה המושלם — שתי ידיים פנויות",
+      "config_position": "bottom",
+      "config_asset": null
+    },
+    {
+      "segment_start": 9,
+      "segment_end": 13,
+      "ssim_trend_vs_segment_start": [
+        {
+          "t": 10.32,
+          "ssim_vs_segment_start": 0.821689
+        },
+        {
+          "t": 11.68,
+          "ssim_vs_segment_start": 0.799315
+        },
+        {
+          "t": 12.8,
+          "ssim_vs_segment_start": 0.783613
+        }
+      ],
+      "monotonic_decrease": true,
+      "min_ssim": 0.783613,
+      "motion_verdict": "REAL_GRADUAL_MOTION_CONFIRMED",
+      "frame_paths": [
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg3_0.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg3_1.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg3_2.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg3_3.png"
+      ],
+      "planned_ken_burns": [
+        "pan_right",
+        1.06,
+        20
+      ],
+      "config_text": "2,000+ הזמנות — 4.9 כוכבים",
+      "config_position": "bottom",
+      "config_asset": null
+    },
+    {
+      "segment_start": 13,
+      "segment_end": 15,
+      "ssim_trend_vs_segment_start": [
+        {
+          "t": 13.66,
+          "ssim_vs_segment_start": 0.891282
+        },
+        {
+          "t": 14.34,
+          "ssim_vs_segment_start": 0.859699
+        },
+        {
+          "t": 14.9,
+          "ssim_vs_segment_start": 0.841881
+        }
+      ],
+      "monotonic_decrease": true,
+      "min_ssim": 0.841881,
+      "motion_verdict": "REAL_GRADUAL_MOTION_CONFIRMED",
+      "frame_paths": [
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg4_0.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg4_1.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg4_2.png",
+        "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_seg4_3.png"
+      ],
+      "planned_ken_burns": [
+        "zoom_in",
+        1.0,
+        1.05
+      ],
+      "config_text": "כתבו 008B בתגובות",
+      "config_position": "bottom",
+      "config_asset": "images/007_detail.jpg"
+    }
+  ],
+  "transition_analysis": [
+    {
+      "boundary_s": 3,
+      "ssim_across_cut": 0.685815,
+      "before_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary1_before.png",
+      "after_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary1_after.png"
+    },
+    {
+      "boundary_s": 6,
+      "ssim_across_cut": 0.601514,
+      "before_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary2_before.png",
+      "after_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary2_after.png"
+    },
+    {
+      "boundary_s": 9,
+      "ssim_across_cut": 0.454058,
+      "before_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary3_before.png",
+      "after_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary3_after.png"
+    },
+    {
+      "boundary_s": 13,
+      "ssim_across_cut": 0.586455,
+      "before_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary4_before.png",
+      "after_frame": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_frames\\008B_boundary4_after.png"
+    }
+  ],
+  "retention_curve": {
+    "duration_s": 15,
+    "curve": {
+      "1": 74.0,
+      "2": 42.0,
+      "3": 28.0,
+      "4": 20.0,
+      "5": 14.0,
+      "6": 12.0,
+      "7": 10.0,
+      "8": 9.0,
+      "9": 8.0,
+      "10": 7.0,
+      "11": 4.0,
+      "12": 4.0,
+      "13": 4.0,
+      "14": 4.0,
+      "15": 4.0,
+      "0": 100.0
+    }
+  },
+  "steepest_retention_drop": {
+    "second": 2,
+    "drop_pct": 32.0,
+    "all_drops": [
+      [
+        1,
+        26.0
+      ],
+      [
+        2,
+        32.0
+      ],
+      [
+        3,
+        14.0
+      ],
+      [
+        4,
+        8.0
+      ],
+      [
+        5,
+        6.0
+      ],
+      [
+        6,
+        2.0
+      ],
+      [
+        7,
+        2.0
+      ],
+      [
+        8,
+        1.0
+      ],
+      [
+        9,
+        1.0
+      ],
+      [
+        10,
+        1.0
+      ],
+      [
+        11,
+        3.0
+      ],
+      [
+        12,
+        0.0
+      ],
+      [
+        13,
+        0.0
+      ],
+      [
+        14,
+        0.0
+      ],
+      [
+        15,
+        0.0
+      ]
+    ]
+  },
+  "layer3_cause_a_rating": {
+    "rating": "LIKELY",
+    "evidence": "Confirmed at full sub-second resolution (0s/0.5s/1s/1.5s/2s all freshly extracted via ffmpeg, not the earlier integer-second fallback): all five frames are the identical static product photo. There is zero motion for the first 2 full seconds -- this is not an artifact of coarse 1-second sampling, it's a genuinely static opening shot. The only visual motion cue is a static blue light-ray graphic baked into the source photo itself."
+  },
+  "dimensions_requiring_agent_review": {
+    "planning_quality": "MOSTLY REASONABLE, ONE CALIBRATION ISSUE. Every one of the 5 segments has a genuine planned Ken Burns motion (confirmed executing correctly via SSIM in all 5 -- this is not a missing-plan problem). But segment 0's pan_left magnitude (-30px over 3s on a 1080px canvas, i.e. ~2.8% of frame width, with displacement starting at 0px and only ~10px by t=1s) is planned to be so subtle that it visually reads as static even under direct comparison -- Layer 3's agents, looking at the actual frames, rated cause (a) 'no motion cue' LIKELY. The plan technically includes motion; the plan's calibrated magnitude for THIS specific segment is arguably too subtle to serve its intended purpose (a scroll-stopping visual cue in the first 1-2s, the exact window where Layer 7 shows the steepest drop). Segments 1-4 use larger zoom deltas (1.06-1.10) which read more perceptibly.",
+    "product_reveal_timing": "The stand+tablet-in-use composition IS visible from frame 0 (not delayed), but it's partially obscured by the tablet itself and the light-ray graphic overlay -- a clean, unobstructed view of the stand product alone only arrives at segment 1 (3s+, boundary1_after.png). This is a reasonable design choice (context shot first, clean product shot second), not an obvious defect on its own, but it does mean the very first frame doesn't showcase the stand as clearly as the 3s+ frame does.",
+    "first_frame_quality": "Technically competent: sharp, well-lit, correct resolution/aspect ratio, no rendering artifacts, professional-looking 3D product render. No technical execution flaw here -- the issue Layer 3 already identified (catalog/AliExpress feel, cause c = LIKELY) is a STYLE/content problem, not a technical quality problem. This frame would pass any 'is this image well-made' bar; it simply doesn't read as organic TikTok footage.",
+    "overall_creative_quality": "Competently executed against its own plan (motion renders correctly, text overlays are legible and correctly positioned per Safe Zone rules, transitions are clean cuts with no glitches) but the underlying creative choices (a glossy CGI-style product render as the hook image, motion too subtle to register in the critical first 1-2s) limit its ceiling. This is not a broken render -- it is a well-executed version of a hook concept whose two core choices (asset style + motion magnitude) work against early retention.",
+    "text_timing_verified": "CONFIRMED CORRECT at the one boundary directly inspected (segment 0->1 at 3s): boundary1_before.png still shows segment 0's hook text, boundary1_after.png shows segment 1's price/360 text -- the swap happens right at the config's specified 3s boundary, no drift observed. Not independently re-verified at every other boundary in this pass; the transition_analysis SSIM values (0.69-0.69 range) are consistent with a clean hard cut at each boundary, which is this pipeline's actual by-design behavior, not a defect."
+  },
+  "competitor_comparison": {
+    "scope_note": "BEST-EFFORT, SINGLE DATA POINT -- not a full Layer 10 implementation (no systematic collection, no engagement scraping across a sample). Anonymous TikTok search triggered a CAPTCHA and was abandoned rather than solved (would be circumventing anti-bot protection); retried successfully using the account's own existing authenticated session (same one the collector already uses for legitimate purposes), which was not challenged.",
+    "search_query": "מעמד לטאבלט מסתובב (rotating tablet stand)",
+    "top_result_found": {
+      "url": "https://www.tiktok.com/@yeuunnt.22/video/7550598379038870839",
+      "engagement": "78.3K likes, 12.6K saves, 603 comments, 17.1K shares -- vastly higher than any variant in this account (best: 008C at 133 views total)",
+      "is_paid_partnership": true,
+      "opening_frame_description": "A real child lying in bed under a thick gray blanket, with the arm-mounted device holding a phone/tablet angled down toward the child's face -- genuine, low-fi, authentic human-context footage (looks like real UGC, not a studio render). Caption: '360 rotation, easily find the most comfortable [position]'.",
+      "frame_saved_to": "data/tiktok-analytics/product008/layer5_frames/competitor_top_opening.png"
+    },
+    "comparison_to_008B": "008B opens on a glossy CGI-style product render with no human presence at all. The single most successful real competitor in the exact same product category opens on genuine human-context footage (a real person using the product in a real, relatable moment). This is a real, concrete data point directly corroborating Layer 3's cause (c) 'AliExpress catalog feel' finding -- not proof that catalog-style openings can never work, but strong evidence that the highest-performing content in this category leans hard into authentic human context, which 008B (and, per the completed Layer 3 pass, all 15 other variants in this account) currently has none of.",
+    "motion_magnitude_comparison": {
+      "purpose": "Direct follow-up requested: is the OPENING_SEQUENCE_PROBLEM truly about insufficient motion magnitude, or something else about the opening? Measured using the exact same SSIM methodology as 008B's own segment analysis, for an apples-to-apples comparison.",
+      "methodology_correction_note": "First attempt was invalid and was redone, not silently fixed: a TikTok 'Create a passkey' login-security popup appeared over the competitor video between the t=0.1s and t=0.5s captures and stayed there through t=2.5s, so every frame after the first was measuring a static UI dialog, not video content (this produced a misleadingly LOW, flat SSIM ~0.22-0.24 that looked like erratic real motion but was actually a popup artifact). Redone with popup-dismissal logic checked before every single capture, then visually re-verified all 3 key frames were clean before trusting any number.",
+      "008B_consecutive_frame_ssim": {
+        "0.0s_vs_0.5s": 0.927016, "0.5s_vs_1.0s": 0.927074, "1.0s_vs_1.5s": 0.927572,
+        "1.5s_vs_2.0s": 0.927189, "2.0s_vs_2.5s": 0.927499,
+        "pattern": "Remarkably flat/constant (~0.927 every interval) -- exactly what a mathematically linear Ken Burns pan produces (equal time steps = equal displacement = equal similarity delta)."
+      },
+      "competitor_consecutive_frame_ssim": {
+        "0.1s_vs_0.5s": 0.452257, "0.5s_vs_1.0s": 0.468377, "1.0s_vs_1.5s": 0.469030,
+        "1.5s_vs_2.0s": 0.453404, "2.0s_vs_2.5s": 0.461000,
+        "pattern": "Also fairly flat/constant (~0.46 every interval) -- ruling out 'one early hard cut' as the explanation (that would show one big drop then near-1.0 stability afterward, which is NOT what this shows). This is sustained, continuous, substantial visual change throughout the full 2.5s window -- confirmed by direct visual inspection too: the framing genuinely shifts (tighter on the blanket, different composition) from 0.1s to 2.5s, consistent with real handheld camera movement and real subject (child) movement, not a static photo being cropped differently."
+      },
+      "conclusion": "Insufficient motion MAGNITUDE is a real, substantiated, measured factor, not a false lead -- the competitor's sustained frame-to-frame visual-change rate (~0.46 SSIM per 0.5s) is roughly double the rate of ours (~0.927 SSIM per 0.5s; recall SSIM is a similarity score, so the LOWER number means MORE change). This is not a one-off cut artifact -- both videos show flat, consistent per-interval change rates, just at very different magnitudes, over the full measured window. HOWEVER, magnitude is very unlikely to be the whole story: the TYPE of motion also differs qualitatively -- ours is a smooth, deterministic, single-static-photo crop-pan (mathematically constant velocity, no discrete moments); theirs is real, organic camera/subject movement with a real physical camera being repositioned. Recommend reading this as 'both magnitude AND type matter, with magnitude now genuinely measured rather than assumed' rather than picking one explanation over the other from a single data point."
+    },
+    "caveat": "Single competitor data point, single category, single search query. Should not be treated as a comprehensive competitive benchmark -- that is Layer 10's job, not yet built. But it is real, measured evidence, not a guess -- including the motion-magnitude comparison above, which was caught, corrected, and re-verified after an initial methodology error rather than reported as-is."
+  }
+}

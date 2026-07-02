@@ -1,0 +1,131 @@
+{
+  "product_id": "008",
+  "category": "Rotating phone/tablet stand (arm-mount or desk stand)",
+  "benchmark_type": "STATISTICAL, per ANALYZER_V3_SPEC.md Layer 5's competitor benchmark requirement (2026-07-02, third refinement)",
+  "search_queries_used": [
+    "מעמד לטאבלט מסתובב",
+    "מעמד לנייד מסתובב 360",
+    "תושבת לטאבלט מתקפלת (round abandoned -- 5/5 CAPTCHA-contaminated)",
+    "מעמד סקיסורס לאייפד (round abandoned -- 5/5 CAPTCHA-contaminated)",
+    "מעמד מסתובב לטאבלט",
+    "זרוע מעמד טאבלט לשולחן"
+  ],
+  "target_competitor_count": 5,
+  "actual_valid_competitor_count": 4,
+  "confidence": "MODERATE -- 4 of 5 target, all confirmed clean and on-category. Not full LOW_CONFIDENCE (that's reserved for n<=2), but explicitly one below target -- do not treat as equivalent to a full 5/5 or 10/10 benchmark.",
+  "known_data_loss_disclosed": "A 5th valid competitor (@goussve.km, 58 likes, confirmed on-category during initial review) had its extracted frames deleted by an overly broad cleanup command aimed at a DIFFERENT, CAPTCHA-contaminated batch that happened to reuse the same generic filenames (comp0-comp4). Not re-collected for this pass given diminishing returns after two additional search rounds; disclosed rather than silently omitted.",
+  "market_composition_finding": "IMPORTANT, not previously expected: none of the 4 valid competitors are confirmed Israeli/Hebrew-market despite every search being run in Hebrew (per ANALYZER_V3_SPEC.md's own warning that a Hebrew query can still surface non-Israeli accounts). Captions: 3 in English (@yeuunnt.22, @unboxingexpert, @digitalnexus1), 1 in Spanish (@toptech.mx). This benchmark should be read as an EXPANDED/GLOBAL-MARKET benchmark, not an Israeli-market one -- per the spec's own expansion rule ('if insufficient in-market data exists, expand gradually while recording the market source'), which is exactly what happened here, not a methodology failure, but it must be stated plainly rather than assumed away.",
+  "exclusion_filter_applied": {
+    "excluded": [
+      {"url": "https://www.tiktok.com/@eacoswgx/video/7620772523638148382", "like_count": 2761, "reason": "WRONG PRODUCT CATEGORY -- a bendable phone grip accessory, not a rotating stand. Surfaced by the search term overlap ('מסתובב'/bend-rotate wording) but not a comparable product."},
+      {"url": "toptech.mx (round 1 attempt)", "reason": "First extraction attempt was CAPTCHA-contaminated (all frames showed a slider puzzle). Re-extracted cleanly in round 3 and included below."}
+    ]
+  },
+  "competitors": [
+    {
+      "label": "yeuunnt.22",
+      "url": "https://www.tiktok.com/@yeuunnt.22/video/7550598379038870839",
+      "like_count": 78300,
+      "saves": 12600, "comments": 603, "shares": 17100,
+      "market_source": "Not confirmed Israeli/Hebrew -- English caption",
+      "avg_consecutive_ssim": 0.4609,
+      "cut_points_detected": [],
+      "qualitative_review": {
+        "product_reveal_time_s": "~0 (immediate -- device visible in frame 1)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": true,
+        "motion_type": "organic (real handheld/subject movement -- a real child moving under a blanket, confirmed via SSIM trend + direct visual comparison)",
+        "first_frame_strength": "strong -- immediate human/relatable context",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel_or_generically_native": "native/authentic UGC feel (market unconfirmed as specifically Israeli)"
+      }
+    },
+    {
+      "label": "unboxingexpert",
+      "url": "https://www.tiktok.com/@unboxingexpert/video/7095924665666850054",
+      "like_count": 2836,
+      "market_source": "Not confirmed Israeli/Hebrew -- English caption (#rotatable #ipadstand)",
+      "avg_consecutive_ssim": 0.4931,
+      "cut_points_detected": [],
+      "qualitative_review": {
+        "product_reveal_time_s": "~0 (immediate -- stand+iPad visible in frame 1)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": "mostly static camera; motion is primarily the product itself being handled/rotated by hand",
+        "motion_type": "organic object motion (hands actively rotating/adjusting the product)",
+        "first_frame_strength": "solid -- real desk/tech setting, product immediately legible",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel_or_generically_native": "native desk-setup/unboxing style, not catalog"
+      }
+    },
+    {
+      "label": "toptech.mx",
+      "url": "https://www.tiktok.com/@toptech.mx/video/7596714676918947079",
+      "like_count": 1172,
+      "market_source": "Not Israeli -- Spanish caption ('Soporte para iPad, rotación de 360°, altura')",
+      "avg_consecutive_ssim": 0.4989,
+      "cut_points_detected": [],
+      "qualitative_review": {
+        "product_reveal_time_s": "~0-1 (visible early but from a less immediately legible top-down angle)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": "mostly static; hand/object motion",
+        "motion_type": "organic hand/object motion",
+        "first_frame_strength": "moderate -- slightly abstract framing, darker/lower contrast than the others",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel_or_generically_native": "casual desk-demo style, not catalog"
+      }
+    },
+    {
+      "label": "digitalnexus1",
+      "url": "https://www.tiktok.com/@digitalnexus1/video/7294811241925741870",
+      "like_count": 171,
+      "market_source": "Not Israeli -- English caption",
+      "avg_consecutive_ssim": 0.6087,
+      "cut_points_detected": [],
+      "qualitative_review": {
+        "product_reveal_time_s": "~2-5 (slower than the other 3 -- opens on a close, ambiguous crop of the clamp mechanism; full product context only clear by ~5s)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": "mostly static; hand/arm motion",
+        "motion_type": "organic hand/arm motion",
+        "first_frame_strength": "weaker than the other 3 -- ambiguous close crop, product identity not immediately clear",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel_or_generically_native": "casual home-lifestyle setting, native-feeling"
+      }
+    }
+  ],
+  "statistics": {
+    "motion_magnitude_avg_consecutive_ssim": {
+      "competitor_values": [0.4609, 0.4931, 0.4989, 0.6087],
+      "mean": 0.5155,
+      "median": 0.496,
+      "range": [0.4609, 0.6087],
+      "n": 4,
+      "our_008B_value": 0.927,
+      "our_percentile": "0th percentile -- 008B's value (0.927) is HIGHER than every single competitor's (i.e. LESS motion than all 4; SSIM is a similarity score, so lower = more change). 008B falls entirely outside the competitor range, not just below the median."
+    },
+    "cut_frequency": {
+      "competitor_values": [0, 0, 0, 0],
+      "note": "None of the 4 competitors showed a detected hard cut in the measured window -- same as 008B. The difference between us and them is NOT about editing/cut frequency; it's specifically about the intensity of continuous motion.",
+      "our_008B_value": 0
+    },
+    "human_presence": {"competitors_with_human_presence": "4/4", "our_008B": false},
+    "product_shown_in_real_use": {"competitors_showing_real_use": "4/4", "our_008B": false},
+    "motion_type_organic_vs_simulated": {"competitors_using_organic_motion": "4/4", "our_008B": "simulated crop-pan"},
+    "native_vs_catalog_feel": {"competitors_reading_as_native": "4/4", "our_008B": "reads as catalog/marketplace (Layer 3 cause (c) = LIKELY)"},
+    "product_reveal_timing": {
+      "competitor_values_s": ["~0", "~0", "~0-1", "~2-5"],
+      "note": "3 of 4 reveal near-immediately; 1 is slower. Our 008B has the product technically visible at 0s but partially obscured, with a clean unobstructed view only at 3s+ -- roughly comparable to the slowest competitor, slower than the other 3."
+    }
+  },
+  "required_output_statements": [
+    "Our opening motion magnitude is at the 0th percentile of this 4-competitor benchmark -- below every single benchmarked competitor, not just below average.",
+    "All 4 benchmarked competitors show organic human/object motion; our opening uses a simulated crop-pan on a static image.",
+    "All 4 benchmarked competitors show real human presence and real product-in-use demonstration; our opening shows neither.",
+    "All 4 benchmarked competitors read as native/authentic content; our opening reads as catalog/marketplace material (corroborating Layer 3's cause (c) finding with a 4-competitor benchmark, not a single anecdote).",
+    "None of the 4 benchmarked competitors show a detected hard cut in their opening -- cut/editing frequency is not the differentiator; sustained motion intensity is.",
+    "3 of 4 competitors reveal the product near-instantly; our clean, unobstructed product reveal only arrives at 3s, comparable to the single slowest competitor in the benchmark."
+  ]
+}

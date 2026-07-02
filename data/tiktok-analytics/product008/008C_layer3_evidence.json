@@ -1,0 +1,64 @@
+{
+  "variant": "008C",
+  "views": "133",
+  "first_2_second_retention": 0.39,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "שנים ישבתי כפוף מול הנייד",
+    "color": "yellow",
+    "position": "top-center",
+    "asset": "images/008_detail.jpg"
+  },
+  "step11d_prelaunch_prediction": {
+    "verdict": "WARNING",
+    "score": 8,
+    "key_finding": "WARNING — CTA segment frame 14 shows YELLOW text before switching to RED in frame 15 (Text Visibility Rule violation). Code 008C correct in both frames. Conversion impact minor."
+  },
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008C_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0s/0.5s/1s/1.5s/2s/2.5s frames are pixel-identical: a static black stand rendered against a plain gray studio background, with zero motion for the entire hook window. A hard cut (not an animation) occurs only at 3s to a different, blue-gray stand image."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (an adjustable phone/tablet stand) is fully visible and unambiguous at 0s, even though it is empty (no device mounted in it)."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Plain gray/white studio 3D-render background, identical marketplace-catalog aesthetic to the other 008 variants' opening shots -- reads as a product listing photo, not organic TikTok footage."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "שנים ישבתי כפוף מול הנייד ('For years I sat hunched in front of the phone') is a relatable pain-point hook but uses a generic timeframe ('years') rather than a specific number or unique detail -- a common, formulaic complaint template rather than a distinctive hook."
+    },
+    "e": {
+      "rating": "LIKELY",
+      "evidence": "Hook text describes a posture/pain problem from phone use ('sat hunched in front of the phone'), but the static frame shown for the entire hook window is just an empty stand product shot with no phone in it and no demonstration of hunching, pain, or relief -- the text sets up a bodily problem the image never visualizes."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "שנים ישבתי כפוף מול הנייד reads as natural, colloquial spoken Hebrew (using slang 'נייד' for phone); no stilted or translated phrasing."
+    }
+  },
+  "step11d_divergence_note": "DIVERGENCE OF OMISSION. STEP 11D's pre-launch WARNING (8/10) flags only a narrow technical bug in the CTA segment ('frame 14 shows YELLOW text before switching to RED in frame 15 -- Text Visibility Rule violation'), and explicitly calls the conversion impact 'minor.' It says nothing about the hook/opening at all. Frame-by-frame verification of the actual opening (0-2.5s) shows a fully static, plain-background catalog product shot with no visual connection to the hook text's stated pain point (posture/back pain from phone use) -- a substantive creative issue STEP 11D never surfaced. Real-world result: first_2_second_retention of 0.39 (WEAK), the worst of the three variants reviewed in this pass, on a statistically meaningful base of 133 views. STEP 11D scored this variant fairly high (8/10) based on a cosmetic CTA color-timing bug while missing what visual inspection shows to be the more consequential hook-level problem."
+}

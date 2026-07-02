@@ -1,0 +1,64 @@
+{
+  "variant": "008B",
+  "views": "114",
+  "first_2_second_retention": 0.42,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "מה הדבר הזה שהפך לי את השולחן?",
+    "color": "yellow",
+    "position": "top-center",
+    "asset": "images/004_detail.jpg"
+  },
+  "step11d_prelaunch_prediction": {
+    "verdict": "PASS",
+    "score": 9,
+    "key_finding": "PASS — strongest hook (curiosity + motion lines), vivid WOW MOMENT, consistent CTA"
+  },
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008B_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Confirmed at full sub-second resolution (0s/0.5s/1s/1.5s/2s all freshly extracted via ffmpeg, not the earlier integer-second fallback): all five frames are the identical static product photo. There is zero motion for the first 2 full seconds -- this is not an artifact of coarse 1-second sampling, it's a genuinely static opening shot. The only visual motion cue is a static blue light-ray graphic baked into the source photo itself."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (a tablet/phone stand holding a tablet) is clearly visible and identifiable at 0s."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "The opening shot is a glossy CGI-style product render with a stylized light-ray effect -- reads as an AliExpress hero/marketplace image, not organic handheld TikTok footage."
+    },
+    "d": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text references a specific personal claim ('my desk', specifically), not a fully generic phrase -- reasonably matches its intended Curiosity hook type."
+    },
+    "e": {
+      "rating": "POSSIBLE",
+      "evidence": "Hook text implies a dramatic transformation ('transformed my desk'), but all 5 opening frames through 2s show the product simply sitting motionless -- no before/after, no demonstration of the claimed transformation."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'הפך לי את השולחן' is grammatically valid, plausible colloquial Hebrew, not translated/stilted."
+    }
+  },
+  "step11d_divergence_note": "CONFIRMED DIVERGENCE, now verified at full sub-second resolution (previous pass used integer-second fallback frames only). STEP 11D's pre-launch prediction was PASS 9/10, explicitly citing 'motion lines' as part of why this was the strongest hook in the batch. Five fresh frames at 0/0.5/1/1.5/2s -- extracted directly from the rendered MP4 via ffmpeg, not sampled at 1-second intervals -- are pixel-identical. There is no real motion in this shot at all; the 'motion lines' STEP 11D credited are a static compositing effect baked into a single still image. This rules out 'STEP 11D just sampled at too coarse an interval to catch a quick sub-second animation' as an innocent explanation -- there is no animation to catch. STEP 11D's scoring genuinely mistook a static graphic for real motion. Real-world result: MARGINAL retention (42% at 2s), and Layer 7 shows 75% of this variant's total viewer loss happens by second 3 (OPENING_SEQUENCE_PROBLEM). Worth checking other products' STEP 11D 'PASS ... motion' citations for the same issue."
+}

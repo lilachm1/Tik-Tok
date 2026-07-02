@@ -1,0 +1,128 @@
+
+==============================================================
+TikTok Analytics Collector  v2
+==============================================================
+
+Scanning project files for uploaded products...
+  Found: 4 products  (002, 003, 007, 008)
+  Total variants: 16
+  Existing CSV rows: 16
+
+Will collect: 16 variant(s)
+
+Verifying session...
+Session valid.
+
+[002A] Collecting...
+    Found via direct video-ID navigation (7651320643010514197)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=153  2s_ret=0.2600
+[002B] Collecting...
+    Found via direct video-ID navigation (7651327807460642068)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=353  2s_ret=0.3900
+[002C] Collecting...
+    Found via direct video-ID navigation (7651330347824696596)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=390  2s_ret=0.2800
+[002D] Collecting...
+    Found via direct video-ID navigation (7651330918107385109)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=315  2s_ret=0.2500
+[003A] Collecting...
+    Found via direct video-ID navigation (7651355377853828372)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=355  2s_ret=0.3800
+[003B] Collecting...
+    Found via direct video-ID navigation (7651356624040332564)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=360  2s_ret=0.4500
+[003C] Collecting...
+    Found via direct video-ID navigation (7651357085019426068)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=1  2s_ret=0.8400
+[003D] Collecting...
+    Found via direct video-ID navigation (7651357592245030165)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=2  2s_ret=0.4500
+[007A] Collecting...
+    Found via direct video-ID navigation (7652467017831828757)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=120  2s_ret=0.4100
+[007B] Collecting...
+    Found via direct video-ID navigation (7652465904726379797)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=91  2s_ret=0.4500
+[007C] Collecting...
+    Found via direct video-ID navigation (7652463304824196373)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=106  2s_ret=0.4400
+[007D] Collecting...
+    Found via direct video-ID navigation (7652466506638363924)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=145  2s_ret=0.4400
+[008A] Collecting...
+    Found via direct video-ID navigation (7652733286132976917)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=4  2s_ret=0.7500
+[008B] Collecting...
+    Found via direct video-ID navigation (7652732353164348692)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=114  2s_ret=0.4200
+[008C] Collecting...
+    Found via direct video-ID navigation (7652732676591357205)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=133  2s_ret=0.3900
+[008D] Collecting...
+    Found via direct video-ID navigation (7652732971664837909)
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=2  2s_ret=0.6000
+
+
+  CSV written: data\video_results.csv  (16 total rows)
+
+==============================================================
+COLLECTOR QA REPORT
+Run : 2026-07-02 15:30
+==============================================================
+Products  : 4  (002, 003, 007, 008)
+Expected  : 16 variants
+Collected : 16
+Not found : 0
+Skipped   : 0  (existing rows; use --update to re-collect)
+
+Data quality:
+  Views extracted        : 16/16
+  2-sec retention data   : 16/16
+
+Per-variant:
+  002       OK   views=153  2s_ret=0.2600
+  002       OK   views=353  2s_ret=0.3900
+  002       OK   views=390  2s_ret=0.2800
+  002       OK   views=315  2s_ret=0.2500
+  003A      OK   views=355  2s_ret=0.3800
+  003B      OK   views=360  2s_ret=0.4500
+  003C      OK   views=1  2s_ret=0.8400
+  003D      OK   views=2  2s_ret=0.4500
+  007A      OK   views=120  2s_ret=0.4100
+  007B      OK   views=91  2s_ret=0.4500
+  007C      OK   views=106  2s_ret=0.4400
+  007D      OK   views=145  2s_ret=0.4400
+  008A      OK   views=4  2s_ret=0.7500
+  008B      OK   views=114  2s_ret=0.4200
+  008C      OK   views=133  2s_ret=0.3900
+  008D      OK   views=2  2s_ret=0.6000
+
+QA Gates:
+  1. Login / session     : PASS
+  2. Video matching      : PASS
+  3. Data extraction     : PASS
+  4. CSV schema (33-col) : PASS
+  5. Analyzer handoff    : PASS
+
+Overall: PASS
+
+Next steps:
+  python scripts/tiktok_collect_qa.py   (full standalone QA suite)
+  /tiktok analyze                        (in Claude Code when QA passes)
+==============================================================

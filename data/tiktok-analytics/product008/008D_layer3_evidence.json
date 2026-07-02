@@ -1,0 +1,64 @@
+{
+  "variant": "008D",
+  "views": "2",
+  "first_2_second_retention": 0.6,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "ראיתי בטיקטוק ולא הבנתי — עד שקניתי",
+    "color": "yellow",
+    "position": "top-center",
+    "asset": "images/009_detail.jpg"
+  },
+  "step11d_prelaunch_prediction": {
+    "verdict": "PASS",
+    "score": 9,
+    "key_finding": "PASS — TikTok Discovery format maximally native, rotation animation cohesive throughout"
+  },
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008D_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0s/0.5s/1s/1.5s/2s/2.5s frames are pixel-identical: a static silver/metallic stand rendered against a plain white/gray studio background, with zero motion for the entire hook window. This directly contradicts STEP 11D's pre-launch claim of 'rotation animation cohesive throughout' -- there is no animation visible anywhere in the 0-2.5s hook window."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (an adjustable stand) is fully visible and unambiguous at 0s."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Plain white/gray studio 3D-render background, same marketplace-catalog aesthetic as the other 008 variants -- contradicts STEP 11D's pre-launch claim that this hook is 'maximally native' to the TikTok Discovery format."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "ראיתי בטיקטוק ולא הבנתי — עד שקניתי ('I saw it on TikTok and didn't understand -- until I bought it') is a curiosity-gap hook with a personal narrative beat, not purely generic, but it names no specific number, feature, or problem -- the curiosity is entirely unspecified."
+    },
+    "e": {
+      "rating": "LIKELY",
+      "evidence": "The hook text promises an unresolved mystery/surprise ('didn't understand it until I bought it'), implying a non-obvious feature or 'aha' moment is coming, but the static frame shown for the full 2.5s hook window is just a plain motionless stand -- no reveal, no demonstration, nothing visually cashing in the curiosity the text sets up within the hook window itself."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "ראיתי בטיקטוק ולא הבנתי — עד שקניתי reads as natural, idiomatic spoken Hebrew; no translated or stilted phrasing."
+    }
+  },
+  "step11d_divergence_note": "CONFIRMED DIVERGENCE, directly analogous to 008B's already-documented finding. STEP 11D's pre-launch prediction was PASS 9/10, explicitly citing 'TikTok Discovery format maximally native, rotation animation cohesive throughout.' Fresh sub-second frames (0/0.5/1/1.5/2/2.5s), extracted directly from the rendered MP4 via ffmpeg, are pixel-identical -- a static silver stand product shot with no motion whatsoever. The only motion-like element in the clip is a static blue light-ray/rotation graphic that appears baked into a DIFFERENT still image starting at the 3s segment cut, not during the hook itself. STEP 11D appears to have credited a visual effect that lives outside the hook window (or is itself just a static compositing graphic, as confirmed for 008B) to the hook's opening seconds. IMPORTANT CAVEAT: 008D has only 2 total views (per video_results.csv), so the 0.6 first_2_second_retention and MARGINAL classification are LOW_CONFIDENCE and not statistically meaningful -- this divergence is a direct, view-count-independent comparison of STEP11D's stated prediction against the actual rendered frames, and should NOT be read as a claim that the static hook caused the observed (unreliable, n=2) retention number."
+}

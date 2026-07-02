@@ -15,3 +15,13 @@ __pycache__/
 videos/*.mp4
 assets/
 output/identify_*/
+
+# Layer 3/5 frame extraction dumps — regenerable via ffmpeg from the source MP4s /
+# competitor video URLs; the JSON evidence files that summarize them are what's tracked.
+data/tiktok-analytics/*/layer3_frames/
+data/tiktok-analytics/*/layer5_frames/
+data/tiktok-analytics/*/layer5_competitor_frames/
+
+# Accidental Windows copy-paste duplicates
+* - Copy.png
+* - Copy.jpg

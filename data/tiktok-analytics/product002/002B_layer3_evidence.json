@@ -1,0 +1,59 @@
+{
+  "variant": "002B",
+  "views": "353",
+  "first_2_second_retention": 0.39,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002B_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Same underlying visual asset as 002A: 0s/0.5s/1s/1.5s are the identical static AliExpress hero-render of the car phone mount (identical crop/lighting/English badges), then a single hard cut at 2s to a static AliExpress listing-page screenshot that holds unchanged through 2.5s/3s. Zero motion inside either half -- two static stills plus one cut, no camera or product movement at any point in 0-3s."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "Product (magnetic car phone mount) is clearly visible and labeled 'Vacuum Magnet' with feature badges at 0s, same as every other variant sharing this asset."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "0-1.5s is a glossy CGI AliExpress hero shot with English marketing badges; 2-3s is a literal screenshot of the AliExpress app/website (Express/Choice badges, strikethrough price, delivery date text) with a Hebrew price overlay burned on top. Identical to 002A's asset -- reads as marketplace material, not organic TikTok footage, regardless of which hook text is layered over it."
+    },
+    "d": {
+      "rating": "LIKELY",
+      "evidence": "Hook text 'ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...' ('I saw this on TikTok and couldn't believe it exists...') is a highly generic, formulaic viral-hook template -- it names no specific number, no specific problem the product solves, and no specific detail of what 'it' even is or why it's surprising. This exact phrasing pattern is interchangeable across almost any product; nothing here is unique to a magnetic phone mount."
+    },
+    "e": {
+      "rating": "LIKELY",
+      "evidence": "Hook explicitly claims 'I saw this on TikTok' (i.e., organic native discovery), but the very first frame (0s) is a synthetic, glossy CGI-style AliExpress product render with English marketing badges, and by 2-3s the video is showing an actual AliExpress listing-page screenshot. The visual proof directly contradicts the 'saw it on TikTok' framing -- what's shown is AliExpress marketplace material, not anything resembling native TikTok content."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'ראיתי את זה בטיקטוק ולא האמנתי שזה קיים' is natural, casual spoken Hebrew and a common authentic-sounding TikTok phrasing pattern -- not stilted or translated. (Grammatically gender-neutral in this case since the first-person past-tense verb forms used don't inflect by the speaker's gender.)"
+    }
+  },
+  "step11d_divergence_note": "NO STEP 11D SCORE EXISTS FOR THIS PRODUCT -- same absence as all four 002 variants. output/2026-06-14-product-002-upload_package.md has only one product-level 'STEP 3C: PASS' line and no per-variant 'STEP 11D:' verdict/score anywhere, unlike product 008's package. So there is nothing to diverge from -- no pre-launch prediction was ever recorded for 002B. Real-world result: WEAK retention (39% at 2s, n=353 views) -- the best of the four 002 variants, but still below the MARGINAL threshold. Notable finding independent of STEP 11D: the underlying video asset (0-3s) is byte-for-byte identical in structure to 002A's (same static product render, same hard cut at 2s, same AliExpress screenshot) -- only the hook text differs across variants A-D. That means whatever wins or loses here is being decided almost entirely by hook text/type, since the visual creative itself is constant."
+}

@@ -1,0 +1,59 @@
+{
+  "variant": "003A",
+  "views": "355",
+  "first_2_second_retention": 0.38,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "לא האמנתי שזה סוגר שקיות בשניות...",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product003\\layer3_frames\\003A_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0s, 0.5s, 1s and 1.5s frames are the identical static lifestyle photo (white + pink mini bag-sealers on a wood table with a plant, woven placemat, and fork) -- zero motion across a full 1.5 seconds. This is a still product photo with only the hook-text caption animated over it, not real footage."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The two bag-sealer units are clearly visible, well-lit, and centered in frame from 0s onward -- product identity is not in question."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "At 2s the video cuts away from the product entirely into a raw, uncropped screenshot of what is clearly a marketplace listing page: visible chrome includes 'אבטחה ופרטיות' (security & privacy), 'החזרות חינם' (free returns), 'מסירה: יוני 25' (delivery date), and a yellow discount/urgency banner reading 'רק עד 8 בעלי אקספרס'. This is not just catalog-style styling -- it is a literal scraped AliExpress screenshot, still showing page layout artifacts, appearing inside the measured hook window."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "Hook text 'לא האמנתי שזה סוגר שקיות בשניות...' names a specific product function (seals bags) and a speed claim ('in seconds'), so it is not pure generic curiosity-bait, but it also never states a hard number (e.g. '3 seconds') or a concrete problem -- it's mid-way between specific and generic."
+    },
+    "e": {
+      "rating": "POSSIBLE",
+      "evidence": "Text emphasizes an action/speed claim ('seals bags in seconds') but the frames shown for the full 1.5s are a completely static, undemonstrated photo -- no sealing action visible -- and then the video cuts to an unrelated AliExpress screenshot instead of ever showing the promised action."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'לא האמנתי שזה סוגר שקיות בשניות' is idiomatic, colloquial spoken Hebrew, typical of native TikTok UGC phrasing -- not stilted or translated. (Note: the AliExpress screenshot's own banner text 'רק עד 8 בעלי אקספרס' IS grammatically awkward/garbled, but that text is baked into the scraped marketplace graphic, not the authored hook_segment.text field being rated here -- it is separately captured as evidence for cause (c).)"
+    }
+  },
+  "step11d_divergence_note": "No STEP 11D pre-launch QA data exists for product 003 at all -- confirmed by grepping output/2026-06-14-product-003-upload_package.md, which contains a STEP 3C section but no STEP 11D section whatsoever. This is a genuine absence of pre-launch hook QA for this product, not a parsing failure, so no prediction-vs-reality divergence can be computed. In its place, the real-world finding is: the opening 1.5s is a fully static photo, and by 2s (inside the measured hook window) the video cuts to a literal AliExpress marketplace screenshot rather than any product demonstration. Retention was WEAK (38% at 2s, 355 views), consistent with causes (a)/(c)/(e) above."
+}

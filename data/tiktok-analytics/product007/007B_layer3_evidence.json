@@ -1,0 +1,59 @@
+{
+  "variant": "007B",
+  "views": "91",
+  "first_2_second_retention": 0.45,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "רוב האנשים לא יודעים שזה קיים ברכב",
+    "color": "yellow",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007B_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "All frames from 0s through 2.5s (0/0.5/1/1.5/2/2.5s) are pixel-identical to each other and to 007A/007C/007D's opening frames -- the same static glossy car-organizer product photo, no motion whatsoever, for the full 3-second hook. Scene cuts abruptly to an unrelated gray AliExpress price screenshot only at 3s."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (car seat-back organizer with folding tray) is clearly and fully visible at 0s, same shot as the other three variants."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Identical staged AliExpress-style hero photo shared with all 4 variants: tablet playing a stock movie, branded bottles, a snack box with visible Chinese packaging text, composited fake sunset through the windshield. Reads as a marketplace listing image, not organic TikTok footage."
+    },
+    "d": {
+      "rating": "LIKELY",
+      "evidence": "Hook text 'רוב האנשים לא יודעים שזה קיים ברכב' ('most people don't know this exists in the car') is a generic curiosity-gap template with no number, no named problem, and no concrete surprise -- it could be attached to almost any car accessory. Contrast with 007A/007D, which lead with a specific ₪39 price."
+    },
+    "e": {
+      "rating": "POSSIBLE",
+      "evidence": "The text frames this as a hidden/secret discovery ('most people don't know this exists'), but the opening frame shows the product fully and plainly displayed in a bright, staged catalog shot -- there is no reveal, no concealment, no 'aha' moment visually. The image undercuts the curiosity premise rather than paying it off."
+    },
+    "h": {
+      "rating": "POSSIBLE",
+      "evidence": "'רוב האנשים לא יודעים שזה קיים ברכב' omits any personal anchor (no 'שלי'/'ברכב שלי', no first-person voice) unlike 007C's 'ברכב שלי', making it read as a generic translated statement-of-fact rather than an organic personal TikTok caption. 'קיים ברכב' (exists in-car, no definite article) also reads slightly flat/templated rather than natural spoken Hebrew."
+    }
+  },
+  "step11d_divergence_note": "NO PRE-LAUNCH PREDICTION EXISTS FOR THIS PRODUCT: output/2026-06-17-product-007-upload_package.md has no STEP 11D section at all for any of the 4 variants (confirmed by grep -- zero matches), unlike product 008 where explicit PASS/WARNING/FAIL scores existed per variant. There is no prediction to compare against, so no divergence is possible in the STEP 11D sense. Taken on its own, the frame evidence (fully static AliExpress-style shot for 3s, generic curiosity-gap hook text) is consistent with -- not surprising relative to -- the observed 45% MARGINAL 2s retention; nothing here suggests the real result contradicts what a fair pre-launch reviewer would have predicted from the footage."
+}

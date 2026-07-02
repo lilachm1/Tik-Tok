@@ -1,0 +1,59 @@
+{
+  "variant": "007C",
+  "views": "106",
+  "first_2_second_retention": 0.44,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "הגב של המושב ברכב שלי היה בלאגן מוחלט",
+    "color": "red",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007C_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0/0.5/1/1.5/2/2.5s frames are pixel-identical -- the same static glossy car-organizer product photo used across all 4 variants, with zero motion for the full 3-second hook. The scene only changes at 3s, cutting to a gray AliExpress price screenshot."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product is clearly visible and identifiable at 0s -- same fully-in-frame organizer/tray shot as the other variants."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Same staged AliExpress-style hero photo as the other 3 variants: stock tablet video, branded bottles, snack box with visible Chinese text, composited sunset backdrop. Marketplace-listing look, not organic footage."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "Hook text 'הגב של המושב ברכב שלי היה בלאגן מוחלט' ('my car seat back was a total mess') names a specific personal problem (unlike 007B's fully generic curiosity line), but 'בלאגן מוחלט' ('total mess') itself is a vague, unspecific descriptor -- no concrete detail of what the mess was (spills, kids' stuff, wrappers, etc.), so it's a real problem statement without a sharp specific hook."
+    },
+    "e": {
+      "rating": "LIKELY",
+      "evidence": "Hook text promises a 'before' scene of chaos/mess ('בלאגן מוחלט'), but the opening frame at 0s already shows the pristine, fully-organized solved state -- bottles neatly seated, tablet propped up, snacks arranged on the tray. There is no messy 'before' shown at all during the entire static 3-second hook; the text's problem claim is never visually paid off in the opening."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'הגב של המושב ברכב שלי היה בלאגן מוחלט' is natural, personal, first-person Hebrew ('ברכב שלי' = 'in my car') with an idiomatic phrase ('בלאגן מוחלט') that a native speaker would plausibly say -- reads as organic, not translated."
+    }
+  },
+  "step11d_divergence_note": "NO PRE-LAUNCH PREDICTION EXISTS FOR THIS PRODUCT: output/2026-06-17-product-007-upload_package.md contains no STEP 11D verdict/score for any variant (confirmed via grep, zero matches), unlike product 008's package. So there is nothing to diverge from here. What the frame evidence does surface independently is a genuine hook-product mismatch (cause e): the text sets up a 'messy car' problem but the static opening image shows only the already-organized solution, with no before/after contrast -- a real weakness a pre-launch reviewer looking at just this frame would likely have flagged, had a STEP 11D review existed for this product."
+}

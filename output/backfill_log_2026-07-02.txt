@@ -1,0 +1,139 @@
+
+==============================================================
+TikTok Analytics Collector  v2
+==============================================================
+
+Scanning project files for uploaded products...
+  Found: 4 products  (002, 003, 007, 008)
+  Total variants: 16
+  Existing CSV rows: 16
+
+Will collect: 16 variant(s)
+
+Verifying session...
+Session valid.
+
+[002A] Collecting...
+    search_box_find: search input not visible
+    Found after 0 scroll(s)
+    _scrape_row: rowY=224 H=720 W=1280  raw_nums=[]
+    _scrape_row: → views= likes= comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=353  2s_ret=0.3900
+[002B] Collecting...
+    search_box_find: search input not visible
+  WARNING: 002 not found on TikTok
+[002C] Collecting...
+    search_box_find: search input not visible
+  WARNING: 002 not found on TikTok
+[002D] Collecting...
+    search_box_find: search input not visible
+  WARNING: 002 not found on TikTok
+[003A] Collecting...
+    search_box_find: search input not visible
+    Found after 0 scroll(s)
+    _scrape_row: rowY=369 H=720 W=1280  raw_nums=['355', '355']
+    _scrape_row: → views=355 likes=355 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=355  2s_ret=0.3800
+[003B] Collecting...
+    search_box_find: search input not visible
+    Found after 0 scroll(s)
+    _scrape_row: rowY=369 H=720 W=1280  raw_nums=['360', '360']
+    _scrape_row: → views=360 likes=360 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=360  2s_ret=0.4500
+[003C] Collecting...
+    search_box_find: search input not visible
+  WARNING: 003C not found on TikTok
+[003D] Collecting...
+    search_box_find: search input not visible
+  WARNING: 003D not found on TikTok
+[007A] Collecting...
+    Found after 2 scroll(s)
+    _scrape_row: rowY=409 H=720 W=1280  raw_nums=['120', '120']
+    _scrape_row: → views=120 likes=120 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=120  2s_ret=0.4100
+[007B] Collecting...
+  WARNING: 007B not found on TikTok
+[007C] Collecting...
+  WARNING: 007C not found on TikTok
+[007D] Collecting...
+    Found after 1 scroll(s)
+    _scrape_row: rowY=409 H=720 W=1280  raw_nums=['145', '145']
+    _scrape_row: → views=145 likes=145 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=145  2s_ret=0.4400
+[008A] Collecting...
+  WARNING: 008A not found on TikTok
+[008B] Collecting...
+    Found after 2 scroll(s)
+    _scrape_row: rowY=481 H=720 W=1280  raw_nums=['114', '114']
+    _scrape_row: → views=114 likes=114 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=114  2s_ret=0.4200
+[008C] Collecting...
+    Found after 2 scroll(s)
+    _scrape_row: rowY=389 H=720 W=1280  raw_nums=['133', '133']
+    _scrape_row: → views=133 likes=133 comments=
+    _open_video_detail: found 'View Data' button — clicking it
+    click_analytics_tab: no separate Analytics tab found (detail view may already show analytics directly)
+  OK  views=133  2s_ret=0.3900
+[008D] Collecting...
+  WARNING: 008D not found on TikTok
+
+
+  CSV written: data\video_results.csv  (16 total rows)
+
+==============================================================
+COLLECTOR QA REPORT
+Run : 2026-07-02 14:45
+==============================================================
+Products  : 4  (002, 003, 007, 008)
+Expected  : 16 variants
+Collected : 7
+Not found : 9
+Skipped   : 0  (existing rows; use --update to re-collect)
+
+Data quality:
+  Views extracted        : 7/7
+  2-sec retention data   : 7/7
+
+Per-variant:
+  002       OK   views=353  2s_ret=0.3900
+  002       NOT FOUND
+  002       NOT FOUND
+  002       NOT FOUND
+  003A      OK   views=355  2s_ret=0.3800
+  003B      OK   views=360  2s_ret=0.4500
+  003C      NOT FOUND
+  003D      NOT FOUND
+  007A      OK   views=120  2s_ret=0.4100
+  007B      NOT FOUND
+  007C      NOT FOUND
+  007D      OK   views=145  2s_ret=0.4400
+  008A      NOT FOUND
+  008B      OK   views=114  2s_ret=0.4200
+  008C      OK   views=133  2s_ret=0.3900
+  008D      NOT FOUND
+
+QA Gates:
+  1. Login / session     : PASS
+  2. Video matching      : PARTIAL — 9 variant(s) not found
+  3. Data extraction     : PASS
+  4. CSV schema (33-col) : PASS
+  5. Analyzer handoff    : PASS
+
+Overall: PASS
+
+Next steps:
+  python scripts/tiktok_collect_qa.py   (full standalone QA suite)
+  /tiktok analyze                        (in Claude Code when QA passes)
+==============================================================

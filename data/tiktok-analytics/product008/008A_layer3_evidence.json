@@ -1,0 +1,64 @@
+{
+  "variant": "008A",
+  "views": "4",
+  "first_2_second_retention": 0.75,
+  "retention_classification": "STRONG",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "מעמד אלומיניום ב-₪40?",
+    "color": "yellow",
+    "position": "top-center",
+    "asset": "images/007_detail.jpg"
+  },
+  "step11d_prelaunch_prediction": {
+    "verdict": "WARNING",
+    "score": 7,
+    "key_finding": "WARNING — composite benefit image (multi-panel inset) scores 6/10 TikTok-native (AliExpress infographic aesthetic). Jarring visual transition at 3s (gray hook → vivid lifestyle). Pre-existing CEO-approved finding (STEP 11B)."
+  },
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer3_frames\\008A_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0s/0.5s/1s/1.5s/2s/2.5s frames are pixel-identical: a static gray-blue aluminum stand rendered against a plain white/gray studio background, with zero motion for the entire hook window. Only at the 3s cut does the image change at all (hard cut to a different lifestyle photo, not a continuous animation)."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (an adjustable aluminum tablet/laptop stand) is fully visible and unambiguous at 0s."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "The opening shot is a plain-background 3D product-render hero image, indistinguishable from a marketplace listing photo. This matches STEP 11D's own pre-launch language calling the composite image '6/10 TikTok-native (AliExpress infographic aesthetic)'."
+    },
+    "d": {
+      "rating": "POSSIBLE",
+      "evidence": "מעמד אלומיניום ב-₪40? ('Aluminum stand for 40 NIS?') names the product and a concrete price, which is more specific than a fully generic hook, but it's just a price-shock question with no unique problem or surprise beyond that -- a fairly common, formulaic pattern."
+    },
+    "e": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook asks about an aluminum stand at ~₪40; the visible frame shows exactly an aluminum stand, and the later on-screen price (₪40.29) is consistent with the hook's ₪40 -- text and image agree on subject and price point."
+    },
+    "h": {
+      "rating": "POSSIBLE",
+      "evidence": "The text places the shekel symbol immediately before the numeral ('ב-₪40'), mirroring English currency convention ($40) rather than the more natural spoken-Hebrew ordering ('40 ₪”) -- a subtle machine-translation-style tell, though the sentence is otherwise grammatically fine."
+    }
+  },
+  "step11d_divergence_note": "AGREEMENT, not divergence. STEP 11D's pre-launch WARNING (7/10) explicitly predicted both things that frame-by-frame verification confirms: (1) 'AliExpress infographic aesthetic' -- matches the plain-studio-background 3D catalog render seen static across 0/0.5/1/1.5/2/2.5s; (2) 'Jarring visual transition at 3s (gray hook -> vivid lifestyle)' -- matches the hard cut observed exactly at 3s from the static gray stand shot to a full lifestyle photo (tablet, hand with stylus, desk, plants). This is a case where the pre-launch QA call and the actual rendered creative line up. IMPORTANT CAVEAT: 008A has only 4 total views (per video_results.csv), so the 0.75 first_2_second_retention and its STRONG classification are LOW_CONFIDENCE and not statistically meaningful -- this note describes the STEP11D-vs-frames agreement only, and does NOT claim the static/catalog visual caused any particular view-count outcome at this sample size."
+}

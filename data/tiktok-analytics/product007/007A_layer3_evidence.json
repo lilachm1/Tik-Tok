@@ -1,0 +1,59 @@
+{
+  "variant": "007A",
+  "views": "120",
+  "first_2_second_retention": 0.41,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "₪39 למארגן גב מושב עם שולחן מתקפל?",
+    "color": "yellow",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007A_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "All 6 frames from 0s through 2.5s (0/0.5/1/1.5/2/2.5s) are pixel-identical -- a single static glossy product photo of a car back-seat organizer with a fold-down tray (tablet playing a movie, two drink bottles, a snack box, cup holders). Zero motion for the entire 3-second hook window. The scene only changes at the 3s frame, which cuts to an unrelated flat gray AliExpress price-listing screenshot (₪61.98 struck through, ₪37 discount banner) -- confirming the hook itself never moves at all."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product (car seat-back organizer with integrated folding tray) is fully visible and unambiguous at 0s -- tray, bottle holders, tablet slot, tissue pocket all clearly shown."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "The opening shot is a staged, glossy AliExpress-style hero photo: a tablet playing a stock movie clip, two branded soda bottles, and a snack box with visible Chinese text ('貴巧') on the packaging, staged inside a car with an obviously composited/fake sunset visible through the windshield. This reads exactly like a marketplace listing photo, not organic handheld TikTok footage."
+    },
+    "d": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text leads with a specific price ('₪39 למארגן גב מושב עם שולחן מתקפל?') -- a concrete number tied to a concrete product feature (folding table), not a vague/generic statement."
+    },
+    "e": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text asks about the ₪39 price of 'the seat-back organizer with a folding table,' and the frame shows exactly that object with its tray extended -- text and image match."
+    },
+    "h": {
+      "rating": "POSSIBLE",
+      "evidence": "'₪39 למארגן גב מושב עם שולחן מתקפל?' is grammatically parseable but the noun phrase 'למארגן גב מושב' (missing a 'ל' before 'גב', i.e. reads like 'to-organizer back seat' rather than the more natural 'למארגן לגב המושב' or 'למארגן גב-מושב') has a compressed, machine-translated cadence typical of AliExpress listing titles rather than a Hebrew speaker's natural phrasing."
+    }
+  },
+  "step11d_divergence_note": "NO PRE-LAUNCH PREDICTION EXISTS FOR THIS PRODUCT: the upload package (output/2026-06-17-product-007-upload_package.md) contains no 'STEP 11D' section or per-variant PASS/WARNING/FAIL score at all (confirmed by grep -- zero matches for 'STEP 11D' or 'VARIANT' QA headings in that file), unlike product 008's package which had explicit STEP 11D verdicts for each variant. So there is nothing to diverge from here -- this is a genuine absence of pre-launch QA signal for product 007, not a prediction that turned out wrong. The real-world result (41% retention at 2s, MARGINAL) lines up with what the frames show on their own merits: a completely static, AliExpress-style catalog image for the full 3-second hook, which is consistent with a hook that holds attention only marginally rather than strongly."
+}

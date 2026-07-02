@@ -1,0 +1,38 @@
+{
+  "generated": "2026-07-02",
+  "decision": "PROCEED",
+  "products_analyzed": ["002", "003", "007", "008"],
+  "data_vintage": {
+    "confirmed_rows": 16,
+    "newest_confirmed_upload": "2026-06-17"
+  },
+  "learning": {
+    "best_hook_type": "Curiosity",
+    "best_category": "Home & Garden (Kitchen/Food Storage)",
+    "best_price_range_min": 15,
+    "best_price_range_max": 24,
+    "best_cta_style": null,
+    "retention_diagnosis": "MARGINAL",
+    "retention_avg_2s": 0.45,
+    "hook_type_wins": {
+      "Price Shock": 0,
+      "Curiosity": 1,
+      "Problem/Solution": 2,
+      "TikTok Discovery": 1
+    }
+  },
+  "product_009_brief": {
+    "recommended_category": "Mobile Phone Accessories",
+    "lead_hook_for_variant_A": "Curiosity",
+    "lead_hook_reason": "Highest average views across CONFIRMED runs (229.5 vs 158.0/157.5/116.0) and, for the first time, the most reliable 2-second retention average (42.8%) once Problem/Solution's tiny-sample outlier (003C, 1 view) is excluded -- Problem/Solution has the higher raw win count (2/4 vs 1/4) but that edge does not hold up once retention data is factored in.",
+    "price_target_min": 15,
+    "price_target_max": 24,
+    "product_types_to_avoid": [],
+    "first_frame_requirement": "standard approach -- 2s retention is WEAK-to-MARGINAL but not CRITICAL on any statistically meaningful variant, meaning the hook itself is not the primary problem",
+    "pacing_adjustment": "shorten and tighten the mid-video (5-13s) segments -- average watch time is POOR (<25% of the 15s runtime) on 13 of 16 variants, including several high-view variants; viewers consistently leave well before the video ends regardless of hook type",
+    "cta_adjustment": "no data yet -- cta_code_comments has never been collected for any product; this is now the top data-quality gap",
+    "storyboard_notes": "consider testing a shorter/faster-paced middle section as an explicit experiment, given how consistent the watch-time drop-off is across every hook type and product tested so far. This is the first analysis run backed by complete saves/shares/watch-time/retention data -- prior PROCEED decisions (including 2026-07-01's) were built on incomplete data per PROJECT_STATUS.md."
+  },
+  "pause_reason": null,
+  "change_strategy_issue": null
+}

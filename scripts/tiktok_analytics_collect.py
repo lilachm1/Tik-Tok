@@ -56,7 +56,60 @@ DESKTOP_UA = (
     "Chrome/124.0.0.0 Safari/537.36"
 )
 
-CONTENT_TAB_URL = "https://www.tiktok.com/tiktokstudio/content"
+# Confirmed via screenshot (2026-07-01): "/tiktokstudio/content" is the Posts
+# MANAGEMENT list (edit/share/comment/"..." actions, no analytics link at all).
+# The correct page is the separate Analytics -> Content tab, which has a
+# clearly labeled "View data" button per row in an "Action" column. Using the
+# wrong URL this whole time is the real root cause behind every blank
+# saves/shares/watch-time/retention field — the button we were searching for
+# never existed on the page we were navigating to.
+CONTENT_TAB_URL = (
+    "https://www.tiktok.com/tiktokstudio/analytics/content"
+    "?dateRange=%7B%22type%22%3A%22fixed%22%2C%22pastDay%22%3A28%7D"
+)
+
+# ── PERMANENT FINDING (2026-07-02) — READ BEFORE RE-ARCHITECTING ANYTHING ──
+#
+# The page at CONTENT_TAB_URL is titled "Your top posts", not "All posts".
+# Hovering its info icon shows TikTok's own description, word for word:
+#   "Your top performing posts in the last 28 days, ranked according to the
+#    views, likes, new viewers, and new followers gained."
+# It is a ranked top-~10 leaderboard, NOT an exhaustive list of every video —
+# confirmed rigorously, not assumed: the "Last 28 days" setting was already
+# selected (checkmark verified in the date-range dropdown, so this is not a
+# "you're on 7 days" mistake), and the container's own scrollHeight never
+# grows while scrolling — it plateaus at a fixed value and scrollTop maxes
+# out at exactly (scrollHeight - clientHeight), the mathematical bottom, with
+# a generous 1.5s settle delay per step for any lazy-loaded rows. There is
+# nothing more to load; TikTok is simply not computing a "top" rank for
+# lower-performing videos on this page at all. This is why the 2026-07-02
+# backfill attempt returned NOT_FOUND for 9 of 16 variants (the ones that
+# don't rank in this leaderboard, e.g. low-view variants) and, worse, wrote
+# WRONG data for 002A (silently matched a different bare-CTA sibling video
+# that did happen to be in the leaderboard) — see collect_one_variant()'s
+# safety guard below, added the same day specifically to stop that.
+#
+# The separate plain "Posts" tab (POSTS_TAB_URL below) DOES list every
+# video and has a working search box — but clicking a video there opens its
+# public-facing page, never analytics (confirmed by direct test: it lands on
+# https://www.tiktok.com/@.../video/{id}, not tiktokstudio/analytics/...).
+#
+# THE FIX: the analytics detail page is directly addressable by video ID —
+# https://www.tiktok.com/tiktokstudio/analytics/{video_id}/overview — and
+# this was confirmed, via a completely fresh page navigation with no prior
+# click, to work identically whether or not that video ranks in "Your top
+# posts". Confirmed on 007B specifically (a video absent from the top-posts
+# leaderboard at every date range tried), which loaded full analytics
+# (91 views, 2 likes, 3.1s avg watch time, 4.4% watched-full) with zero
+# dependency on the leaderboard. This is now the PRIMARY collection path
+# (see _open_video_detail_direct / _find_video_id_via_posts_tab below); the
+# old find-row-in-leaderboard-then-click-"View Data" flow is kept only as a
+# last-resort fallback for bare-CTA products with no confirmed identity map
+# yet (data/{pid}-identity-map.json), where the visual-evidence-gathering
+# flow (gather_visual_evidence) is still required regardless of any of this.
+
+POSTS_TAB_URL = "https://www.tiktok.com/tiktokstudio/content"
+ANALYTICS_DETAIL_URL_TMPL = "https://www.tiktok.com/tiktokstudio/analytics/{video_id}/overview"
 
 # Partial URL fragments that appear in TikTok analytics XHR responses
 ANALYTICS_URL_FRAGMENTS = [
@@ -100,6 +153,20 @@ JS_SCROLL_CONTAINER = """(frac) => {
     if (!el) return null;
     el.scrollTop += el.clientHeight * frac;
     return el.scrollTop;
+}"""
+
+# The content-list table has a "View Data" action button that is cut off to
+# the right of the default viewport — confirmed directly by the account
+# owner. Widening the window alone does not reveal it; the table itself must
+# be scrolled horizontally. Mirrors JS_SCROLL_CONTAINER's technique but on
+# scrollWidth/scrollLeft instead of scrollHeight/scrollTop.
+JS_SCROLL_CONTAINER_HORIZONTAL = """(frac) => {
+    const el = [...document.querySelectorAll('*')].find(
+        e => e.scrollWidth > e.clientWidth + 50 && e.clientWidth > 200
+    );
+    if (!el) return null;
+    el.scrollLeft += el.clientWidth * frac;
+    return el.scrollLeft;
 }"""
 
 JS_SCAN_SUBSTRING = """(substr) => {
@@ -146,6 +213,91 @@ def scroll_container(page, frac=0.7):
         return page.evaluate(JS_SCROLL_CONTAINER, frac)
     except Exception:
         return None
+
+
+def scroll_container_horizontal(page, frac=0.9):
+    """Scroll the content-list table horizontally to reveal the 'View Data'
+    button, which sits past the right edge of the default viewport."""
+    try:
+        return page.evaluate(JS_SCROLL_CONTAINER_HORIZONTAL, frac)
+    except Exception:
+        return None
+
+
+VIEW_DATA_SELECTORS = (
+    "text=View Data", "text=View data", "text=view data",
+    "[aria-label*='View Data']", "[aria-label*='view data']",
+    "[title*='View Data']",
+)
+
+
+def _find_view_data_button(page, el, row_tolerance=50):
+    """
+    Find the 'View Data' button belonging to the SAME ROW as `el` (the
+    matched caption/CTA element) — not just the first 'View Data' button
+    anywhere on the page. Grabbing the first match page-wide was confirmed
+    (via a validation run) to open the wrong video's analytics entirely,
+    since 'View Data' buttons are not unique per page.
+
+    This is the correct control to open TikTok Studio's per-video analytics
+    view — clicking the caption/thumbnail instead opens the public-facing
+    video page, which never exposes creator analytics (also confirmed via a
+    validation run). The button is off-screen to the right by default, so
+    the table is scrolled horizontally first if nothing matches yet.
+
+    Returns a Locator if found, None otherwise.
+    """
+    try:
+        el.evaluate("el => el.scrollIntoView({block: 'center', inline: 'end'})")
+        time.sleep(0.3)
+    except Exception:
+        pass
+
+    def _row_y():
+        try:
+            bbox = el.bounding_box()
+            return bbox["y"] + bbox["height"] / 2 if bbox else None
+        except Exception:
+            return None
+
+    def _closest_match():
+        target_y = _row_y()
+        if target_y is None:
+            return None
+        best, best_dist = None, row_tolerance
+        for sel in VIEW_DATA_SELECTORS:
+            try:
+                for btn in page.locator(sel).all():
+                    try:
+                        if not btn.is_visible(timeout=300):
+                            continue
+                        bbox = btn.bounding_box()
+                        if bbox is None:
+                            continue
+                        btn_y = bbox["y"] + bbox["height"] / 2
+                        dist = abs(btn_y - target_y)
+                        if dist < best_dist:
+                            best, best_dist = btn, dist
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+        return best
+
+    match = _closest_match()
+    if match is not None:
+        return match
+
+    for _ in range(6):
+        moved = scroll_container_horizontal(page, 0.9)
+        time.sleep(0.4)
+        match = _closest_match()
+        if match is not None:
+            return match
+        if moved is None:
+            break
+
+    return None
 
 
 def find_all_caption_matches(page, substring, max_scrolls=30):
@@ -341,6 +493,59 @@ def extract_caption_from_upload_package(product_id, variant_letter):
     return None
 
 
+def extract_category_from_product_output(product_id):
+    """
+    Extract the product category from the product output file
+    (output/[date]-product-{pid}.md), e.g. "**Category:** Interior Accessories
+    (9% commission)". Strips a trailing "(NN% commission)" note if present;
+    other parentheticals (e.g. "(Kitchen/Food Storage)") are kept as part of
+    the category name. Returns "" if not found.
+    """
+    out_files = [
+        p for p in OUTPUT_DIR.glob(f"*-product-{product_id}.md")
+        if not p.name.endswith("-upload_package.md")
+    ]
+    if not out_files:
+        return ""
+
+    try:
+        text = out_files[0].read_text(encoding="utf-8")
+    except Exception:
+        return ""
+
+    m = re.search(r"\*\*Category:\*\*\s*(.+)", text)
+    if not m:
+        return ""
+
+    category = m.group(1).strip()
+    category = re.sub(r"\s*\(\d+%\s*commission\)\s*$", "", category, flags=re.IGNORECASE)
+    return category.strip()
+
+
+def extract_hook_type_from_upload_package(product_id, variant_letter):
+    """
+    Fallback source for hook_type when it's missing from the variant's
+    video-config.json entry (e.g. data/008-video-config.json). Reads the
+    "## VARIANT {letter} — {hook type}" section header from the upload
+    package. Returns "" if not found.
+    """
+    pkg_files = list(OUTPUT_DIR.glob(f"*-product-{product_id}-upload_package.md"))
+    if not pkg_files:
+        return ""
+
+    try:
+        text = pkg_files[0].read_text(encoding="utf-8")
+    except Exception:
+        return ""
+
+    m = re.search(
+        rf"^##\s*VARIANT\s+{variant_letter}\s*[—-]\s*(.+)$",
+        text,
+        flags=re.MULTILINE,
+    )
+    return m.group(1).strip() if m else ""
+
+
 def detect_all_products(filter_ids=None):
     """
     Scan data/*-video-config.json to build manifest of all products.
@@ -373,7 +578,7 @@ def detect_all_products(filter_ids=None):
             "product_id":  pid,
             "upload_date": cfg.get("date", ""),
             "price_ils":   cfg.get("price_ils", ""),
-            "category":    cfg.get("category", ""),
+            "category":    cfg.get("category", "") or extract_category_from_product_output(pid),
             "variants":    {},
         }
 
@@ -410,7 +615,7 @@ def detect_all_products(filter_ids=None):
 
             products[pid]["variants"][letter] = {
                 "variant":     f"{pid}{letter}",
-                "hook_type":   vcfg.get("hook_type", ""),
+                "hook_type":   vcfg.get("hook_type", "") or extract_hook_type_from_upload_package(pid, letter),
                 "hook_text":   hook_text,
                 "caption_search_text": caption_search_text,
                 "cta_code":    cta_code,
@@ -641,6 +846,322 @@ def parse_captures(captures):
     return m
 
 
+# ── DOM text-label extraction (saves/shares/watch-time/retention) ──────────
+#
+# parse_captures() above only ever guesses XHR JSON key names, and has never
+# once found a match in practice -- these 5 fields have been blank on every
+# CONFIRMED row since the collector's first run. Confirmed via a live
+# validated pass on 008B (2026-07-02) that the real values ARE reachable, as
+# plain page content, once _open_video_detail() actually lands on the detail
+# page:
+#   - "Average watch time" / "Watched full video" are text labels with the
+#     value on the next line of the same small stat card.
+#   - saves/shares have NO text label anywhere -- they're 2 of 5 bare numbers
+#     next to icons (views/likes/comments/shares/saves, confirmed in that
+#     left-to-right order by matching each icon's SVG path shape against the
+#     TikTok Studio screenshot).
+#   - first_2_second_retention is a point on a line chart with no text
+#     anywhere on the page -- it only appears in a floating tooltip on
+#     hover. There are TWO identically-classed ".echarts-for-react" charts
+#     on this page (a 7-day trend chart above, and this retention curve);
+#     naively grabbing "the first chart" grabs the wrong one -- confirmed by
+#     bounding-box inspection, it sits permanently off-screen (negative Y)
+#     after the page's own scroll. The lookup below scopes strictly from the
+#     exact "Retention rate" heading text instead.
+
+def _read_stat_card_value(page, label):
+    """
+    Read a labelled overview stat card's value, e.g. label="Average watch
+    time" -> "2.85s". The label and its value are two consecutive lines of
+    text inside the same small card; climbs a few ancestor levels looking
+    for a container whose innerText contains the label as an exact line,
+    then returns the next line. Returns "" if not found (never a guess).
+    """
+    try:
+        loc = page.locator(f"text={label}").first
+        if not loc.is_visible(timeout=2_000):
+            return ""
+        return loc.evaluate("""el => {
+            let node = el;
+            for (let i = 0; i < 4 && node && node.parentElement; i++) {
+                node = node.parentElement;
+                const lines = (node.innerText || '').split('\\n').map(s => s.trim()).filter(Boolean);
+                const idx = lines.indexOf(el.textContent.trim());
+                if (idx >= 0 && idx + 1 < lines.length) return lines[idx + 1];
+            }
+            return '';
+        }""") or ""
+    except Exception:
+        return ""
+
+
+def _read_engagement_icons(page):
+    """
+    Read the 5-icon stat row (views/likes/comments/shares/saves) from the
+    video info card at the top of the detail page. All 5 numbers share the
+    same data-tt attribute and no other distinguishing text; the only way to
+    tell them apart is left-to-right position, confirmed once against the
+    screenshot's icon shapes (play/heart/comment-bubble/share-arrow/
+    bookmark) on 2026-07-02. Returns {} if the row isn't exactly 5 elements
+    (never a partial/guessed mapping).
+    """
+    try:
+        nums = page.evaluate("""() => {
+            const spans = [...document.querySelectorAll(
+                '[data-tt="VideoOverviewPage_VideoInfoCard_TUXText"]'
+            )];
+            return spans.map(s => {
+                const r = s.getBoundingClientRect();
+                return {x: r.x, text: s.textContent.trim()};
+            }).filter(s => /^[\\d,.]+[KkMm]?$/.test(s.text) && s.text.length <= 10)
+              .sort((a, b) => a.x - b.x);
+        }""")
+    except Exception:
+        return {}
+    if len(nums) != 5:
+        return {}
+    keys = ("views", "likes", "comments", "shares", "saves")
+    return {k: nums[i]["text"] for i, k in enumerate(keys)}
+
+
+def _find_retention_canvas(page):
+    """
+    Locate the retention-rate chart's own canvas element, scoped strictly by
+    climbing from the exact "Retention rate" heading text (NOT the first
+    '.echarts-for-react' element on the page -- there's a second, wider
+    trend chart above it that a naive query grabs instead; confirmed via
+    bounding-box inspection that chart sits off-screen at negative Y after
+    the page's own scroll). Returns a rect dict or None.
+    """
+    try:
+        return page.evaluate("""() => {
+            const heading = [...document.querySelectorAll('div,span')].find(
+                el => el.textContent.trim() === 'Retention rate' && el.children.length === 0
+            );
+            if (!heading) return null;
+            let card = heading;
+            for (let i = 0; i < 8 && card.parentElement; i++) {
+                card = card.parentElement;
+                const r = card.getBoundingClientRect();
+                if (r.width > 300 && r.width < 700 && r.height > 200 && r.height < 700) break;
+            }
+            const canvases = card.querySelectorAll('canvas');
+            if (!canvases.length) return null;
+            const c = canvases[canvases.length - 1];
+            const r = c.getBoundingClientRect();
+            return {x: r.x, y: r.y, w: r.width, h: r.height};
+        }""")
+    except Exception:
+        return None
+
+
+def _snapshot_floating_labels(page):
+    """Short text of every absolute/fixed-positioned element currently on
+    screen -- used to diff before/after a hover to find the tooltip that
+    appears, without assuming its exact text format."""
+    try:
+        return set(page.evaluate("""() => {
+            const out = [];
+            document.querySelectorAll('div,span').forEach(el => {
+                const cs = window.getComputedStyle(el);
+                if (cs.position === 'absolute' || cs.position === 'fixed') {
+                    const t = (el.textContent || '').trim();
+                    if (t && t.length < 60 && el.children.length <= 3) {
+                        const r = el.getBoundingClientRect();
+                        if (r.width > 0 && r.height > 0) out.push(t);
+                    }
+                }
+            });
+            return out;
+        }"""))
+    except Exception:
+        return set()
+
+
+# Tooltip text is the time and value concatenated with no separator, e.g.
+# "0:0242%" = time 0:02, value 42%. Confirmed against a live hover sweep on
+# 008B (2026-07-02): 0:00->100%, 0:01->74%, 0:02->42%, 0:03->28%, 0:06->12%,
+# 0:09->8%, 0:14->4% -- a smooth monotonic decay curve.
+RETENTION_TOOLTIP_RE = re.compile(r"^(\d+):(\d{2})(\d+)%$")
+
+
+def _detect_video_duration(page):
+    """
+    Duration = the largest "0:SS" label near the chart (the axis has both
+    a "0:00 (100%)" left-edge label and a "0:SS" right-edge total-duration
+    label; picking .last risked grabbing whichever renders later in DOM
+    order, which was the left edge -- confirmed by a ZeroDivisionError on
+    a live run, 2026-07-02). Scanning all matches and taking the max value
+    is safe regardless of DOM order. Falls back to 15 (the standard MVP
+    video length) if nothing is readable.
+    """
+    duration_s = 15
+    try:
+        candidates = page.locator(r"text=/^0:\d{2}( \(100%\))?$/").all()
+        best = 0
+        for cand in candidates:
+            try:
+                if not cand.is_visible(timeout=500):
+                    continue
+                m = re.match(r"0:(\d{2})", cand.text_content().strip())
+                if m:
+                    best = max(best, int(m.group(1)))
+            except Exception:
+                pass
+        if best > 0:
+            duration_s = best
+    except Exception:
+        pass
+    return duration_s
+
+
+def _hover_retention_at_second(page, rect, target_second, duration_s):
+    """
+    Hover the retention chart, nudging the position by whole-second
+    increments -- VERIFIED against the tooltip's own displayed timestamp
+    each time, never assumed -- until it lands exactly on `target_second`.
+    Returns the retention value as 0-100, or None if 6 nudges never land on
+    it (never a guess). Shared by _extract_first_2_second_retention (locks
+    to second=2) and _extract_full_retention_curve (calls this once per
+    second -- see ANALYZER_V3_SPEC.md Layer 7, which requires the whole
+    curve, not just t=2s, to distinguish a hook problem from a mid-video
+    pacing problem from an ending problem from a video-length problem).
+    """
+    before = _snapshot_floating_labels(page)
+
+    def hover_at_frac(frac):
+        x = rect["x"] + rect["w"] * max(0.0, min(1.0, frac))
+        y = rect["y"] + rect["h"] * 0.5
+        page.mouse.move(max(0, x - 15), y, steps=3)
+        time.sleep(0.15)
+        page.mouse.move(x, y, steps=6)
+        time.sleep(0.5)
+        after = _snapshot_floating_labels(page)
+        for label in after - before:
+            m = RETENTION_TOOLTIP_RE.match(label.replace(" ", ""))
+            if m:
+                minutes, seconds, value = m.groups()
+                return int(minutes) * 60 + int(seconds), float(value)
+        return None, None
+
+    frac = target_second / duration_s if duration_s else 0.0
+    for _ in range(6):
+        t, value = hover_at_frac(frac)
+        if t is None:
+            return None
+        if t == target_second:
+            return value
+        frac += (1.0 / duration_s) * (1 if t < target_second else -1)
+    return None
+
+
+def _extract_first_2_second_retention(page):
+    """
+    Hover the retention-rate line chart at t=2s and read the value from the
+    floating tooltip that appears (TikTok prints this number nowhere else on
+    the page). Returns "" if the chart can't be found, is off-screen, or the
+    2-second bucket can't be reached.
+    """
+    rect = _find_retention_canvas(page)
+    if not rect or rect["w"] <= 0 or rect["y"] < 0 or rect["y"] > 3000:
+        return ""
+    duration_s = _detect_video_duration(page)
+    value = _hover_retention_at_second(page, rect, 2, duration_s)
+    if value is None:
+        return ""
+    return f"{value / 100.0:.4f}"
+
+
+def _extract_full_retention_curve(page):
+    """
+    ANALYZER_V3_SPEC.md Layer 7 requires the retention curve sampled at
+    every second, not just t=2s, to distinguish a HOOK_PROBLEM (drop at
+    0-2s) from a MID_VIDEO_PACING_PROBLEM (drop in the middle) from an
+    ENDING_PROBLEM (drop only in the last few seconds) from a
+    VIDEO_LENGTH_PROBLEM (retention stays high right to the end -- the
+    content simply ran out, not a retention failure at all). This is a
+    mechanical generalization of _extract_first_2_second_retention's
+    already-verified hover-and-nudge technique across every second of the
+    video instead of locking to one point -- not a new technique.
+
+    Returns {"duration_s": int, "curve": {second: value_0_to_100, ...}}, or
+    None if the chart can't be found/is off-screen at all. Any individual
+    second that can't be locked onto after 6 nudges is simply omitted from
+    "curve" -- never filled with a guessed or interpolated value.
+    """
+    rect = _find_retention_canvas(page)
+    if not rect or rect["w"] <= 0 or rect["y"] < 0 or rect["y"] > 3000:
+        return None
+    duration_s = _detect_video_duration(page)
+
+    curve = {}
+    for second in range(0, duration_s + 1):
+        value = _hover_retention_at_second(page, rect, second, duration_s)
+        if value is not None:
+            curve[second] = value
+
+    return {"duration_s": duration_s, "curve": curve}
+
+
+def _parse_seconds(text):
+    """'2.85s' -> '2.85'. Empty on failure."""
+    m = re.match(r"([\d.]+)s?", text.strip())
+    return m.group(1) if m else ""
+
+
+def _parse_percent_to_fraction(text):
+    """'3.1%' -> '0.0310'. '<0.1%' -> treated as 0. Empty on failure."""
+    text = text.strip().lstrip("<").rstrip("%")
+    try:
+        return f"{float(text) / 100.0:.4f}"
+    except ValueError:
+        return ""
+
+
+def extract_dom_metrics(page):
+    """
+    Read saves/shares/average_watch_time/watched_full_video_rate/
+    first_2_second_retention directly from the visible detail page instead
+    of guessing XHR JSON key names. Only called once _open_video_detail() has
+    verified the detail page was actually reached. Any field that can't be
+    confirmed is left blank -- never a guess.
+    """
+    out = {
+        "views": "", "likes": "", "comments": "",
+        "saves": "", "shares": "", "average_watch_time": "",
+        "watched_full_video_rate": "", "first_2_second_retention": "",
+    }
+
+    avg_watch = _read_stat_card_value(page, "Average watch time")
+    if avg_watch:
+        out["average_watch_time"] = _parse_seconds(avg_watch)
+
+    watched_full = _read_stat_card_value(page, "Watched full video")
+    if watched_full:
+        out["watched_full_video_rate"] = _parse_percent_to_fraction(watched_full)
+
+    # This same icon row also gives views/likes/comments -- confirmed MORE
+    # reliable than the content-list-page row scraper (_scrape_row), which
+    # scans by pixel position via elementFromPoint() and was caught live
+    # (2026-07-02, re-testing 008B) returning views=114/likes=114/comments=''
+    # -- silently duplicating the views value and losing comments entirely --
+    # while this icon row read 114/1/0 correctly in the exact same run. These
+    # values take priority below; row_metrics (from _scrape_row) is now only
+    # a last-resort fallback for when the detail page couldn't be opened at
+    # all (opened=False), not a routinely-trusted source.
+    icons = _read_engagement_icons(page)
+    if icons:
+        out["views"] = _parse_tiktok_count(icons.get("views", ""))
+        out["likes"] = _parse_tiktok_count(icons.get("likes", ""))
+        out["comments"] = _parse_tiktok_count(icons.get("comments", ""))
+        out["shares"] = _parse_tiktok_count(icons.get("shares", ""))
+        out["saves"] = _parse_tiktok_count(icons.get("saves", ""))
+
+    out["first_2_second_retention"] = _extract_first_2_second_retention(page)
+
+    return out
+
+
 # ── TikTok navigation ──────────────────────────────────────────────────────
 
 def _parse_tiktok_count(text):
@@ -736,16 +1257,20 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0, hook_tex
     """
     Scroll through Creator Center Content tab searching for a video by CTA code.
 
-    skip_count: how many matching elements to skip before clicking.
-      0  = click the first match (per-variant codes like "007A").
-      N  = skip N matches, then click the (N+1)th — used for bare-code products
+    skip_count: how many matching elements to skip before selecting.
+      0  = the first match (per-variant codes like "007A").
+      N  = skip N matches, then select the (N+1)th — used for bare-code products
            where all variants share the same search term (e.g. "002").
            A=0, B=1, C=2, D=3.
 
     hook_text: unused in this function (used by search_box_find). Kept for
       signature compatibility with collect_one_variant.
 
-    Returns (True, row_metrics_dict) on success, (False, {}) if not found.
+    Does NOT click — returns the matched element so the caller can open it via
+    _open_video_detail(), which verifies navigation actually happens (the text/
+    aria-label leaf node matched here is often not the real clickable target).
+
+    Returns (True, row_metrics_dict, el) on success, (False, {}, None) if not found.
     row_metrics_dict has keys: views, likes, comments (scraped from the list row).
     """
     selectors = [
@@ -763,13 +1288,12 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0, hook_tex
                     if el.is_visible(timeout=800):
                         print(f"    Found after {scroll_i} scroll(s)")
                         row_m = _scrape_row(el)
-                        el.click()
-                        return True, row_m
+                        return True, row_m, el
                 except Exception:
                     pass
             scroll_container(page, 0.8)
             time.sleep(2.0)
-        return False, {}
+        return False, {}, None
 
     # Skip path — count unique video cards by absolute page Y, skip first N (bare codes)
     # Uses el.bounding_box() instead of el.evaluate() to avoid cross-frame JS exceptions.
@@ -804,19 +1328,25 @@ def scroll_and_find_video(page, cta_code, max_scrolls=25, skip_count=0, hook_tex
                             continue
                         print(f"    Found after {scroll_i} scroll(s) (skipped {skipped})")
                         row_m = _scrape_row(el)
-                        el.click()
-                        return True, row_m
+                        return True, row_m, el
                     except Exception:
                         pass
             except Exception:
                 pass
         scroll_container(page, 0.8)
         time.sleep(2.0)
-    return False, {}
+    return False, {}, None
 
 
 def click_analytics_tab(page):
-    """Try to click the Analytics/Insights tab within a video detail view."""
+    """
+    Try to click a separate Analytics/Insights tab within a video detail view,
+    if one exists. Returns True if a tab was found and clicked, False
+    otherwise — False is expected and fine if the detail view already shows
+    analytics directly with no separate tab; it does NOT necessarily mean
+    something is wrong. Logs explicitly either way instead of silently
+    passing, so this is never mistaken for "nothing to do here."
+    """
     for sel in (
         "text=Analytics", "text=analytics",
         "[class*='analytics'][role='tab']", "[href*='analytics']",
@@ -826,9 +1356,136 @@ def click_analytics_tab(page):
             if el.is_visible(timeout=2_000):
                 el.click()
                 time.sleep(2)
-                return
+                return True
         except Exception:
             pass
+    print("    click_analytics_tab: no separate Analytics tab found "
+          "(detail view may already show analytics directly)")
+    return False
+
+
+def _open_video_detail(page, el):
+    """
+    Click a content-list element to open its video detail/analytics view.
+
+    Fixes two confirmed failure modes (confirmed by inspecting the actual
+    *_analytics.png screenshots on disk — every one of them showed the
+    content LIST page, never a detail page, across every product tried so
+    far, including the video-ID path which clicks a real <a href> element):
+
+      1. The row-finding functions locate `el` via a text=/aria-label=/href=
+         selector, which often resolves to a non-interactive leaf node (e.g.
+         a caption text span). Clicking it can silently do nothing.
+      2. TikTok Studio's row links may open the video's public-facing page in
+         a NEW browser tab rather than navigating the current page. If that
+         happens and nobody looks at the new tab, every later step (the
+         Analytics tab click, XHR capture, screenshot) keeps operating on the
+         stale original page — which looks exactly like "the click did
+         nothing," even though it did something, just not where we expected.
+
+    PRIMARY strategy: find and click the "View Data" button for this row
+    (confirmed by the account owner as the correct control — it opens TikTok
+    Studio's own analytics view, unlike the caption/thumbnail, which opens
+    the public-facing video page and never exposes creator analytics). That
+    button sits past the right edge of the default viewport, so the table is
+    scrolled horizontally first (see _find_view_data_button).
+
+    FALLBACK strategy (only if no "View Data" button is found at all): click
+    the nearest interactive ancestor of `el` — known to be unreliable (it
+    opens the public video page, confirmed via a validation run), kept only
+    so a variant isn't silently skipped if TikTok's layout changes again.
+
+    Returns (active_page, opened):
+      active_page — whichever page object should be used for everything
+        downstream (the original page, or a new tab if one opened).
+      opened — True only if navigation was actually verified (URL changed,
+        a new tab appeared, or a detail-page marker became visible). Never a
+        silent guess — if this is False, a clear WARNING is printed so a
+        blank saves/shares/watch-time/retention result is never mistaken for
+        "TikTok just doesn't have this data."
+    """
+    before_url = page.url
+    context = page.context
+    pages_before = len(context.pages)
+
+    view_data_btn = _find_view_data_button(page, el)
+
+    def _click_view_data():
+        try:
+            view_data_btn.click()
+        except Exception as exc:
+            print(f"    _open_video_detail: 'View Data' click failed — {exc}")
+
+    def _click_with_ancestor_fallback():
+        try:
+            handle = el.evaluate_handle("""el => {
+                let node = el;
+                for (let i = 0; i < 6 && node; i++) {
+                    const style = window.getComputedStyle(node);
+                    if (node.tagName === 'A' || node.tagName === 'BUTTON' ||
+                        node.getAttribute('role') === 'button' ||
+                        style.cursor === 'pointer') {
+                        return node;
+                    }
+                    node = node.parentElement;
+                }
+                return el;
+            }""")
+            clickable = handle.as_element()
+            (clickable or el).click()
+        except Exception as exc:
+            print(f"    _open_video_detail: ancestor-click failed ({exc}); trying direct click")
+            try:
+                el.click()
+            except Exception as exc2:
+                print(f"    _open_video_detail: direct click also failed — {exc2}")
+
+    if view_data_btn is not None:
+        print("    _open_video_detail: found 'View Data' button — clicking it")
+        click_fn = _click_view_data
+    else:
+        print("    _open_video_detail: WARNING — no 'View Data' button found even "
+              "after scrolling the table horizontally; falling back to the "
+              "unreliable caption/ancestor click")
+        click_fn = _click_with_ancestor_fallback
+
+    # Try to catch a new tab opening as a direct result of the click.
+    try:
+        with context.expect_page(timeout=3_000) as popup_info:
+            click_fn()
+        new_page = popup_info.value
+        new_page.wait_for_load_state(timeout=10_000)
+        print(f"    _open_video_detail: click opened a new tab — switching to it ({new_page.url})")
+        return new_page, True
+    except PWTimeout:
+        pass
+    except Exception as exc:
+        print(f"    _open_video_detail: popup-detection error — {exc}")
+
+    time.sleep(2.5)
+
+    # Fallback check: a new tab may have appeared without expect_page catching it.
+    if len(context.pages) > pages_before:
+        new_page = context.pages[-1]
+        print(f"    _open_video_detail: a new tab appeared ({new_page.url}) — switching to it")
+        return new_page, True
+
+    after_url = page.url
+    if after_url != before_url:
+        return page, True
+
+    for marker in ("text=Audience Retention", "text=Analytics", "text=Average watch time"):
+        try:
+            if page.locator(marker).first.is_visible(timeout=1_500):
+                return page, True
+        except Exception:
+            pass
+
+    print(f"    _open_video_detail: WARNING — click did not open a video detail view "
+          f"(URL unchanged: {after_url}). saves/shares/average_watch_time/"
+          f"watched_full_video_rate/first_2_second_retention will be unavailable "
+          f"for this variant.")
+    return page, False
 
 
 def search_box_find(page, caption_search_text, cta_code):
@@ -838,17 +1495,21 @@ def search_box_find(page, caption_search_text, cta_code):
     then confirm identity via CTA code or unique single result.
 
     Avoids Playwright text= locators with Hebrew/RTL text, which are unreliable.
-    Returns (True, row_metrics) or (False, {}).
+
+    Does NOT click — returns the matched element so the caller can open it via
+    _open_video_detail(), which verifies navigation actually happens.
+
+    Returns (True, row_metrics, el) or (False, {}, None).
     """
     query = caption_search_text.strip() if caption_search_text else ""
     if not query:
-        return False, {}
+        return False, {}, None
 
     try:
         box = page.locator("input[placeholder*='Search']").first
         if not box.is_visible(timeout=3_000):
             print("    search_box_find: search input not visible")
-            return False, {}
+            return False, {}, None
 
         box.click()
         box.fill(query)
@@ -866,8 +1527,7 @@ def search_box_find(page, caption_search_text, cta_code):
                     if el.is_visible(timeout=2_000):
                         print(f"    search_box_find: CTA confirmed [{sel[:25]}]")
                         row_m = _scrape_row(el)
-                        el.click()
-                        return True, row_m
+                        return True, row_m, el
                 except Exception:
                     pass
 
@@ -889,46 +1549,230 @@ def search_box_find(page, caption_search_text, cta_code):
         # via search because we can't distinguish between variants.
         if is_bare_code:
             print(f"    search_box_find: NOT FOUND (bare code '{cta_code}' — identity unconfirmable via search)")
-            return False, {}
+            return False, {}, None
 
         # For variant-level codes: exactly 1 visible row confirms identity
         if len(visible_videos) == 1:
             el = visible_videos[0]
             print(f"    search_box_find: unique result confirmed (1 video visible)")
             row_m = _scrape_row(el)
-            el.click()
-            return True, row_m
+            return True, row_m, el
         elif len(visible_videos) == 0:
             print("    search_box_find: NOT FOUND (0 videos visible)")
-            return False, {}
+            return False, {}, None
         else:
             print(f"    search_box_find: NOT FOUND ({len(visible_videos)} videos visible — identity unconfirmed)")
-            return False, {}
+            return False, {}, None
     except Exception as exc:
         print(f"    search_box_find: exception — {exc}")
-        return False, {}
+        return False, {}, None
+
+
+def _find_video_id_via_posts_tab(page, cta_code):
+    """
+    Look up a video's ID via the full 'Posts' tab (lists every video, has a
+    working search box) instead of the 'Your top posts' leaderboard, which
+    only covers the top ~10 -- see the permanent finding above CONTENT_TAB_URL.
+
+    SAFE ONLY for unique per-variant CTA codes (e.g. "007B") -- never call
+    this for a bare 3-digit code shared across all variants (e.g. "002"),
+    since a text search would be just as identity-ambiguous here as it is
+    everywhere else on bare-CTA products. Those still require the existing
+    visual-evidence + identity-map flow; callers must check is_bare_code
+    before using this function.
+
+    Returns the video ID string, or None if not found.
+    """
+    try:
+        page.goto(POSTS_TAB_URL, wait_until="domcontentloaded", timeout=30_000)
+        time.sleep(3)
+        box = page.locator("input").first
+        if not box.is_visible(timeout=3_000):
+            return None
+        box.click()
+        box.fill(cta_code)
+        time.sleep(2.5)
+
+        el = page.locator(f"text={cta_code}").first
+        if not el.is_visible(timeout=3_000):
+            return None
+        href = el.evaluate("""el => {
+            let node = el;
+            for (let i = 0; i < 8 && node; i++) {
+                if (node.tagName === 'A' && node.getAttribute('href')) return node.getAttribute('href');
+                node = node.parentElement;
+            }
+            return null;
+        }""")
+        if not href:
+            return None
+        return href.rstrip("/").split("/")[-1] or None
+    except Exception as exc:
+        print(f"    _find_video_id_via_posts_tab: exception — {exc}")
+        return None
+
+
+def _open_video_detail_direct(page, video_id):
+    """
+    Navigate straight to a video's analytics page by ID -- confirmed
+    2026-07-02 to work independent of the 'Your top posts' leaderboard and
+    independent of ever clicking a 'View Data' button (see permanent finding
+    above CONTENT_TAB_URL). Returns True only if a real detail-page marker
+    is actually visible afterward -- never a silent assumption.
+    """
+    url = ANALYTICS_DETAIL_URL_TMPL.format(video_id=video_id)
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=20_000)
+        time.sleep(3)
+    except Exception as exc:
+        print(f"    _open_video_detail_direct: navigation failed — {exc}")
+        return False
+
+    for marker in ("text=Average watch time", "text=Retention rate", "text=Overview"):
+        try:
+            if page.locator(marker).first.is_visible(timeout=2_000):
+                return True
+        except Exception:
+            pass
+    print(f"    _open_video_detail_direct: landed on {page.url!r} but no detail-page "
+          f"marker is visible — treating as not opened rather than guessing")
+    return False
 
 
 # ── Per-variant collection ─────────────────────────────────────────────────
+
+def _finish_collection(page, active_page, opened, cta_code, row_metrics):
+    """
+    Shared tail end of collect_one_variant() for both the direct-URL path
+    and the legacy find-row-then-click fallback: waits for the detail page
+    to settle, extracts DOM metrics, screenshots for QA evidence, and
+    assembles the final metrics dict. `page` is the original page (only
+    closed-around if the legacy click path opened a separate popup tab);
+    `active_page` is whichever page should actually be read from.
+    """
+    captures = install_capture(active_page)
+
+    if opened:
+        time.sleep(1)
+        click_analytics_tab(active_page)
+        # The Retention rate and Traffic source sections sit below the fold
+        # on the detail page and may lazy-load their data only once scrolled
+        # into view — confirmed necessary by the account owner. Use the same
+        # container-scroll technique as the content list: TikTok Studio pages
+        # here consistently use a nested overflow:auto element instead of the
+        # window scrolling directly, so plain window.scrollBy is unreliable.
+        for _ in range(5):
+            moved = scroll_container(active_page, 0.9)
+            time.sleep(0.6)
+            if moved is None:
+                try:
+                    active_page.evaluate("window.scrollBy(0, 600)")
+                except Exception:
+                    pass
+                time.sleep(0.4)
+        # Allow up to 12 seconds for API captures to accumulate
+        for _ in range(12):
+            if captures:
+                time.sleep(2)
+                break
+            time.sleep(1)
+
+        # Primary source for saves/shares/watch-time/retention: read them
+        # straight off the page (see "DOM text-label extraction" section
+        # above). The XHR capture above has never once found a matching key
+        # in practice — kept only as a fallback merge below.
+        dom_metrics = extract_dom_metrics(active_page)
+    else:
+        # Detail view never opened — no point waiting for XHR that can't fire.
+        print(f"    collect_one_variant: skipping analytics wait for {cta_code} "
+              f"— detail view was not reached")
+        dom_metrics = {}
+
+    # Screenshot for QA evidence — proves (or disproves) which page we ended on.
+    try:
+        ss_dir = ANALYTICS_DIR / f"product{cta_code[:3]}"
+        ss_dir.mkdir(parents=True, exist_ok=True)
+        active_page.screenshot(
+            path=str(ss_dir / f"{cta_code}_analytics.png"),
+            full_page=False,
+        )
+    except Exception:
+        pass
+
+    metrics = parse_captures(captures)
+    # DOM text-label extraction takes priority — it's the confirmed-working
+    # path (validated live on 008B, 2026-07-02). XHR guessing is kept only
+    # as a fallback for whichever fields dom_metrics didn't fill in.
+    for field, value in dom_metrics.items():
+        if value:
+            metrics[field] = value
+    # Fill views/likes/comments from DOM row scrape where XHR returned nothing
+    for field in ("views", "likes", "comments"):
+        if not metrics.get(field):
+            metrics[field] = row_metrics.get(field, "")
+    metrics["not_found"] = False
+    metrics["_detail_opened"] = opened
+
+    # Close the detail tab if it was a separate popup, to avoid tab pile-up
+    # across many variants. Never close the original content-list page.
+    if active_page is not page:
+        try:
+            active_page.close()
+        except Exception:
+            pass
+
+    return metrics
+
 
 def collect_one_variant(page, cta_code, skip_count=0, caption_search_text="", video_id=None):
     """
     Navigate to and collect metrics for the video identified by cta_code.
 
-    caption_search_text: TikTok caption prefix for search filtering.
-    skip_count: passed through for bare-code products (legacy fallback only
-      — superseded by video_id when a confirmed identity map exists).
+    PRIMARY PATH (2026-07-02): resolve a video ID and navigate DIRECTLY to
+    its analytics page (https://www.tiktok.com/tiktokstudio/analytics/
+    {video_id}/overview), bypassing "Your top posts" entirely — see the
+    permanent finding above CONTENT_TAB_URL for why that page cannot be
+    trusted to contain every video no matter how long you scroll. The
+    video_id comes from data/{pid}-identity-map.json when given (bare-CTA
+    products), or is looked up fresh via the full "Posts" tab for unique
+    per-variant CTA codes (never for bare codes — see
+    _find_video_id_via_posts_tab's docstring).
+
+    FALLBACK PATH (legacy, kept intentionally): find-row-in-"Your top
+    posts"-then-click-"View Data". Reached only when no video_id could be
+    resolved (a bare-CTA product with no identity map yet still needs the
+    separate visual-evidence-gathering flow regardless of any of this) or
+    when direct navigation itself failed.
+
+    caption_search_text: TikTok caption prefix for search filtering (legacy
+      path only).
+    skip_count: passed through for bare-code products (legacy path only —
+      superseded by video_id whenever a confirmed identity map exists).
     video_id: confirmed TikTok video ID from data/{pid}-identity-map.json.
-      When present, this is the ONLY safe way to find the right row for a
-      bare-CTA variant (href is plain ASCII, unambiguous, and unique per
-      variant even though caption/CTA are shared — see load_identity_map()).
-      Tried first; falls back to caption/CTA matching if not found.
 
     Returns a dict:
-      {"not_found": True}               — video not found on TikTok
-      {"not_found": False, <metrics>}   — metrics extracted (may be partial)
+      {"not_found": True}                        — video not found on TikTok
+      {"not_found": False, "_detail_opened": bool, <metrics>}
+        detail_opened is False when the video's detail/analytics view could
+        not be verified — in that case saves/shares/average_watch_time/
+        watched_full_video_rate/first_2_second_retention are guaranteed
+        blank and that blank is NOT a signal that TikTok lacks the data; it
+        means we never reached the page that shows it.
     """
-    captures = install_capture(page)
+    is_bare_code = bool(re.match(r'^\d{3}$', cta_code))
+
+    resolved_video_id = video_id
+    if not resolved_video_id and not is_bare_code:
+        resolved_video_id = _find_video_id_via_posts_tab(page, cta_code)
+
+    if resolved_video_id:
+        opened = _open_video_detail_direct(page, resolved_video_id)
+        if opened:
+            print(f"    Found via direct video-ID navigation ({resolved_video_id})")
+            return _finish_collection(page, page, True, cta_code, {})
+        print(f"    collect_one_variant: direct navigation to video_id "
+              f"{resolved_video_id} failed — falling back to the legacy "
+              f"'Your top posts' list flow")
 
     # Reset to content list — TikTok may redirect creator-center → tiktokstudio
     try:
@@ -945,54 +1789,29 @@ def collect_one_variant(page, cta_code, skip_count=0, caption_search_text="", vi
             return {"not_found": True}
     time.sleep(3)
 
-    found, row_metrics = False, {}
+    found, row_metrics, el = False, {}, None
 
     if video_id:
-        el = scroll_until_row_visible(page, video_id)
-        if el is not None:
+        candidate = scroll_until_row_visible(page, video_id)
+        if candidate is not None:
             print(f"    Found by confirmed video ID {video_id}")
-            row_metrics = _scrape_row(el)
-            el.click()
+            row_metrics = _scrape_row(candidate)
+            el = candidate
             found = True
 
     if not found and caption_search_text:
-        found, row_metrics = search_box_find(page, caption_search_text, cta_code)
+        found, row_metrics, el = search_box_find(page, caption_search_text, cta_code)
         if not found:
-            found, row_metrics = scroll_and_find_video(page, cta_code, skip_count=skip_count)
+            found, row_metrics, el = scroll_and_find_video(page, cta_code, skip_count=skip_count)
     elif not found:
-        found, row_metrics = scroll_and_find_video(page, cta_code, skip_count=skip_count)
+        found, row_metrics, el = scroll_and_find_video(page, cta_code, skip_count=skip_count)
     if not found:
         return {"not_found": True}
 
-    # Wait for video detail to load and analytics XHR to fire
-    time.sleep(3)
-    click_analytics_tab(page)
-
-    # Allow up to 12 seconds for API captures to accumulate
-    for _ in range(12):
-        if captures:
-            time.sleep(2)
-            break
-        time.sleep(1)
-
-    # Screenshot for QA evidence
-    try:
-        ss_dir = ANALYTICS_DIR / f"product{cta_code[:3]}"
-        ss_dir.mkdir(parents=True, exist_ok=True)
-        page.screenshot(
-            path=str(ss_dir / f"{cta_code}_analytics.png"),
-            full_page=False,
-        )
-    except Exception:
-        pass
-
-    metrics = parse_captures(captures)
-    # Fill views/likes/comments from DOM row scrape where XHR returned nothing
-    for field in ("views", "likes", "comments"):
-        if not metrics.get(field):
-            metrics[field] = row_metrics.get(field, "")
-    metrics["not_found"] = False
-    return metrics
+    # Open the video's detail/analytics view. This is the step that was
+    # broken: el.click() alone never verified navigation actually happened.
+    active_page, opened = _open_video_detail(page, el)
+    return _finish_collection(page, active_page, opened, cta_code, row_metrics)
 
 
 # ── Row assembly and derived fields ────────────────────────────────────────
@@ -1019,11 +1838,11 @@ def compute_derived(row):
             shares       = float(row.get("shares")           or 0)
             cta_comments = float(row.get("cta_code_comments") or 0)
 
-            row["engagement_rate"]  = f"{(likes + saves + comments + shares) / v:.4f}"
-            row["save_rate"]        = f"{saves    / v:.4f}"
-            row["comment_rate"]     = f"{comments / v:.4f}"
-            row["share_rate"]       = f"{shares   / v:.4f}"
-            row["cta_comment_rate"] = f"{cta_comments / v:.4f}"
+            row["engagement_rate"]  = f"{(likes + saves + comments + shares) / v * 100:.2f}"
+            row["save_rate"]        = f"{saves    / v * 100:.2f}"
+            row["comment_rate"]     = f"{comments / v * 100:.2f}"
+            row["share_rate"]       = f"{shares   / v * 100:.2f}"
+            row["cta_comment_rate"] = f"{cta_comments / v * 100:.2f}"
     except (ValueError, TypeError):
         pass
 
@@ -1263,8 +2082,17 @@ def main():
             # Bare-code variants found via skip_count (order-based guessing) have
             # UNVERIFIED identity — UNLESS video_id came from a confirmed identity
             # map, in which case identity was confirmed via unique href, not guessed.
+            #
+            # BUG FIXED 2026-07-02: this used to only fire when skip_count > 0,
+            # which let variant A (skip_count == 0, the "first match wins" fast
+            # path) slip through unchecked — its match is EQUALLY a guess, just
+            # with N=0 skips instead of N>0. This exact gap let a live backfill
+            # run write 002B's real data (353 views) under the 002A row, with no
+            # warning at all, because 002A's video_id lookup failed (that video
+            # isn't in "Your top posts" — see the permanent finding above
+            # CONTENT_TAB_URL) and fell through to this same guess undetected.
             is_bare_code = bool(re.match(r'^\d{3}$', cta_code))
-            if not raw["not_found"] and is_bare_code and skip_count > 0 and not video_id:
+            if not raw["not_found"] and is_bare_code and not video_id:
                 print(f"  WARNING: {label} found via order-based matching (skip_count={skip_count})")
                 print(f"           Identity UNVERIFIED — bare code '{cta_code}' with shared caption")
                 print(f"           Metrics NOT written (require variant-level CTA for confirmation)")

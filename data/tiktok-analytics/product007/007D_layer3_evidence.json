@@ -1,0 +1,59 @@
+{
+  "variant": "007D",
+  "views": "145",
+  "first_2_second_retention": 0.44,
+  "retention_classification": "MARGINAL",
+  "hook_segment": {
+    "start": 0,
+    "end": 3,
+    "text": "טיקטוק הכניס לי ₪39 לסל",
+    "color": "yellow",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer3_frames\\007D_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "0/0.5/1/1.5/2/2.5s frames are pixel-identical -- the same static glossy car-organizer product photo used across all 4 variants of this product, zero motion for the full 3-second hook. Scene cuts to a gray AliExpress price screenshot only at 3s."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "The product is fully visible and identifiable at 0s -- same organizer/tray/tablet-holder shot as the other 3 variants."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Same staged AliExpress-style hero photo shared with the other 3 variants: stock tablet video, branded bottles, snack box with visible Chinese packaging text, composited sunset. Reads as a marketplace listing photo, not organic TikTok content."
+    },
+    "d": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text 'טיקטוק הכניס לי ₪39 לסל' ('TikTok put ₪39 in my cart') leads with a specific price and a concrete TikTok-discovery narrative, matching this variant's intended 'TikTok Discovery' hook type -- not a vague/generic statement."
+    },
+    "e": {
+      "rating": "UNLIKELY",
+      "evidence": "Hook text is about discovering and buying a ₪39 product via TikTok; the frame shows exactly the ₪39 car organizer product referenced. Text and image are consistent."
+    },
+    "h": {
+      "rating": "POSSIBLE",
+      "evidence": "'טיקטוק הכניס לי ₪39 לסל' ('TikTok inserted-to-me ₪39 to-the-cart') stacks two indirect-object constructions ('לי' and 'לסל') around the verb 'הכניס,' which is grammatically legal but reads as a compressed, slightly unnatural calque -- a native speaker telling this story colloquially would more likely say something like 'טיקטוק שם לי את זה בסל' or 'עלה לי 39 שקל בטיקטוק,' not this stacked-dative phrasing."
+    }
+  },
+  "step11d_divergence_note": "NO PRE-LAUNCH PREDICTION EXISTS FOR THIS PRODUCT: output/2026-06-17-product-007-upload_package.md has no STEP 11D section for any of the 4 variants (confirmed via grep -- zero matches for 'STEP 11D'), unlike product 008 where explicit per-variant PASS/WARNING/FAIL scores existed. There is no pre-launch prediction to diverge from. Independently of that gap, the frame evidence shows this variant has the same fully-static, AliExpress-style opening shot as 007A/B/C, and its hook text (unlike 007B's generic curiosity line) is concrete and internally consistent with the image -- yet it still only reached 44% MARGINAL 2s retention, reinforcing that the static/catalog-feel visual (causes a and c) is likely the dominant shared drag across all 4 variants regardless of how well-crafted the accompanying hook text is."
+}

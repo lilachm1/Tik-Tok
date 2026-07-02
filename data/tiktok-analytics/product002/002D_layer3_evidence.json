@@ -1,0 +1,59 @@
+{
+  "variant": "002D",
+  "views": "315",
+  "first_2_second_retention": 0.25,
+  "retention_classification": "WEAK",
+  "hook_segment": {
+    "start": 0,
+    "end": 2,
+    "text": "כולן מדברות על זה ואני סוף סוף הזמנתי...",
+    "color": "white",
+    "position": "top-center"
+  },
+  "step11d_prelaunch_prediction": null,
+  "frame_source": "ffmpeg_fresh_subsecond",
+  "frame_paths": [
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_0s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_0.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_1s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_1.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_2s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_2.5s.png",
+    "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product002\\layer3_frames\\002D_opening_3s.png"
+  ],
+  "causes_to_rate": {
+    "a": "Weak opening visual — flat catalog shot, no motion cue",
+    "b": "Unclear product in first second",
+    "c": "AliExpress catalog feel — reads as a marketplace thumbnail, not organic TikTok",
+    "d": "Generic hook text — no specific number/problem/surprise",
+    "e": "Hook–product mismatch — text promises something the image doesn't show",
+    "h": "Non-native Hebrew phrasing — grammatically valid but reads as translated/stilted"
+  },
+  "causes_rated_by_agent": {
+    "a": {
+      "rating": "LIKELY",
+      "evidence": "Same shared asset as the other three variants: 0s/1s frames show the identical static AliExpress hero-render (car phone mount + English badges), hard cut at 2s to the identical static AliExpress listing screenshot, held through 2.5s/3s. No motion within either half across the full 0-3s window -- confirmed the weakest-retention variant (25% at 2s) also has the least visual movement of any of them (tied with the others, since the asset is identical)."
+    },
+    "b": {
+      "rating": "UNLIKELY",
+      "evidence": "Product is clearly visible and labeled 'Vacuum Magnet' with feature badges at 0s, identical to A/B/C."
+    },
+    "c": {
+      "rating": "LIKELY",
+      "evidence": "Identical shared asset: CGI-style AliExpress hero render with English badges (0-1.5s), hard cut to a literal AliExpress listing-page screenshot (2-3s). Same marketplace-thumbnail feel as every other 002 variant."
+    },
+    "d": {
+      "rating": "LIKELY",
+      "evidence": "Hook text 'כולן מדברות על זה ואני סוף סוף הזמנתי...' ('Everyone's talking about it and I finally ordered...') is a highly generic FOMO/social-proof template with no specific number, no named problem, and no concrete surprise -- 'everyone's talking about it' names no source, no context, and no detail about what the product actually does. This is one of the most formulaic, product-agnostic hook openers possible."
+    },
+    "e": {
+      "rating": "POSSIBLE",
+      "evidence": "Hook builds anticipation around social proof ('everyone's talking about it') and a personal purchase decision ('I finally ordered'), but the frames show neither social proof (no comments, no other creators, no crowd signal) nor an unboxing/ordering moment -- just the same static product render followed by an AliExpress price screenshot. The price screenshot arguably supports the 'I ordered' framing (justifying why), so it's a partial/loose match rather than a flat contradiction -- rated POSSIBLE rather than LIKELY."
+    },
+    "h": {
+      "rating": "UNLIKELY",
+      "evidence": "'כולן מדברות על זה ואני סוף סוף הזמנתי' is natural, colloquial spoken Hebrew and a very common authentic-sounding Israeli TikTok phrasing -- not stilted or translated. Note (outside this cause's definition): 'כולן' ('everyone', fem. plural) is again an explicit female-only address, matching the feminine-form pattern seen in 002A/B/C -- a gender-neutrality concern per the project's own copy rules, distinct from translation quality."
+    }
+  },
+  "step11d_divergence_note": "NO STEP 11D SCORE EXISTS FOR THIS PRODUCT -- same confirmed absence across all four 002 variants (output/2026-06-14-product-002-upload_package.md contains only a product-level 'STEP 3C: PASS', no per-variant STEP 11D verdict/score, unlike product 008's package which records one per variant). Nothing to diverge from for 002D specifically. Real-world result: WEAK retention, and the worst of the four (25% at 2s, n=315 views). Cross-variant pattern worth flagging: all four 002 variants (A/B/C/D) share the exact same 0-3s visual asset (static AliExpress product render -> hard cut -> static AliExpress listing screenshot); only the hook text changes. Retention across the four ranges narrowly from 25% to 39%, all WEAK -- consistent with a hook-text-driven (not visual-driven) difference layered on top of a uniformly weak, catalog-feeling creative that never had a STEP 11D check to catch it before launch."
+}

@@ -1,0 +1,17 @@
+product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winner,cta_style,asset_source,best_segment,upload_date,upload_time,age_hours,variant_status,tracking_id,affiliate_clicks,affiliate_sales,affiliate_commission,hook_text,shares,average_watch_time,retention_rate,watched_full_video_rate,first_2_second_retention,cta_code_comments,engagement_rate,save_rate,comment_rate,share_rate,cta_comment_rate
+002,002A,Price Shock,Mobile Phone Accessories,23,153,1,0,,false,comment,,,2026-06-14,,404.7,CONFIRMED,product002_A,,,,לא תאמיני כמה זה עולה בעלי אקספרס...,,,,,,,0.65,0.00,0.00,0.00,0.00
+002,002B,Curiosity,Mobile Phone Accessories,23,353,2,0,,false,comment,,,2026-06-14,,404.7,CONFIRMED,product002_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,,,,,,,0.57,0.00,0.00,0.00,0.00
+002,002C,Problem/Solution,Mobile Phone Accessories,23,390,1,0,,true,comment,,,2026-06-14,,404.7,CONFIRMED,product002_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירות,,,,,,,0.26,0.00,0.00,0.00,0.00
+002,002D,TikTok Discovery,Mobile Phone Accessories,23,315,2,0,,false,comment,,,2026-06-14,,404.8,CONFIRMED,product002_D,,,,כולן מדברות על זה ואני סוף סוף הזמנתי...,,,,,,,0.63,0.00,0.00,0.00,0.00
+003,003A,Price Shock,Home & Garden (Kitchen/Food Storage),8,354,0,0,,false,comment,,,2026-06-14,,380.7,CONFIRMED,product003_A,,,,לא האמנתי שזה סוגר שקיות בשניות...,,,,,,,0.00,0.00,0.00,0.00,0.00
+003,003B,Curiosity,Home & Garden (Kitchen/Food Storage),8,360,1,0,,true,comment,,,2026-06-14,,380.7,CONFIRMED,product003_B,,,,ראיתי את זה בטיקטוק ולא האמנתי שזה קיים...,,,,,,,0.28,0.00,0.00,0.00,0.00
+003,003C,Problem/Solution,Home & Garden (Kitchen/Food Storage),8,1,1,0,,false,comment,,,2026-06-14,,380.7,CONFIRMED,product003_C,,,,מצאתי את הפתרון לבעיה שכולנו מכירים,,,,,,,100.00,0.00,0.00,0.00,0.00
+003,003D,TikTok Discovery,Home & Garden (Kitchen/Food Storage),8,2,0,0,,false,comment,,,2026-06-14,,380.7,CONFIRMED,product003_D,,,,כולם מדברים על זה וסוף סוף הזמנתי...,,,,,,,0.00,0.00,0.00,0.00,0.00
+007,007A,Price Shock,Interior Accessories,39,120,0,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product007_A,,,,₪39 למארגן גב מושב עם שולחן מתקפל?,,,,,,,0.00,0.00,0.00,0.00,0.00
+007,007B,Curiosity,Interior Accessories,39,91,2,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product007_B,,,,רוב האנשים לא יודעים שזה קיים ברכב,,,,,,,2.20,0.00,0.00,0.00,0.00
+007,007C,Problem/Solution,Interior Accessories,39,106,1,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product007_C,,,,הגב של המושב ברכב שלי היה בלאגן מוחלט,,,,,,,0.94,0.00,0.00,0.00,0.00
+007,007D,TikTok Discovery,Interior Accessories,39,145,1,0,,true,comment,,,2026-06-17,,332.8,CONFIRMED,product007_D,,,,טיקטוק הכניס לי ₪39 לסל,,,,,,,0.69,0.00,0.00,0.00,0.00
+008,008A,Price Shock,Mobile Phone Accessories,40.29,4,1,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product008_A,,,,מעמד אלומיניום ב-₪40?,,,,,,,25.00,0.00,0.00,0.00,0.00
+008,008B,Curiosity,Mobile Phone Accessories,40.29,114,1,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product008_B,,,,מה הדבר הזה שהפך לי את השולחן?,,,,,,,0.88,0.00,0.00,0.00,0.00
+008,008C,Problem/Solution,Mobile Phone Accessories,40.29,133,1,0,,true,comment,,,2026-06-17,,332.8,CONFIRMED,product008_C,,,,שנים ישבתי כפוף מול הנייד,,,,,,,0.75,0.00,0.00,0.00,0.00
+008,008D,TikTok Discovery,Mobile Phone Accessories,40.29,2,1,0,,false,comment,,,2026-06-17,,332.8,CONFIRMED,product008_D,,,,ראיתי בטיקטוק ולא הבנתי — עד שקניתי,,,,,,,50.00,0.00,0.00,0.00,0.00
