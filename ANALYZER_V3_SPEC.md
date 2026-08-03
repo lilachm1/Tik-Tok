@@ -38,6 +38,9 @@ These extend the small-sample handling already done ad hoc in the 2026-07-02 ana
 4. **Sample size travels with the number, always.** Every displayed rate must be immediately followed by its `n=`. A rate without a stated sample size is a spec violation.
 5. **Implementation note (for later):** this logic should live in one shared module (e.g. `confidence.py`) that all 10 layers import — not reimplemented per layer, to avoid the 3 nearly-identical small-sample caveats that were written by hand across today's analysis.
 
+### Operating Mode Rule (permanent, platform-wide)
+Every layer must respect the two operating modes defined in `TIKTOK_AGENT_PLAN.md` → "Operating Modes — Permanent Production Requirement": in Daily Incremental Production Mode, no layer may re-diagnose a video that is already fully collected, validated, and diagnosed under the current diagnostic-logic version, and a diagnosis produced under a changed diagnostic version must be added alongside — never overwrite — prior evidence/versions. Approved 2026-08-03; not yet implemented in any layer script.
+
 ---
 
 ## Layer 1 — Product Demand

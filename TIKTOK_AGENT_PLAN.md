@@ -127,6 +127,32 @@ product_id,variant,hook_type,category,price_ils,views,likes,comments,saves,winne
 
 ---
 
+## Operating Modes — Permanent Production Requirement
+
+**Status: Architectural decision approved 2026-08-03. NOT YET IMPLEMENTED — this section defines a permanent requirement for the production workflow; no script or command has been modified to satisfy it yet. Do not implement until separately instructed.**
+
+The platform must support two distinct operating modes:
+
+1. **Historical Backfill Mode** — used during development, or an explicitly forced rebuild. May re-collect and re-diagnose videos regardless of prior state.
+2. **Daily Incremental Production Mode** — the default, normal operating mode once historical development is complete.
+
+### Daily Incremental Production Mode — rules
+
+- Analyze only eligible recent TikTok videos, using a configurable default window of the last 7 days.
+- Do not re-collect or re-diagnose videos that have already been fully collected, validated, and diagnosed.
+- Collect only new videos, newly available metrics, or fields explicitly eligible under a defined refresh policy.
+- Preserve all previously validated historical data.
+- Use idempotent upserts — never create duplicate rows.
+- Never overwrite validated values unless a documented refresh policy or explicit force option permits it.
+- Track collection, validation, diagnosis, and metric-refresh status per video.
+- Skip unnecessary browser work when no eligible records or metrics require collection.
+- Continue learning from newly validated videos so recommendations become progressively more accurate.
+- Preserve earlier diagnosis evidence and versions when diagnostic logic changes — a changed diagnostic version is added alongside prior evidence, never overwritten in place.
+
+This applies platform-wide: to the analytics collector (`scripts/tiktok_analytics_collect.py`) and to every Analyzer v3 layer once implemented (see `ANALYZER_V3_SPEC.md`, cross-cutting rules).
+
+---
+
 ## Product Scoring — Israeli Impulse-Buy Market
 
 Target: products that make people say **"That's cheap, I'll try it."** — not "I need to think about it."

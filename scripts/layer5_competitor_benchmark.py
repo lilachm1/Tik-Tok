@@ -47,6 +47,104 @@ TIMESTAMPS = [0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.5, 5.0, 6.5, 8.0]
 POPUP_LABELS = ["Maybe later", "Skip", "Not now", "Close", "לא כרגע", "דלג"]
 
 
+def select_top_candidates(candidates, target):
+    """
+    Dedup by href and pick the Top-N (`target`) competitors to extract
+    frames for.
+
+    Policy (fixed 2026-08-03 -- was previously broken, see below):
+    - `like_count` is either a real measured int, or `None` if it genuinely
+      could not be determined. `None` must never be treated as a real zero.
+    - Search-discovered candidates (`source: "search"`) are ranked by
+      `like_count` descending, same as before.
+    - Seed candidates (`source: "seed"`, passed via `--seed-urls`) are
+      manually vetted by a human and are ALWAYS included, regardless of
+      their `like_count` or whether it could be measured at all. They fill
+      the Top-N first; search results fill any remaining slots up to
+      `target`. If there are more seeds than `target`, all seeds are still
+      kept -- `target` is a floor on search-filled slots, not a cap on
+      manually-vetted ones.
+
+    The bug this replaces: seed competitors were given `like_count: None`
+    and then ranked with everyone else using `like_count or 0`, so an
+    unmeasured value silently became a real zero and lost to every search
+    result with any positive like count -- which is exactly what dropped
+    @yeuunnt.22 (78.3K likes) and @goussve.km from product 008's benchmark
+    (session 15, 2026-07-02) before they were manually re-added.
+    """
+    by_href = {}
+    for c in candidates:
+        href = c["href"]
+        existing = by_href.get(href)
+        if existing is None:
+            by_href[href] = dict(c)
+            continue
+        if c["like_count"] is not None and (
+            existing["like_count"] is None or c["like_count"] > existing["like_count"]
+        ):
+            existing["like_count"] = c["like_count"]
+        if c.get("source") == "seed":
+            existing["source"] = "seed"
+
+    seeds = [c for c in by_href.values() if c.get("source") == "seed"]
+    searched = [c for c in by_href.values() if c.get("source") != "seed"]
+    searched.sort(key=lambda c: c["like_count"] if c["like_count"] is not None else -1, reverse=True)
+
+    top = list(seeds)
+    for c in searched:
+        if len(top) >= target:
+            break
+        top.append(c)
+    return top
+
+
+def fetch_like_count_for_url(page, url, out_dir, label):
+    """
+    Navigate to a single competitor video page and extract its real
+    like_count, so seed competitors get a measured value instead of the
+    placeholder `None` this used to leave in place. Returns an int, or None
+    if it genuinely could not be determined (navigation failure, selector
+    not found, unsolved CAPTCHA) -- `None` here is a real "unavailable"
+    signal, never assumed to mean zero (see select_top_candidates()).
+    """
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+    except Exception:
+        return None
+    time.sleep(2)
+    dismiss_popups(page)
+    if not wait_for_manual_captcha_solve(page, out_dir, label):
+        return None
+
+    try:
+        el = page.locator('[data-e2e="like-count"]').first
+        if el.is_visible(timeout=5000):
+            text = el.text_content()
+            if text and text.strip():
+                return parse_like_count(text)
+    except Exception:
+        pass
+
+    # Fallback if TikTok's data-e2e attribute isn't present: first short
+    # K/M-style number in the action bar (the like count is the first of
+    # the like/comment/share counters in DOM order on a video page).
+    try:
+        text = page.evaluate("""() => {
+            const nodes = [...document.querySelectorAll('strong, span, button')];
+            for (const n of nodes) {
+                const t = (n.textContent || '').trim();
+                if (/^[\\d.]+[KMkm]?$/.test(t)) return t;
+            }
+            return null;
+        }""")
+        if text:
+            return parse_like_count(text)
+    except Exception:
+        pass
+
+    return None
+
+
 def parse_like_count(text):
     """'78.3K' -> 78300, '883' -> 883. Empty on failure."""
     text = text.strip().upper()
@@ -112,7 +210,7 @@ def search_candidates(page, query, out_dir):
             continue
         seen.add(href)
         like_count = parse_like_count(r.get("likeText") or "0")
-        candidates.append({"href": href, "like_count": like_count})
+        candidates.append({"href": href, "like_count": like_count, "source": "search"})
 
     candidates.sort(key=lambda c: c["like_count"], reverse=True)
     return candidates
@@ -297,20 +395,24 @@ def main():
 
         if args.seed_urls:
             for url in args.seed_urls.split(","):
-                all_candidates.append({"href": url.strip(), "like_count": None})
+                url = url.strip()
+                if not url:
+                    continue
+                full_url = url if url.startswith("http") else f"https://www.tiktok.com{url}"
+                print(f"Fetching real like_count for seed competitor: {full_url}")
+                like_count = fetch_like_count_for_url(page, full_url, out_dir, "seed_precheck")
+                if like_count is None:
+                    print("  like_count unavailable -- included anyway (seed competitors are never excluded for a missing metric)")
+                else:
+                    print(f"  like_count = {like_count}")
+                all_candidates.append({"href": url, "like_count": like_count, "source": "seed"})
 
-        # Dedup by href, keep highest known like_count
-        by_href = {}
-        for c in all_candidates:
-            href = c["href"]
-            if href not in by_href or (c["like_count"] or 0) > (by_href[href]["like_count"] or 0):
-                by_href[href] = c
-        ranked = sorted(by_href.values(), key=lambda c: c["like_count"] or 0, reverse=True)
-        top = ranked[: args.target]
+        top = select_top_candidates(all_candidates, args.target)
 
         print(f"\nTop {len(top)} candidates selected:")
         for c in top:
-            print(f"  {c['like_count']} likes -- {c['href']}")
+            like_str = f"{c['like_count']} likes" if c["like_count"] is not None else "likes unavailable"
+            print(f"  {like_str} ({c.get('source', 'search')}) -- {c['href']}")
 
         competitors = []
         for i, c in enumerate(top):
@@ -327,6 +429,8 @@ def main():
                 "label": label,
                 "url": url,
                 "like_count": c["like_count"],
+                "like_count_unavailable": c["like_count"] is None,
+                "source": c.get("source", "search"),
                 "duration_s": result["duration"],
                 "frame_paths": result["frames"],
                 "motion_metrics": motion,
