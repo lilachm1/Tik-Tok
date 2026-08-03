@@ -10,10 +10,22 @@ Run: python scripts/test_layer5_competitor_benchmark.py
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from layer5_competitor_benchmark import select_top_candidates
+from layer5_competitor_benchmark import (
+    select_top_candidates,
+    merge_search_candidates,
+    shortlist_by_real_likes,
+    passes_relevance_filter,
+)
 
 
 def searched(href, likes):
@@ -102,6 +114,118 @@ class SelectTopCandidatesTests(unittest.TestCase):
         hrefs = [c["href"] for c in top]
         self.assertIn("/@yeuunnt.22/video/1", hrefs)
         self.assertIn("/@goussve.km/video/2", hrefs)
+
+
+def viewed(href, views):
+    return {"href": href, "view_count": views, "source": "search"}
+
+
+class MergeSearchCandidatesTests(unittest.TestCase):
+
+    def test_dedup_across_queries_keeps_first_seen(self):
+        merged = merge_search_candidates([
+            [viewed("/@a/video/1", 100)],
+            [viewed("/@a/video/1", 999), viewed("/@b/video/2", 50)],
+        ])
+        hrefs = [c["href"] for c in merged]
+        self.assertEqual(hrefs.count("/@a/video/1"), 1)
+        a = next(c for c in merged if c["href"] == "/@a/video/1")
+        self.assertEqual(a["view_count"], 100)  # first-seen (query 1's value), not overwritten
+
+    def test_sorted_by_view_count_desc(self):
+        merged = merge_search_candidates([[viewed("/@a/video/1", 10), viewed("/@b/video/2", 500)]])
+        self.assertEqual([c["href"] for c in merged], ["/@b/video/2", "/@a/video/1"])
+
+    def test_none_view_count_never_coerced_to_zero_and_sorts_last(self):
+        merged = merge_search_candidates([[viewed("/@a/video/1", None), viewed("/@b/video/2", 0)]])
+        self.assertEqual([c["href"] for c in merged], ["/@b/video/2", "/@a/video/1"])
+        a = next(c for c in merged if c["href"] == "/@a/video/1")
+        self.assertIsNone(a["view_count"])
+
+
+class ShortlistByRealLikesTests(unittest.TestCase):
+    """Mocks fetch_like_count_and_caption_for_url -- no Playwright/network
+    needed. This is the fix for the 2026-08-03 finding that TikTok search
+    cards expose a VIEW count, not a like count, in their DOM
+    (data-e2e="video-views" is the only engagement number present) -- real
+    like_count must come from each candidate's own video page instead."""
+
+    def test_only_top_k_by_view_count_are_fetched(self):
+        candidates = [viewed(f"/@x{i}/video/{i}", 100 - i) for i in range(10)]
+        with patch("layer5_competitor_benchmark.fetch_like_count_and_caption_for_url",
+                   return_value=(5, "some caption")) as mock_fetch:
+            result = shortlist_by_real_likes(page=None, candidates=candidates, out_dir=Path("."), top_k=3)
+        self.assertEqual(mock_fetch.call_count, 3)
+        self.assertEqual(len(result), 3)
+        self.assertEqual([c["href"] for c in result], ["/@x0/video/0", "/@x1/video/1", "/@x2/video/2"])
+
+    def test_real_like_count_replaces_view_count_as_the_ranking_field(self):
+        candidates = [viewed("/@a/video/1", 9999)]  # huge view count, tiny real like count
+        with patch("layer5_competitor_benchmark.fetch_like_count_and_caption_for_url",
+                   return_value=(3, "caption")):
+            result = shortlist_by_real_likes(page=None, candidates=candidates, out_dir=Path("."), top_k=5)
+        self.assertEqual(result[0]["like_count"], 3)
+        self.assertEqual(result[0]["view_count_at_search"], 9999)
+
+    def test_unavailable_real_like_count_preserved_as_none_not_zero(self):
+        candidates = [viewed("/@a/video/1", 500)]
+        with patch("layer5_competitor_benchmark.fetch_like_count_and_caption_for_url",
+                   return_value=(None, "caption")):
+            result = shortlist_by_real_likes(page=None, candidates=candidates, out_dir=Path("."), top_k=5)
+        self.assertIsNone(result[0]["like_count"])
+
+    def test_output_feeds_directly_into_select_top_candidates(self):
+        """End-to-end of the two-stage fix: view-ranked candidates ->
+        real-like-count shortlist -> final Top-N by real likes."""
+        candidates = [viewed(f"/@x{i}/video/{i}", 1000 - i) for i in range(5)]
+        real_likes = {"/@x0/video/0": 10, "/@x1/video/1": 900, "/@x2/video/2": 5,
+                      "/@x3/video/3": 1, "/@x4/video/4": 2}
+        with patch("layer5_competitor_benchmark.fetch_like_count_and_caption_for_url",
+                   side_effect=lambda page, url, out_dir, label: (
+                       next(v for href, v in real_likes.items() if href.split("/")[-1] in url), "caption")):
+            shortlisted = shortlist_by_real_likes(page=None, candidates=candidates, out_dir=Path("."), top_k=5)
+        top = select_top_candidates(shortlisted, target=3)
+        # /@x1 has the highest REAL like count despite not having the highest view count
+        self.assertEqual(top[0]["href"], "/@x1/video/1")
+
+    def test_wrong_category_candidate_excluded_before_frame_extraction(self):
+        """The actual 2026-08-03 incident: a seat-cushion video (view_count
+        way ahead of the real seat-back-organizer competitors) must be
+        dropped by caption BEFORE it could ever reach frame extraction."""
+        candidates = [viewed("/@cushion/video/1", 50000), viewed("/@organizer/video/2", 100)]
+        captions = {
+            "/@cushion/video/1": (50000, "No more back pain no more butt pain #seatcushion #carseatcushion"),
+            "/@organizer/video/2": (100, "מארגן גב מושב לרכב עם שולחן מתקפל"),
+        }
+        with patch("layer5_competitor_benchmark.fetch_like_count_and_caption_for_url",
+                   side_effect=lambda page, url, out_dir, label: next(
+                       v for href, v in captions.items() if href.split("/")[-1] in url)):
+            result = shortlist_by_real_likes(
+                page=None, candidates=candidates, out_dir=Path("."), top_k=5,
+                include_keywords=["מארגן", "organizer"], exclude_keywords=["cushion", "כרית"],
+            )
+        hrefs = [c["href"] for c in result]
+        self.assertNotIn("/@cushion/video/1", hrefs)
+        self.assertIn("/@organizer/video/2", hrefs)
+
+
+class PassesRelevanceFilterTests(unittest.TestCase):
+
+    def test_no_filters_means_pass(self):
+        self.assertTrue(passes_relevance_filter("anything at all", None, None))
+
+    def test_include_keyword_required_when_given(self):
+        self.assertTrue(passes_relevance_filter("מארגן לרכב", ["מארגן"], None))
+        self.assertFalse(passes_relevance_filter("כרית נוחות", ["מארגן"], None))
+
+    def test_exclude_keyword_overrides_include_match(self):
+        # contains both the include keyword AND an exclude keyword -- must be excluded
+        self.assertFalse(passes_relevance_filter(
+            "seat organizer cushion combo", ["organizer"], ["cushion"]))
+
+    def test_case_insensitive(self):
+        self.assertTrue(passes_relevance_filter("ORGANIZER for your car", ["organizer"], None))
+        self.assertFalse(passes_relevance_filter("Cozy CUSHION for car seats", None, ["cushion"]))
 
 
 if __name__ == "__main__":
