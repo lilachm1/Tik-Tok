@@ -18,9 +18,15 @@ output/identify_*/
 
 # Layer 3/5 frame extraction dumps — regenerable via ffmpeg from the source MP4s /
 # competitor video URLs; the JSON evidence files that summarize them are what's tracked.
+# Also covers third-party competitor video frame captures (sessions 21-23 diagnostics/
+# triage) — those are re-derivable from the URLs in the benchmark JSONs and shouldn't
+# be committed as binary image history.
 data/tiktok-analytics/*/layer3_frames/
 data/tiktok-analytics/*/layer5_frames/
 data/tiktok-analytics/*/layer5_competitor_frames/
+data/tiktok-analytics/*/layer5_competitor_frames_archive/
+data/tiktok-analytics/*/layer5_triage_multiquery/
+data/tiktok-analytics/*/layer5_diagnosis_comp2_probe1/
 
 # Accidental Windows copy-paste duplicates
 * - Copy.png

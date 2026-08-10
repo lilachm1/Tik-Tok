@@ -1,0 +1,587 @@
+{
+  "product_id": "007",
+  "search_queries": [
+    "מארגן גב מושב לרכב"
+  ],
+  "target_competitor_count": 5,
+  "actual_competitor_count": 5,
+  "low_confidence": false,
+  "low_confidence_reason": null,
+  "competitors": [
+    {
+      "label": "comp0",
+      "url": "https://www.tiktok.com/@phoebeyuee/video/7515793149281799454",
+      "like_count": 20600,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": 20600,
+      "source": "seed",
+      "duration_s": 15.090112,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp0_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.468995
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.475469
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.406577
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.479402
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.423543
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.382445
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.302205
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.328912
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.320415
+          }
+        ],
+        "avg_consecutive_ssim": 0.3986625555555555,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": null,
+        "text_appears_time_s": null,
+        "human_motion_present": null,
+        "camera_movement_present": null,
+        "motion_type": null,
+        "first_frame_strength": null,
+        "product_shown_in_real_use": null,
+        "feels_native_to_tiktok_israel": null,
+        "notes": null
+      }
+    },
+    {
+      "label": "comp1",
+      "url": "https://www.tiktok.com/@tidytravelshop/video/7397503187982322974",
+      "like_count": 5611,
+      "like_count_unavailable": false,
+      "caption": "",
+      "view_count_at_search": 5611,
+      "source": "seed",
+      "duration_s": 16.25111,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp1_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.414031
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.324714
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.519558
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.671876
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.276368
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.219401
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.57327
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.308495
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.254658
+          }
+        ],
+        "avg_consecutive_ssim": 0.395819,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": null,
+        "text_appears_time_s": null,
+        "human_motion_present": null,
+        "camera_movement_present": null,
+        "motion_type": null,
+        "first_frame_strength": null,
+        "product_shown_in_real_use": null,
+        "feels_native_to_tiktok_israel": null,
+        "notes": null
+      }
+    },
+    {
+      "label": "comp2",
+      "url": "https://www.tiktok.com/@ejanne0/video/7249126114667351304",
+      "like_count": 2271,
+      "like_count_unavailable": false,
+      "caption": "",
+      "view_count_at_search": 2271,
+      "source": "seed",
+      "duration_s": 22.733333,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp2_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.575287
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.586156
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.548837
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.675136
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.360389
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.403539
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.431355
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.482308
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.611483
+          }
+        ],
+        "avg_consecutive_ssim": 0.5193877777777778,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": null,
+        "text_appears_time_s": null,
+        "human_motion_present": null,
+        "camera_movement_present": null,
+        "motion_type": null,
+        "first_frame_strength": null,
+        "product_shown_in_real_use": null,
+        "feels_native_to_tiktok_israel": null,
+        "notes": null
+      }
+    },
+    {
+      "label": "comp3",
+      "url": "https://www.tiktok.com/@phoebeyuee/video/7532885137101557022",
+      "like_count": 110500,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": null,
+      "source": "seed",
+      "duration_s": 13.799999,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp3_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.320623
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.355832
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.346739
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.431058
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.354408
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.355982
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.309339
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.290456
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.387453
+          }
+        ],
+        "avg_consecutive_ssim": 0.35020999999999997,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": null,
+        "text_appears_time_s": null,
+        "human_motion_present": null,
+        "camera_movement_present": null,
+        "motion_type": null,
+        "first_frame_strength": null,
+        "product_shown_in_real_use": null,
+        "feels_native_to_tiktok_israel": null,
+        "notes": null
+      }
+    },
+    {
+      "label": "comp4",
+      "url": "https://www.tiktok.com/@tidytravelshop/video/7393367195159514399",
+      "like_count": 63700,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": null,
+      "source": "seed",
+      "duration_s": 11.560679,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product007\\layer5_competitor_frames\\comp4_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.427638
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.30473
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.361041
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.383468
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.240587
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.231664
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.252002
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.525802
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.612378
+          }
+        ],
+        "avg_consecutive_ssim": 0.37103444444444444,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": null,
+        "text_appears_time_s": null,
+        "human_motion_present": null,
+        "camera_movement_present": null,
+        "motion_type": null,
+        "first_frame_strength": null,
+        "product_shown_in_real_use": null,
+        "feels_native_to_tiktok_israel": null,
+        "notes": null
+      }
+    }
+  ]
+}

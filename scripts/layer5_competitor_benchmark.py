@@ -470,30 +470,29 @@ def wait_for_manual_captcha_solve(page, out_dir, label, timeout_s=300, poll_s=3)
     return False
 
 
-def download_video_bytes(page, timeout_s=15):
+def wait_for_video_ready(page, timeout_s=15):
     """
-    Triggers real playback and downloads the actual decoded video bytes via
-    its blob URL, returning (bytes, content_type) or (None, None).
+    Triggers real playback and waits for the <video> element's decoded-frame
+    buffer to actually be populated (readyState >= 2, HAVE_CURRENT_DATA).
 
-    Root cause fixed 2026-08-03 (a real, confirmed bug, not a hypothesis):
-    live DOM inspection showed a competitor page's <video> element sitting at
-    readyState=0 (HAVE_NOTHING) for 4+ seconds after navigation -- TikTok
-    defers actually loading video data until playback is triggered. The
-    previous version of `extract_competitor_frames()` never called .play(),
-    only set `currentTime` (a no-op on an unloaded video) and screenshotted
-    the live element -- which, in a page object reused across many
-    sequential navigations, silently captured a PREVIOUS candidate's still-
-    painted frame instead. Confirmed in production: 2 of 5 product-007
-    competitors' "extracted frames" were entirely different videos by
-    different creators. Explicitly calling `.play()` (muted, to satisfy
-    autoplay policy) reliably brings readyState to 4 within ~0.5s in manual
-    testing.
+    Root cause confirmed 2026-08-03: live DOM inspection showed a competitor
+    page's <video> element sitting at readyState=0 (HAVE_NOTHING) for 4+
+    seconds after navigation -- TikTok defers actually loading video data
+    until playback is triggered. An earlier version of
+    `extract_competitor_frames()` never called .play(), only set
+    `currentTime` (a no-op on an unloaded video) and screenshotted the live
+    element -- which, in a page object reused across many sequential
+    navigations, silently captured a PREVIOUS candidate's still-painted
+    frame instead. Confirmed in production: 2 of 5 product-007 competitors'
+    "extracted frames" were entirely different videos by different
+    creators. Explicitly calling `.play()` (muted, to satisfy autoplay
+    policy) reliably brings readyState to 4 within ~0.5s in manual testing.
 
-    Downloading the actual bytes (rather than continuing to screenshot the
-    live element even after this fix) removes the whole class of live-DOM
-    timing risk permanently and lets ffmpeg do the frame extraction the same
-    way this project already does for its OWN rendered videos (Layer 3) --
-    operating on real file bytes, not a race-prone in-browser paint.
+    Returns (True, duration) once readyState >= 2, where duration is a float
+    or None if the video itself doesn't report one (rare, but seen on some
+    TikTok live-replay pages -- distinct from "never became ready"). Returns
+    (False, None) if the video never became ready within timeout_s -- the
+    caller must not proceed to capture frames in that case.
     """
     try:
         page.evaluate("""() => {
@@ -501,48 +500,106 @@ def download_video_bytes(page, timeout_s=15):
             if (v) { v.muted = true; v.play().catch(() => {}); }
         }""")
     except Exception:
-        return None, None
+        return False, None
 
     for _ in range(int(timeout_s / 0.5)):
         try:
             ready = page.evaluate("""() => {
                 const v = document.querySelector('video');
-                return v ? {readyState: v.readyState, src: v.currentSrc || ''} : null;
+                return v ? {readyState: v.readyState, duration: v.duration || null} : null;
             }""")
         except Exception:
-            return None, None
-        if ready and ready["readyState"] >= 3 and ready["src"]:
-            break
+            return False, None
+        if ready and ready["readyState"] >= 2:
+            return True, ready["duration"]
         time.sleep(0.5)
-    else:
-        return None, None  # never loaded -- do NOT fall back to screenshotting an unloaded element
+    return False, None  # never loaded -- caller must not proceed to capture frames
 
+
+def capture_frame_canvas(page, t, out_path, seek_timeout_ms=4000):
+    """
+    Seeks the page's <video> element to time `t` and captures the currently-
+    decoded frame by drawing it onto an off-screen <canvas> and reading it
+    back via toDataURL(), writing the PNG bytes to `out_path`. Returns True
+    on success, False otherwise.
+
+    Replaces the previous download-the-raw-bytes-then-ffmpeg approach
+    (`download_video_bytes()` + ffmpeg `-ss`/`-frames:v`), which was
+    confirmed broken 2026-08-03: TikTok's <video src> is a `blob:` URL
+    backed by a MediaSource object (used for adaptive/segmented streaming),
+    not a plain Blob, and `fetch()` on a MediaSource-backed blob: URL throws
+    `TypeError: Failed to fetch` unconditionally -- a browser-level
+    restriction (MediaSource blob URLs are only consumable by a <video>
+    element, never by fetch/XHR), not a timing race, so no amount of extra
+    waiting fixes it.
+
+    Drawing the already-decoded video frame onto a canvas sidesteps the
+    problem entirely: `drawImage()` operates on the pixel buffer the browser
+    has already decoded and is displaying, regardless of how the underlying
+    bytes were sourced or whether they're independently fetchable. This is
+    the same technique screen-recording/video-frame-grab tools use for MSE
+    content in general.
+    """
     try:
-        result = page.evaluate("""async () => {
-            const v = document.querySelector('video');
-            const resp = await fetch(v.currentSrc);
-            const buf = await resp.arrayBuffer();
-            const bytes = new Uint8Array(buf);
-            let binary = '';
-            const CHUNK = 8192;
-            for (let i = 0; i < bytes.length; i += CHUNK) {
-                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
-            }
-            return {b64: btoa(binary), contentType: resp.headers.get('content-type') || 'video/mp4'};
-        }""")
+        result = page.evaluate(
+            """async ({t, seekTimeoutMs}) => {
+                const v = document.querySelector('video');
+                if (!v) return {error: 'no video element'};
+                const seeked = await new Promise((resolve) => {
+                    let settled = false;
+                    const onSeeked = () => {
+                        if (settled) return;
+                        settled = true;
+                        v.removeEventListener('seeked', onSeeked);
+                        resolve(true);
+                    };
+                    v.addEventListener('seeked', onSeeked);
+                    v.currentTime = t;
+                    setTimeout(() => {
+                        if (settled) return;
+                        settled = true;
+                        v.removeEventListener('seeked', onSeeked);
+                        resolve(false);
+                    }, seekTimeoutMs);
+                });
+                // A timed-out seek (not-yet-buffered target range, e.g. late
+                // in a long clip) leaves currentTime wherever it drifted to --
+                // capturing that would silently repeat the exact failure mode
+                // this function replaces (wrong-frame-for-the-timestamp). Only
+                // accept it if currentTime nonetheless landed acceptably close
+                // to the requested t.
+                if (!seeked && Math.abs(v.currentTime - t) > 0.35) {
+                    return {error: `seek timed out and did not settle near t (currentTime=${v.currentTime})`};
+                }
+                if (!v.videoWidth || !v.videoHeight) return {error: 'video has no decoded dimensions yet'};
+                const canvas = document.createElement('canvas');
+                canvas.width = v.videoWidth;
+                canvas.height = v.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
+                return {dataUrl: canvas.toDataURL('image/png')};
+            }""",
+            {"t": t, "seekTimeoutMs": seek_timeout_ms},
+        )
     except Exception:
-        return None, None
+        return False
 
-    if not result or not result.get("b64"):
-        return None, None
+    if not result or result.get("error") or not result.get("dataUrl"):
+        return False
+
+    data_url = result["dataUrl"]
+    if "," not in data_url:
+        return False
+    b64 = data_url.split(",", 1)[1]
     import base64
-    return base64.b64decode(result["b64"]), result.get("contentType", "video/mp4")
+    try:
+        out_path.write_bytes(base64.b64decode(b64))
+    except Exception:
+        return False
+    return True
 
 
 def extract_competitor_frames(page, video_url, out_dir, label):
-    import shutil
-    import subprocess
-
     page.goto(video_url, wait_until="domcontentloaded", timeout=30000)
     time.sleep(2)
     dismiss_popups(page)
@@ -550,45 +607,19 @@ def extract_competitor_frames(page, video_url, out_dir, label):
     if not wait_for_manual_captcha_solve(page, out_dir, label):
         return None
 
-    video_bytes, content_type = download_video_bytes(page)
-    if not video_bytes:
+    is_ready, duration = wait_for_video_ready(page)
+    if not is_ready:
         return None
-
-    ext = "webm" if content_type and "webm" in content_type else "mp4"
-    video_path = out_dir / f"{label}_source.{ext}"
-    video_path.write_bytes(video_bytes)
-
-    ffmpeg = shutil.which("ffmpeg")
-    ffprobe = shutil.which("ffprobe")
-    if not ffmpeg or not ffprobe:
-        return None
-
-    try:
-        probe = subprocess.run(
-            [ffprobe, "-v", "error", "-show_entries", "format=duration",
-             "-of", "default=noprint_wrappers=1:nokey=1", str(video_path)],
-            capture_output=True, timeout=15, text=True,
-        )
-        duration = float(probe.stdout.strip()) if probe.stdout.strip() else None
-    except Exception:
-        duration = None
 
     frame_paths = []
     for t in TIMESTAMPS:
         if duration and t >= duration:
             break
         out_path = out_dir / f"{label}_t{t}.png"
-        try:
-            subprocess.run(
-                [ffmpeg, "-y", "-ss", str(t), "-i", str(video_path), "-frames:v", "1", str(out_path)],
-                capture_output=True, timeout=20,
-            )
-        except Exception:
-            continue
-        if out_path.exists():
+        if capture_frame_canvas(page, t, out_path):
             frame_paths.append({"t": t, "path": str(out_path)})
 
-    return {"duration": duration, "frames": frame_paths, "source_video_path": str(video_path)}
+    return {"duration": duration, "frames": frame_paths, "source_video_path": None}
 
 
 def compute_motion_metrics(frame_paths):
