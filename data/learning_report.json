@@ -1,5 +1,7 @@
 {
   "generated": "2026-07-02",
+  "last_updated": "2026-08-11",
+  "checkpoint": "CREATIVE_RULES_SYNTHESIS_INCORPORATED (session 26) -- Permanent Creative Rules 1-3 and non-permanent Rule 4 from the approved Layer 3+5+7 diagnosis are now part of this learning report. Creative pipeline and Product 009 not yet touched -- awaiting human review of this update.",
   "decision": "PROCEED",
   "products_analyzed": ["002", "003", "007", "008"],
   "data_vintage": {
@@ -21,6 +23,130 @@
       "TikTok Discovery": 1
     }
   },
+  "creative_rules": {
+    "_comment": "Added session 26 (2026-08-11), per the approved Layer 3+5+7 cross-product diagnosis in CREATIVE_GAP_ANALYSIS.md / PROJECT_STATUS.md session 25. Additive to this file -- does not alter the pre-existing hook-type/pricing 'learning' block above, which was generated separately on 2026-07-02.",
+    "synthesis_source": "CREATIVE_GAP_ANALYSIS.md; ANALYZER_V3_SPEC.md (CROSS-PRODUCT LEARNING ARCHITECTURE section); PROJECT_STATUS.md session 25",
+    "evidence_scope": {
+      "products_covered": ["002", "003", "007", "008"],
+      "our_variants_analyzed": 16,
+      "qa_verified_competitors_analyzed": 20
+    },
+    "permanent_rules": [
+      {
+        "id": "rule_1",
+        "title": "Open on a real hand/person already using the product, not a static product render.",
+        "classification": "PERMANENT_CREATIVE_RULE",
+        "evidence": {
+          "our_variants": "0/16",
+          "qa_verified_competitors": "20/20"
+        },
+        "supported_across_products": ["002", "003", "007", "008"]
+      },
+      {
+        "id": "rule_2",
+        "title": "Avoid marketplace/catalog-style product presentation; use native real-world product demonstration instead.",
+        "classification": "PERMANENT_CREATIVE_RULE",
+        "revised_from": "Original narrow Rule 2 wording ('never show an AliExpress screenshot') was MODIFIED by Product 008, which shows glossy static CGI/catalog presentation without a literal marketplace screenshot. The broader revised wording above earned permanent status on its own 16/16 vs. 0/20 evidence.",
+        "evidence": {
+          "our_variants": "16/16 show marketplace/catalog-style presentation",
+          "qa_verified_competitors": "0/20 show this presentation style",
+          "notes": "Products 002/003/007: literal AliExpress/marketplace screenshots. Product 008: glossy static CGI/catalog presentation without literal marketplace UI -- same underlying defect, different mechanism."
+        },
+        "supported_across_products": ["002", "003", "007", "008"]
+      },
+      {
+        "id": "rule_3",
+        "title": "Show the product's actual mechanism/action/use rather than merely displaying the product.",
+        "classification": "PERMANENT_CREATIVE_RULE",
+        "evidence": {
+          "our_variants": "0/16",
+          "qa_verified_competitors": "20/20"
+        },
+        "sharpest_example": "Product 008: the core '360-degree rotation' benefit is represented by a static arrow graphic instead of actual rotation footage.",
+        "supported_across_products": ["002", "003", "007", "008"]
+      }
+    ],
+    "modified_rules": [
+      {
+        "id": "rule_4",
+        "title": "Include meaningful creative progression beyond a flat/basic demo.",
+        "examples": [
+          "comparison",
+          "reveal",
+          "use-case payoff",
+          "transformation",
+          "different context/use",
+          "sustained real interaction",
+          "another meaningful progression rather than a flat uninterrupted presentation"
+        ],
+        "classification": "MODIFIED_RULE",
+        "permanent": false,
+        "do_not_promote_to_permanent": true,
+        "evidence_scope": "EVIDENCE_3_OF_4_PRODUCTS",
+        "evidence": {
+          "supported_in_products": ["003", "007", "008"],
+          "not_yet_evaluated_in_products": ["002"]
+        }
+      }
+    ],
+    "combined_layer_3_5_7_diagnosis": {
+      "layer_3_what": "Our videos open with static/catalog-style product presentation.",
+      "layer_7_when": "Among the 12 statistically usable variants (>=10 views), 2-second retention is approximately 0.25-0.45 and none are STRONG.",
+      "layer_5_how": "20/20 QA-verified successful competitor videos use real human/product interaction and demonstrate the real mechanism instead of our static/catalog presentation.",
+      "causality": {
+        "status": "REPEATED_CROSS_PRODUCT_CORRELATION -- NOT PROVEN CAUSATION",
+        "have": [
+          "direct evidence about our creative (Layer 3)",
+          "direct evidence about competitor creative (Layer 5)",
+          "direct evidence about our own retention (Layer 7)",
+          "repeated correlation across 4 independent products"
+        ],
+        "do_not_have": [
+          "competitor retention curves",
+          "causal proof that changing the creative rules will improve retention"
+        ],
+        "forbidden_claims": [
+          "competitors retain viewers better at 2 seconds",
+          "competitors decline more slowly"
+        ]
+      }
+    },
+    "data_quality_findings": [
+      {
+        "finding": "Apparent STRONG retention results in the portfolio are not reliable wins -- both are driven by tiny sample size, not real creative success.",
+        "type": "DATA_QUALITY_SAMPLE_SIZE",
+        "not_a_creative_rule": true,
+        "examples": [
+          {"variant": "003C", "issue": "STRONG-looking result based on 1 view"},
+          {"variant": "008A", "issue": "STRONG-looking result based on 4 views"}
+        ],
+        "statistically_usable_variants": "12/16 (>=10 views)",
+        "usable_variant_outcomes": "all WEAK or MARGINAL, none STRONG",
+        "usable_variant_retention_2s_range": [0.25, 0.45]
+      }
+    ],
+    "status_for_creative_pipeline": {
+      "note": "The 3 permanent rules are strong cross-product recommendations based on repeated correlation, NOT causally proven performance improvements. They are adopted as REQUIREMENTS for the next creative test, not as confirmed wins.",
+      "rule_4_status": "NOT permanent -- must not be applied as a hard requirement by the creative pipeline yet.",
+      "pipeline_touched": false
+    },
+    "next_causal_test": {
+      "purpose": "The next creative should function as a causal test of the 3 permanent rules.",
+      "old_pattern": [
+        "static/catalog opening",
+        "no real human interaction",
+        "no demonstrated mechanism"
+      ],
+      "new_pattern": [
+        "real hand/person from the opening",
+        "native real-world presentation",
+        "actual mechanism demonstrated"
+      ],
+      "comparison_goal": "Measured retention/performance on the NEW pattern vs. historical OLD-pattern variants determines whether the correlations translate into real improvement.",
+      "test_status": "NOT_YET_RUN",
+      "results": null
+    }
+  },
   "product_009_brief": {
     "recommended_category": "Mobile Phone Accessories",
     "lead_hook_for_variant_A": "Curiosity",
@@ -31,7 +157,8 @@
     "first_frame_requirement": "standard approach -- 2s retention is WEAK-to-MARGINAL but not CRITICAL on any statistically meaningful variant, meaning the hook itself is not the primary problem",
     "pacing_adjustment": "shorten and tighten the mid-video (5-13s) segments -- average watch time is POOR (<25% of the 15s runtime) on 13 of 16 variants, including several high-view variants; viewers consistently leave well before the video ends regardless of hook type",
     "cta_adjustment": "no data yet -- cta_code_comments has never been collected for any product; this is now the top data-quality gap",
-    "storyboard_notes": "consider testing a shorter/faster-paced middle section as an explicit experiment, given how consistent the watch-time drop-off is across every hook type and product tested so far. This is the first analysis run backed by complete saves/shares/watch-time/retention data -- prior PROCEED decisions (including 2026-07-01's) were built on incomplete data per PROJECT_STATUS.md."
+    "storyboard_notes": "consider testing a shorter/faster-paced middle section as an explicit experiment, given how consistent the watch-time drop-off is across every hook type and product tested so far. This is the first analysis run backed by complete saves/shares/watch-time/retention data -- prior PROCEED decisions (including 2026-07-01's) were built on incomplete data per PROJECT_STATUS.md.",
+    "creative_rules_compliance_note": "Added session 26 (2026-08-11): this brief predates the approved Layer 3+5+7 creative-rules synthesis above. Its `first_frame_requirement` ('standard approach') is now superseded -- Permanent Rules 1-3 identify our static/catalog opening itself as the unanimous 0/16-vs-20/20 (or 16/16-vs-0/20) defect. Any Product 009 generation must comply with `creative_rules.permanent_rules` before this brief's hook/pricing recommendations are applied. Left the brief's own text/numbers unedited -- regenerating Product 009 guidance is out of scope for this update."
   },
   "pause_reason": null,
   "change_strategy_issue": null
