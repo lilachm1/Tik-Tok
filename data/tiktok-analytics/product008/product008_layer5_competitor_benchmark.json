@@ -1,131 +1,590 @@
 {
   "product_id": "008",
-  "category": "Rotating phone/tablet stand (arm-mount or desk stand)",
-  "benchmark_type": "STATISTICAL, per ANALYZER_V3_SPEC.md Layer 5's competitor benchmark requirement (2026-07-02, third refinement)",
-  "search_queries_used": [
-    "מעמד לטאבלט מסתובב",
-    "מעמד לנייד מסתובב 360",
-    "תושבת לטאבלט מתקפלת (round abandoned -- 5/5 CAPTCHA-contaminated)",
-    "מעמד סקיסורס לאייפד (round abandoned -- 5/5 CAPTCHA-contaminated)",
-    "מעמד מסתובב לטאבלט",
-    "זרוע מעמד טאבלט לשולחן"
+  "search_queries": [
+    "מעמד לטאבלט מסתובב"
   ],
   "target_competitor_count": 5,
-  "actual_valid_competitor_count": 4,
-  "confidence": "MODERATE -- 4 of 5 target, all confirmed clean and on-category. Not full LOW_CONFIDENCE (that's reserved for n<=2), but explicitly one below target -- do not treat as equivalent to a full 5/5 or 10/10 benchmark.",
-  "known_data_loss_disclosed": "A 5th valid competitor (@goussve.km, 58 likes, confirmed on-category during initial review) had its extracted frames deleted by an overly broad cleanup command aimed at a DIFFERENT, CAPTCHA-contaminated batch that happened to reuse the same generic filenames (comp0-comp4). Not re-collected for this pass given diminishing returns after two additional search rounds; disclosed rather than silently omitted.",
-  "market_composition_finding": "IMPORTANT, not previously expected: none of the 4 valid competitors are confirmed Israeli/Hebrew-market despite every search being run in Hebrew (per ANALYZER_V3_SPEC.md's own warning that a Hebrew query can still surface non-Israeli accounts). Captions: 3 in English (@yeuunnt.22, @unboxingexpert, @digitalnexus1), 1 in Spanish (@toptech.mx). This benchmark should be read as an EXPANDED/GLOBAL-MARKET benchmark, not an Israeli-market one -- per the spec's own expansion rule ('if insufficient in-market data exists, expand gradually while recording the market source'), which is exactly what happened here, not a methodology failure, but it must be stated plainly rather than assumed away.",
-  "exclusion_filter_applied": {
-    "excluded": [
-      {"url": "https://www.tiktok.com/@eacoswgx/video/7620772523638148382", "like_count": 2761, "reason": "WRONG PRODUCT CATEGORY -- a bendable phone grip accessory, not a rotating stand. Surfaced by the search term overlap ('מסתובב'/bend-rotate wording) but not a comparable product."},
-      {"url": "toptech.mx (round 1 attempt)", "reason": "First extraction attempt was CAPTCHA-contaminated (all frames showed a slider puzzle). Re-extracted cleanly in round 3 and included below."}
-    ]
-  },
+  "actual_competitor_count": 5,
+  "low_confidence": false,
+  "low_confidence_reason": null,
   "competitors": [
     {
-      "label": "yeuunnt.22",
-      "url": "https://www.tiktok.com/@yeuunnt.22/video/7550598379038870839",
-      "like_count": 78300,
-      "saves": 12600, "comments": 603, "shares": 17100,
-      "market_source": "Not confirmed Israeli/Hebrew -- English caption",
-      "avg_consecutive_ssim": 0.4609,
-      "cut_points_detected": [],
-      "qualitative_review": {
-        "product_reveal_time_s": "~0 (immediate -- device visible in frame 1)",
-        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
-        "human_motion_present": true,
-        "camera_movement_present": true,
-        "motion_type": "organic (real handheld/subject movement -- a real child moving under a blanket, confirmed via SSIM trend + direct visual comparison)",
-        "first_frame_strength": "strong -- immediate human/relatable context",
-        "product_shown_in_real_use": true,
-        "feels_native_to_tiktok_israel_or_generically_native": "native/authentic UGC feel (market unconfirmed as specifically Israeli)"
-      }
-    },
-    {
-      "label": "unboxingexpert",
+      "label": "comp0",
       "url": "https://www.tiktok.com/@unboxingexpert/video/7095924665666850054",
-      "like_count": 2836,
-      "market_source": "Not confirmed Israeli/Hebrew -- English caption (#rotatable #ipadstand)",
-      "avg_consecutive_ssim": 0.4931,
-      "cut_points_detected": [],
+      "like_count": 2869,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": 2869,
+      "source": "seed",
+      "duration_s": 12.220553,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp0_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.886387
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.803031
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.740917
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.472191
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.554118
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.398701
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.433684
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.457409
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.501688
+          }
+        ],
+        "avg_consecutive_ssim": 0.5831251111111111,
+        "likely_cut_points_s": []
+      },
       "qualitative_review": {
-        "product_reveal_time_s": "~0 (immediate -- stand+iPad visible in frame 1)",
+        "product_reveal_time_s": "~0 (tablet + stand fully visible and already mounted in frame 1)",
         "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
         "human_motion_present": true,
-        "camera_movement_present": "mostly static camera; motion is primarily the product itself being handled/rotated by hand",
-        "motion_type": "organic object motion (hands actively rotating/adjusting the product)",
-        "first_frame_strength": "solid -- real desk/tech setting, product immediately legible",
+        "camera_movement_present": "mostly static camera; motion is the product/hand being adjusted",
+        "motion_type": "organic hand motion (hand rotating/adjusting the mount; near-end shot shows the stand folded flat)",
+        "first_frame_strength": "strong -- immediate, legible RGB desk setup with tablet already mounted",
         "product_shown_in_real_use": true,
-        "feels_native_to_tiktok_israel_or_generically_native": "native desk-setup/unboxing style, not catalog"
+        "feels_native_to_tiktok_israel": "native desk-setup/tech-unboxing style, not catalog (market not confirmed Israeli)",
+        "notes": "Same stand design coherent across opening, 0-8s grid, and near-end fold-flat closing shot. No cross-candidate leakage."
       }
     },
     {
-      "label": "toptech.mx",
+      "label": "comp1",
       "url": "https://www.tiktok.com/@toptech.mx/video/7596714676918947079",
-      "like_count": 1172,
-      "market_source": "Not Israeli -- Spanish caption ('Soporte para iPad, rotación de 360°, altura')",
-      "avg_consecutive_ssim": 0.4989,
-      "cut_points_detected": [],
+      "like_count": 1211,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": 1211,
+      "source": "seed",
+      "duration_s": 16.39043,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp1_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.514494
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.450534
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.332618
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.598431
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.484797
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.477758
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.383937
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.372754
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.515198
+          }
+        ],
+        "avg_consecutive_ssim": 0.45894677777777776,
+        "likely_cut_points_s": []
+      },
       "qualitative_review": {
-        "product_reveal_time_s": "~0-1 (visible early but from a less immediately legible top-down angle)",
+        "product_reveal_time_s": "~1-2 (opens on an ambiguous close crop of a hand reaching for a small base component; full product context arrives ~1-2s later)",
         "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
         "human_motion_present": true,
         "camera_movement_present": "mostly static; hand/object motion",
         "motion_type": "organic hand/object motion",
-        "first_frame_strength": "moderate -- slightly abstract framing, darker/lower contrast than the others",
+        "first_frame_strength": "weaker than most of the other 4 -- abstract close crop, product identity not immediately legible",
         "product_shown_in_real_use": true,
-        "feels_native_to_tiktok_israel_or_generically_native": "casual desk-demo style, not catalog"
+        "feels_native_to_tiktok_israel": "casual home-desk-decor style (plant, ambient lamp, branded sign in background), native-feeling; market not confirmed Israeli (historically Spanish-caption)",
+        "notes": "Same black foldable base+arm design coherent across opening, grid, and near-end base-alone shot. Longest of the 5 sampled at the standard grid (16.4s total)."
       }
     },
     {
-      "label": "digitalnexus1",
-      "url": "https://www.tiktok.com/@digitalnexus1/video/7294811241925741870",
-      "like_count": 171,
-      "market_source": "Not Israeli -- English caption",
-      "avg_consecutive_ssim": 0.6087,
-      "cut_points_detected": [],
+      "label": "comp2",
+      "url": "https://www.tiktok.com/@yeuunnt.22/video/7550598379038870839",
+      "like_count": 78300,
+      "like_count_unavailable": false,
+      "caption": "",
+      "view_count_at_search": null,
+      "source": "seed",
+      "duration_s": 35.433333,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp2_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.467857
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.461178
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.485261
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.496657
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.493369
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.489888
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.537027
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.478005
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.426734
+          }
+        ],
+        "avg_consecutive_ssim": 0.48177511111111115,
+        "likely_cut_points_s": []
+      },
       "qualitative_review": {
-        "product_reveal_time_s": "~2-5 (slower than the other 3 -- opens on a close, ambiguous crop of the clamp mechanism; full product context only clear by ~5s)",
+        "product_reveal_time_s": "~0 (device visible and already in use in frame 1)",
         "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
         "human_motion_present": true,
-        "camera_movement_present": "mostly static; hand/arm motion",
-        "motion_type": "organic hand/arm motion",
-        "first_frame_strength": "weaker than the other 3 -- ambiguous close crop, product identity not immediately clear",
+        "camera_movement_present": "static camera; real child actively adjusting the clamp arm/phone angle drives all visible change",
+        "motion_type": "organic human motion (a real child repeatedly repositioning the gooseneck clamp mount and phone)",
+        "first_frame_strength": "strong -- immediate human/relatable bedtime context, emotionally warm from frame one",
         "product_shown_in_real_use": true,
-        "feels_native_to_tiktok_israel_or_generically_native": "casual home-lifestyle setting, native-feeling"
+        "feels_native_to_tiktok_israel": "native/authentic UGC feel (market not confirmed Israeli -- no Hebrew visible)",
+        "notes": "Top performer by a wide margin (78.3K likes). By far the longest of the 5 (35.4s vs 10-16s for the others) -- sustained engagement across a much longer runtime, not just a strong opening. Gooseneck bed-clamp variant, not a rigid desk stand -- still within product 008's own defined category ('arm-mount or desk stand')."
+      }
+    },
+    {
+      "label": "comp3",
+      "url": "https://www.tiktok.com/@xyxzq1sfe1/video/7617950061020056848",
+      "like_count": 7027,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": null,
+      "source": "seed",
+      "duration_s": 10.215374,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp3_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.90655
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.872581
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.807337
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.830594
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.795887
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.774728
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.657642
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.545121
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.54458
+          }
+        ],
+        "avg_consecutive_ssim": 0.7483355555555555,
+        "likely_cut_points_s": [
+          5.0,
+          6.5
+        ]
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": "~0 (stand fully visible, hand already reaching for it in frame 1)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": "2 detected hard cuts (at ~5.0s and ~6.5s per motion_metrics) -- a genuinely edited multi-shot video, not a single continuous take",
+        "motion_type": "organic hand motion (product demo) cutting to a real person seated and actively using the mounted tablet",
+        "first_frame_strength": "strong -- clear immediate product legibility, hand already interacting",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel": "native lifestyle/desk-setup content; market not confirmed Israeli",
+        "notes": "Only competitor with detected hard cuts -- structured as a distinct 2-beat video (product/mount demo, then a cut to the creator smiling at camera while genuinely using the tablet in the stand). Same pink/clear stand and same creator coherent across opening, grid, and near-end payoff shot."
+      }
+    },
+    {
+      "label": "comp4",
+      "url": "https://www.tiktok.com/@digitalnexus1/video/7294811241925741870",
+      "like_count": 176,
+      "like_count_unavailable": false,
+      "caption": "TikTok - Make Your Day",
+      "view_count_at_search": null,
+      "source": "seed",
+      "duration_s": 12.816009,
+      "source_video_path": null,
+      "frame_paths": [
+        {
+          "t": 0.1,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t0.1.png"
+        },
+        {
+          "t": 0.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t0.5.png"
+        },
+        {
+          "t": 1.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t1.0.png"
+        },
+        {
+          "t": 1.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t1.5.png"
+        },
+        {
+          "t": 2.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t2.0.png"
+        },
+        {
+          "t": 2.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t2.5.png"
+        },
+        {
+          "t": 3.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t3.5.png"
+        },
+        {
+          "t": 5.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t5.0.png"
+        },
+        {
+          "t": 6.5,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t6.5.png"
+        },
+        {
+          "t": 8.0,
+          "path": "C:\\Automation\\TikTok\\data\\tiktok-analytics\\product008\\layer5_competitor_frames\\comp4_t8.0.png"
+        }
+      ],
+      "motion_metrics": {
+        "consecutive_ssim": [
+          {
+            "from_t": 0.1,
+            "to_t": 0.5,
+            "ssim": 0.63063
+          },
+          {
+            "from_t": 0.5,
+            "to_t": 1.0,
+            "ssim": 0.655322
+          },
+          {
+            "from_t": 1.0,
+            "to_t": 1.5,
+            "ssim": 0.702236
+          },
+          {
+            "from_t": 1.5,
+            "to_t": 2.0,
+            "ssim": 0.750332
+          },
+          {
+            "from_t": 2.0,
+            "to_t": 2.5,
+            "ssim": 0.705454
+          },
+          {
+            "from_t": 2.5,
+            "to_t": 3.5,
+            "ssim": 0.623266
+          },
+          {
+            "from_t": 3.5,
+            "to_t": 5.0,
+            "ssim": 0.577856
+          },
+          {
+            "from_t": 5.0,
+            "to_t": 6.5,
+            "ssim": 0.664502
+          },
+          {
+            "from_t": 6.5,
+            "to_t": 8.0,
+            "ssim": 0.707791
+          }
+        ],
+        "avg_consecutive_ssim": 0.6685987777777778,
+        "likely_cut_points_s": []
+      },
+      "qualitative_review": {
+        "product_reveal_time_s": "~2-5 (slower than the other 4 -- opens on a close, ambiguous crop of a clamp/knob mechanism; full stand+tablet context only clear by mid-video)",
+        "text_appears_time_s": "no baked-in overlay text observed in reviewed frames",
+        "human_motion_present": true,
+        "camera_movement_present": "mostly static; hand/arm motion repositioning the tablet on the arm",
+        "motion_type": "organic hand/arm motion",
+        "first_frame_strength": "weakest of the 5 -- ambiguous close crop, product identity not clear at t0.1",
+        "product_shown_in_real_use": true,
+        "feels_native_to_tiktok_israel": "casual home-lifestyle setting (couch, warm ambient lighting), native-feeling; market not confirmed Israeli",
+        "notes": "Floor-standing telescopic arm variant (different sub-form than comp0/1/3's desk clamps and comp2's bed clamp), still within product 008's own category definition. Weakest/slowest opening of the 5, consistent with being the lowest-performing competitor (176 likes) -- the reveal-timing pattern holds within this benchmark too."
       }
     }
-  ],
-  "statistics": {
-    "motion_magnitude_avg_consecutive_ssim": {
-      "competitor_values": [0.4609, 0.4931, 0.4989, 0.6087],
-      "mean": 0.5155,
-      "median": 0.496,
-      "range": [0.4609, 0.6087],
-      "n": 4,
-      "our_008B_value": 0.927,
-      "our_percentile": "0th percentile -- 008B's value (0.927) is HIGHER than every single competitor's (i.e. LESS motion than all 4; SSIM is a similarity score, so lower = more change). 008B falls entirely outside the competitor range, not just below the median."
-    },
-    "cut_frequency": {
-      "competitor_values": [0, 0, 0, 0],
-      "note": "None of the 4 competitors showed a detected hard cut in the measured window -- same as 008B. The difference between us and them is NOT about editing/cut frequency; it's specifically about the intensity of continuous motion.",
-      "our_008B_value": 0
-    },
-    "human_presence": {"competitors_with_human_presence": "4/4", "our_008B": false},
-    "product_shown_in_real_use": {"competitors_showing_real_use": "4/4", "our_008B": false},
-    "motion_type_organic_vs_simulated": {"competitors_using_organic_motion": "4/4", "our_008B": "simulated crop-pan"},
-    "native_vs_catalog_feel": {"competitors_reading_as_native": "4/4", "our_008B": "reads as catalog/marketplace (Layer 3 cause (c) = LIKELY)"},
-    "product_reveal_timing": {
-      "competitor_values_s": ["~0", "~0", "~0-1", "~2-5"],
-      "note": "3 of 4 reveal near-immediately; 1 is slower. Our 008B has the product technically visible at 0s but partially obscured, with a clean unobstructed view only at 3s+ -- roughly comparable to the slowest competitor, slower than the other 3."
-    }
-  },
-  "required_output_statements": [
-    "Our opening motion magnitude is at the 0th percentile of this 4-competitor benchmark -- below every single benchmarked competitor, not just below average.",
-    "All 4 benchmarked competitors show organic human/object motion; our opening uses a simulated crop-pan on a static image.",
-    "All 4 benchmarked competitors show real human presence and real product-in-use demonstration; our opening shows neither.",
-    "All 4 benchmarked competitors read as native/authentic content; our opening reads as catalog/marketplace material (corroborating Layer 3's cause (c) finding with a 4-competitor benchmark, not a single anecdote).",
-    "None of the 4 benchmarked competitors show a detected hard cut in their opening -- cut/editing frequency is not the differentiator; sustained motion intensity is.",
-    "3 of 4 competitors reveal the product near-instantly; our clean, unobstructed product reveal only arrives at 3s, comparable to the single slowest competitor in the benchmark."
   ]
 }
