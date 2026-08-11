@@ -1,6 +1,6 @@
 # Analyzer v3 — 10-Layer TikTok Affiliate Diagnosis System
 
-**Status: PARTIALLY IMPLEMENTED (corrected 2026-08-10 — this line was previously stale).** Layers 3 (Hook Diagnosis) and 7 (Pacing/Retention) are implemented and run across all 16/16 CONFIRMED variants. Layer 5 (Video/Creative Execution + competitor benchmark) is implemented and, as of session 23 (2026-08-10), run and QA-verified on all 4 products (002, 003, 007, 008) — see this section's own "CATEGORY-BASED BENCHMARK RULE" below for the current benchmark goal, and `PROJECT_STATUS.md` sessions 13-23 for the full implementation/validation history. **Layers 1, 2, 4, 6, 8, 9, 10 remain SPEC ONLY — NOT IMPLEMENTED**; this document defines their architecture so a future session can build them without re-deriving the design. The Layer 5 "Same-Product Visual Identity Gate" subsection is spec-only and explicitly DEFERRED (not required for Layer 5's current category-based goal).
+**Status: PARTIALLY IMPLEMENTED (corrected 2026-08-11 — this line was previously stale, and briefly overstated Product 008's status; see `PROJECT_STATUS.md`'s 2026-08-11 checkpoint-audit entries for what happened).** Layers 3 (Hook Diagnosis) and 7 (Pacing/Retention) are implemented and run across all 16/16 CONFIRMED variants. Layer 5 (Video/Creative Execution + competitor benchmark) is implemented and, as of session 24 (2026-08-11), genuinely run and QA-verified on all 4 products (002 session 21, 003 session 22, 007 session 23, 008 session 24 — re-run from scratch after an audit found its earlier "confirmed" status had been asserted without ever re-running it) — see this section's own "CATEGORY-BASED BENCHMARK RULE" and "CROSS-PRODUCT LEARNING ARCHITECTURE" below for the current, now-permanent methodology, and `PROJECT_STATUS.md` sessions 13-25 for the full implementation/validation history. The session-25 cross-product synthesis across all 4 products lives in `CREATIVE_GAP_ANALYSIS.md`. **Layers 1, 2, 4, 6, 8, 9, 10 remain SPEC ONLY — NOT IMPLEMENTED**; this document defines their architecture so a future session can build them without re-deriving the design. The Layer 5 "Same-Product Visual Identity Gate" subsection is spec-only and explicitly DEFERRED (not required for Layer 5's current category-based goal).
 
 **Purpose.** The current analyzer (`tiktok-analyze.md` C.A–C.J, confirmed working as of 2026-07-02) answers "which variant performed best." Analyzer v3 must answer *why* — diagnosing product, offer, hook, creative asset, execution, angle, pacing, CTA, click-funnel, and competitive positioning as ten distinct, independently-diagnosable layers — and turn that diagnosis into a specific next action, not just a score.
 
@@ -230,6 +230,57 @@ A competitor is admitted to the Layer 5 benchmark only if all three gates below 
 - Reliable success/performance evidence — a real measured signal (like_count, and view_count/engagement/ranking where available and reliable) that positions the competitor as a genuine success within the candidate pool searched, not a random category-relevant video picked without regard to performance.
 
 Given this, the **Same-Product Visual Identity Gate below is `DEFERRED — NOT REQUIRED FOR THE CURRENT LAYER 5 BENCHMARK GOAL`**: DINOv2/OpenCLIP/exact-SKU visual matching solve a narrower problem (proving identical-product identity) than what Layer 5 now actually needs (narrow-category relevance, already covered by the exclusion filter + `CATEGORY_RELEVANCE_VERIFIED` gate above). Nothing in this section has been installed or implemented; it remains available to revisit if a future need for exact-product matching (e.g. for Layer 10's full market-wide system) makes it worth building.
+
+**CROSS-PRODUCT LEARNING ARCHITECTURE (added 2026-08-11, session 25 — PERMANENT, ACTIVE. Makes the per-product benchmark procedure above, and the cross-product synthesis it feeds, a standing methodology — not a one-off session procedure.)** First proven end-to-end across products 002/003/007/008 (sessions 21-25, see `PROJECT_STATUS.md` and `CREATIVE_GAP_ANALYSIS.md`). Every future product's Layer 5 work — and every future re-synthesis when a new product is added — follows this same pipeline.
+
+**The system's core business question, permanent, unchanged by any single session's findings:**
+> "What do successful TikTok videos consistently do that our videos consistently do not — and what should change in the next creative because of that?"
+
+Every layer and every session in this pipeline exists to answer this question with evidence, not to produce diagnostics for their own sake.
+
+**Per-product workflow (permanent):**
+1. Identify the product's exact narrow category from its own existing research/config files (not guessed, not re-derived from scratch each time).
+2. Find 5 successful, same-narrow-category TikTok videos.
+3. `CATEGORY_RELEVANCE_VERIFIED` — per competitor, personally visually confirmed.
+4. `FRAME_IDENTITY_VERIFIED` — per competitor, personally visually confirmed (no stale frames, no cross-candidate leakage).
+5. Independent automated QA (`layer5_benchmark_qa.py --product-id <pid>`).
+6. Full-video creative comparison (not only the opening hook) against our own variants, cross-referencing existing Layer 3 (opening/hook content) and Layer 7 (retention timing) evidence.
+7. Identify what successful competitors consistently do that our own videos do not, for this specific product.
+
+**Permanent operating rules for every future product's Layer 5 run:**
+- Exact SKU matching is **not** required; same narrow product category **is** required (per the CATEGORY-BASED BENCHMARK RULE above).
+- Reliable performance evidence (a real, fetched `like_count`/`view_count`/ranking) **is** required — a random category-relevant video with no success signal is not admissible.
+- **`REJECT → NEXT CANDIDATE`** for any irrelevant or wrong-subcategory candidate. Do not perform lengthy forensic investigation on a rejected candidate unless there is direct evidence of a *systemic* bug (e.g. frame-identity contamination, an extraction/tooling failure) — not simple search noise, which is expected and cheap to reject.
+- **QA-first workflow, permanent:** `SMALLEST TEST → QA → INSPECT EVIDENCE → SCALE`. Validate the live mechanism on a small scope (e.g. `--target 2`) before committing to a full 5-competitor run.
+- **Compare the full video, not only the opening hook** — the opening alone under-counts real differences (e.g. a second creative beat or a payoff/reveal near the end, confirmed to matter in 3 of 4 products so far).
+- **Preserve historical evidence permanently.** Never silently overwrite or mix an earlier (possibly pre-methodology or otherwise unverified) benchmark with a newly-QA-verified one — archive the old evidence intact under a clearly dated/labeled subfolder (`layer5_competitor_frames_archive/<date>_<label>/`) before running anything new. Done for all 4 products so far; required for every future re-run.
+- **Personally inspect the extracted visual evidence for every admitted competitor.** Category relevance and frame identity are gates, not formalities — captions are frequently placeholder/unusable text across every product checked so far (`"TikTok - Make Your Day"` or empty), so caption-based filtering alone is never sufficient evidence of relevance.
+
+**Cross-product learning pipeline (permanent):**
+```
+5 successful same-category videos per product
+  → QA
+  → full-video comparison
+  → repeated cross-product differences
+  → Permanent Creative Rules
+  → combined Layer 3 + Layer 5 + Layer 7 review
+  → only then feed approved conclusions into learning_report.json / the creative pipeline
+```
+A creative difference observed in a single product's benchmark is a **per-product finding**, not yet a rule. A difference that repeats independently across multiple products' benchmarks becomes eligible for classification as a **`PERMANENT CREATIVE RULE`** (unanimous across every product checked, no counter-example), a **`MODIFIED RULE`** (the underlying pattern holds everywhere, but the originally-stated mechanism was too narrow and a later product's evidence forced a broader wording — this is exactly what happened to the "no AliExpress screenshot" rule once product 008 showed the same underlying catalog/CGI-render defect by a different mechanism), or left **`INSUFFICIENT EVIDENCE`** / **`REJECTED`** if the cross-product data doesn't actually support it. `CREATIVE_GAP_ANALYSIS.md` holds the current rule set and its full evidentiary basis — that document's *content* changes as more products are added; this section defines the *architecture* that produces it, and does not change per-session.
+
+**Causality discipline (permanent, platform-wide — extends the Confidence Rules above).** Every conclusion produced by this pipeline must be labeled as exactly one of three tiers, never blurred together:
+1. **Direct evidence** — a directly measured/observed fact (a frame's actual content, a competitor's actual fetched `like_count`, a variant's actual retention curve).
+2. **Repeated correlation** — a pattern that recurs across independent products/competitors but has not been isolated as a cause (e.g. "the single highest-performing competitor in most benchmarks shows some progression beyond a flat demo" is a repeated correlation across 3 of 4 products checked — not proof that adding such a beat *causes* higher performance).
+3. **Hypothesis/recommendation, not yet causally tested** — a proposed creative change grounded in the above, but never validated by an actual before/after test on our own content. **No Creative Rule may be described as "proven to improve performance" until an actual causal test has been run** (e.g. producing and measuring a variant that follows the rule against one that doesn't, on the same product).
+
+**Layer role definitions (permanent, do not conflate):**
+- **Layer 3 = WHAT** viewers see in the opening — the actual visual/textual content of the hook, and what's wrong with it in isolation.
+- **Layer 5 = HOW** our creative execution differs from real, successful competitors in the same narrow category — the comparative/benchmark layer.
+- **Layer 7 = WHEN** viewers leave — the timing of retention loss.
+
+A combined diagnosis reads these three together (what was shown, how it differs from what demonstrably works, and when viewers reacted to it). As of session 25, this combined reading is itself a repeated, four-product correlation — not a proven causal chain — until an actual creative test validates it.
+
+**Future creative-testing requirement (permanent):** once any Permanent/Modified Creative Rule from this pipeline is adopted into the creative pipeline, a future session must design an actual causal test (e.g. producing and measuring a variant that follows the new rule against one that doesn't, holding everything else constant) before that rule may be described as validated rather than a repeated correlation. As of session 25, no rule in `CREATIVE_GAP_ANALYSIS.md` has been causally tested — this is the explicit next gap, not yet closed.
 
 **SAME-PRODUCT VISUAL IDENTITY GATE (added 2026-08-10, third refinement — SPEC ONLY, NOT IMPLEMENTED, NOT INSTALLED. Status as of the same day, later: DEFERRED — NOT REQUIRED for Layer 5's current category-based goal; see the rule directly above.)** The exclusion filter above (2026-07-02) is caption/keyword-based and has a confirmed failure mode: same-*category* competitors pass it because they share incidental keywords, not because they show the same product. Real observed failures: Mini Bag Sealer → sealant-paste and mini-suitcase videos; Seat-Back Organizer → seat-cushion and back-support-cushion videos. This gate adds a mandatory visual check between frame extraction and benchmark admission, so category overlap alone can never be sufficient. Retained here as a deferred design, not required now that Layer 5's goal is explicitly narrow-category (not exact-SKU) benchmarking.
 

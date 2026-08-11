@@ -1,86 +1,138 @@
 # Creative Gap Analysis — What Successful Competitors Do That We Don't
 
-**Date:** 2026-07-02 — **updated 2026-08-10 (sessions 21-23)** — **corrected 2026-08-11 (checkpoint audit)**
-**Question:** What do successful competitor videos consistently do that our videos consistently do not?
-**Status:** Synthesis of completed diagnostic work (Layers 7, 3, 5) for products 002, 003, and 007. Not yet reflected in `learning_report.json` — held per explicit instruction until this synthesis is reviewed. **`PRODUCT008_RECHECK_PENDING` — Product 008 has not been through this synthesis's current methodology; see correction below.**
+**Date:** 2026-07-02 — **updated 2026-08-10 (sessions 21-23)** — **corrected 2026-08-11 (checkpoint audit)** — **FINAL FOUR-PRODUCT SYNTHESIS: 2026-08-11 (session 25)**
 
-**2026-08-10 update:** Layer 5's competitor benchmark, previously run on only product 008, has now also been run and QA-verified (frame identity + category relevance, both visually confirmed, full-video spot-checked) for products 002, 003, and 007 — see `PROJECT_STATUS.md` sessions 21-23 for the full run-by-run detail. **Layer 5's benchmark rule changed at the same time: a competitor now only needs to be from the same narrow product category (e.g. any magnetic car phone mount, not the identical AliExpress listing) — exact-SKU/product-identity matching is explicitly not required.** This means every finding below that was previously "confirmed on 008 only, hypothesized for the rest" is now independently confirmed on **products 002, 003, and 007** (15 real, QA-verified competitors).
+**Question:** What do successful TikTok competitor videos consistently do that our videos consistently do not — across all four products — and what should change in the next creative because of that?
 
-**CORRECTION (2026-08-11):** the line above previously read "confirmed on all four products." That was incorrect. Product 008's original 4-competitor benchmark (created 2026-07-02, commit `f003a7b`) predates `layer5_benchmark_qa.py` (did not exist until session 19 / 2026-08-03), the category-based benchmark rule (session 21), and the canvas-capture frame-identity fix (session 19/21). It has never been re-run under any of those, and no `QA_PASSED_PRODUCT008` result exists anywhere in the repo. Product 008's evidence is preserved below and labeled **pre-current-methodology / unverified under the new standard** — directionally consistent with the newer findings, but not equivalent evidence. **`PRODUCT008_RECHECK_PENDING`. NEXT: Product 008 re-check → QA (`layer5_benchmark_qa.py --product-id 008`) → full-video comparison → THEN cross-product synthesis across 002/003/007/008.**
+**Status:** Cross-product synthesis complete across **all four products (002, 003, 007, 008)**, all four now genuinely `QA_PASSED` under the current Layer 5 category-based methodology (`QA_PASSED_PRODUCT002` session 21, `QA_PASSED_PRODUCT003` session 22, `QA_PASSED_PRODUCT007` session 23, `QA_PASSED_PRODUCT008` session 24). This document is the interim synthesis for that review. **Not yet reflected in `learning_report.json`, the creative pipeline, or Product 009 — held per explicit instruction pending human review of this synthesis and the combined Layer 3+5+7 review that follows it.**
 
-## Evidence base (read this before the findings — confidence varies by claim)
-
-| Layer | Coverage | What it measured |
-|---|---|---|
-| 7 (pacing/retention) | 16/16 variants | WHEN viewers leave (temporal only — see naming correction in `ANALYZER_V3_SPEC.md`) |
-| 3 (hook diagnosis) | 16/16 variants | Frame-level cause rating (a/b/c/d/e/h) at sub-second resolution vs. the actual hook text |
-| 5 (execution diagnosis) | 1/16 variants (008B only) | Whether the rendered video matches its own Ken Burns plan |
-| 5 (competitor benchmark) | **002/003/007: `QA_PASSED`, n=15 competitors** (5+5+5), verified under the current methodology (sessions 21-23). **008: n=4 competitors, but `PRODUCT008_RECHECK_PENDING`** — from the original pre-fix implementation (2026-07-02); predates `layer5_benchmark_qa.py`, the category-based rule, and the frame-identity fix; not equivalent evidence | Statistical comparison against real successful competitor videos in the same narrow category (exact SKU not required, see rule change above — confirmed for 002/003/007 only) |
-
-**Findings below are labeled by how many variants/products actually support them.** A 16/16 finding is portfolio-wide fact. Findings #1-5 were originally a 4-competitors-on-product-008-only hypothesis, extended by inference to 002/003/007 — **as of session 23, they are now independently confirmed by real, QA-verified competitor benchmarks on products 002, 003, and 007** (15 competitors), not just inferred from our own footage. **Product 008's original 4-competitor sample is not part of that confirmation — `PRODUCT008_RECHECK_PENDING` (see correction above).**
+**Prior versions of this document (superseded):** the 2026-07-02 original was a single-product (008-only, 4 competitors, pre-current-methodology) hypothesis. The 2026-08-10 update extended it to 002/003/007 (15 QA-verified competitors) but *incorrectly* rolled Product 008's old, unverified benchmark into a false "confirmed on all 4 products" claim — corrected 2026-08-11 to `PRODUCT008_RECHECK_PENDING`, then closed the same day (session 24) by re-running Product 008 from scratch under the current methodology. This version supersedes all of that: all four products now carry equal-rigor, QA-verified evidence.
 
 ---
 
-## The answer, ranked by evidence strength
+## Evidence base (what this document is actually built on)
 
-### 1. Zero organic motion in the opening — 16/16 our variants vs. 15/15 QA-verified competitors across products 002/003/007 (was 4/4 on product 008 only, pre-methodology; confirmed independently on 002/003/007 in sessions 21-23; `PRODUCT008_RECHECK_PENDING`)
-Every single one of our 16 variants opens on a frame sequence that is pixel-identical for 1.5–3 seconds (confirmed via fresh sub-second ffmpeg extraction, not estimated). Every QA-verified competitor across products 002/003/007 (15 total) shows sustained, continuous frame-to-frame change throughout their opening and full runtime — real handheld camera/subject motion, not a static image. Product 008's earlier, pre-methodology 4-competitor sample showed the same qualitative pattern, but has not been re-verified under the current standard and is not counted in the 15/15 above. Where measured directly (008B vs. its competitors): our opening's motion magnitude sits at the **0th percentile** — below every single competitor, not just below average. Sessions 21-23 confirmed the same qualitative pattern (avg consecutive-frame SSIM 0.42-0.74 for every 002/003/007 competitor, vs. our own static 0-1.5s openings) via full-video frame captures, not just the opening.
+| Layer | Coverage | What it measured |
+|---|---|---|
+| 7 (pacing/retention) | 16/16 our variants | WHEN viewers leave (temporal only) |
+| 3 (hook diagnosis) | 16/16 our variants | Frame-level cause rating (a/b/c/d/e/h) at sub-second resolution vs. the actual hook text |
+| 5 (execution diagnosis) | 1/16 our variants (008B only) | Whether the rendered video matches its own configured motion plan — not repeated for other variants, see gap note below |
+| 5 (competitor benchmark) | **4/4 products, `QA_PASSED`, n=20 competitors total** (5+5+5+5: 002, 003, 007, 008) | Statistical, full-video comparison against real, successful competitor videos in the same narrow category (exact SKU not required) |
 
-Nuance worth keeping: for 008B/008D specifically, Layer 5 shows a Ken Burns pan *is* configured and *is* rendering correctly (SSIM decreasing monotonically) — the motion exists but is calibrated too subtly to register in the critical first 1–2 seconds. For 002/003/007, our own footage is a static photo + AliExpress screenshot with no Ken Burns pan configured for the openings checked (per Layer 3 evidence) — a stronger version of the same defect, not the same "configured but imperceptible" nuance. Either way, the viewer-facing result is identical across all 16: visually static.
+**Portfolio scope:** 16 of our own variants (4 products × 4 variants each) and 20 verified competitors (4 products × 5 each). All 20 competitors passed `CATEGORY_RELEVANCE_VERIFIED` and `FRAME_IDENTITY_VERIFIED`, both personally visually inspected (opening, standard 0–8s grid, and mid/late/near-end full-video frames), plus automated `layer5_benchmark_qa.py` (0 FAIL on all 4 products; 1 non-blocking caption-placeholder WARN on each — TikTok gives no usable caption for most of these candidates, resolved every time by direct visual/on-screen-text confirmation, never by trusting the caption).
 
-### 2. Zero human presence in the opening — 16/16 vs. 15/15 QA-verified competitors (002/003/007; `PRODUCT008_RECHECK_PENDING`)
-No variant across any product shows a person in its opening frame. Every QA-verified competitor across products 002/003/007 does — a real person, in a real moment (a hand actively demonstrating a car mount, a bag sealer, or a seat organizer). Product 008's earlier, pre-methodology sample (a child in bed) showed the same pattern but is not yet re-verified. This is the single sharpest visual contrast found: ours are product-only renders; theirs are person-first, from frame one.
+**Known evidence gaps in this synthesis (reported, not silently filled in):**
+- **Layer 5 execution diagnosis (our own motion measurement)** exists only for 008B (avg SSIM 0.927, 0th percentile vs. its own competitor set). It was never run on the other 15 variants. Everywhere else in this document, "our opening is static" is Layer 3's direct evidence (pixel-identical frames via fresh sub-second ffmpeg extraction), not a computed SSIM number — this is still direct evidence, just a different metric than 008B's.
+- **The "second creative beat" pattern (Rule 4, below) is explicitly documented for products 003, 007, and 008's top competitor, but not for 002.** Session 21's product 002 notes describe all 5 competitors similarly ("real hand actively demonstrating... continuous motion") without singling out a structural difference between the top and bottom performer the way sessions 22/23/24 did. This is an absence of a specific observation, not contrary evidence — Rule 4 below is stated as 3-of-4-products-confirmed, not 4-of-4, until someone goes back and checks 002's competitor set with that specific question in mind.
+- **Competitors' market origin is not confirmed Israeli/Hebrew for the large majority of the 20** (captions are mostly English/Spanish or unusable placeholders; a few handles are Israeli-sounding, e.g. `@max_stock_israel`). Per `ANALYZER_V3_SPEC.md`'s own expansion rule, this is an accepted global-market expansion, not a methodology failure — but it means every claim below is about "successful TikTok content in this narrow category," not proven to be about the Israeli market specifically.
 
-### 3. Zero real product-in-use demonstration — 16/16 vs. 15/15 QA-verified competitors (002/003/007; `PRODUCT008_RECHECK_PENDING`)
-Every one of our openings shows the product sitting motionless, alone, disconnected from any human action. Every QA-verified competitor across products 002/003/007 shows the product being actively handled, worn, mounted, sealed, or used by a real person — not just displayed — within the opening seconds, and continuing throughout the full video. Product 008's earlier sample is consistent with this but not yet re-verified under the current methodology.
+---
 
-### 4. Catalog/marketplace feel instead of native TikTok feel — 16/16 vs. 15/15 QA-verified competitors (002/003/007; `PRODUCT008_RECHECK_PENDING`)
-This is the umbrella pattern, and it shows up in two different severities:
-- **Products 002, 003, 007** (12/16 variants): the opening actually contains literal scraped AliExpress screenshots — visible marketplace page chrome ("אבטחה ופרטיות", "החזרות חינם", delivery dates, discount banners) *inside the measured 2–3s hook window itself*. Not catalog-*styled* — literally a screenshot of a shopping listing. **Confirmed zero competitors do this anywhere in their full video, across all 15 verified 002/003/007 competitors (sessions 21-23).**
-- **Product 008** (4/16 variants): a glossy 3D product render on a plain studio background — the "softer" version of the same problem, and the version STEP 11D's own pre-launch review flagged in one variant as "6/10 TikTok-native (AliExpress infographic aesthetic)."
+## Portfolio-wide facts (direct evidence, not correlation)
 
-Every QA-verified competitor across products 002/003/007 reads as native/authentic UGC (product 008's earlier sample read the same way but is not yet re-verified). This is cause (c) in the Layer 3 rubric, and it was rated LIKELY in **all 16 of 16 variants** — the single most universal finding in this whole diagnostic pass.
+From Layer 3's frame-level cause ratings across all 16 variants (agent-rated LIKELY/POSSIBLE/UNLIKELY against fresh, sub-second ffmpeg-extracted frames — not estimated):
 
-### 5. No emotional/relatable context — 16/16 vs. 15/15 QA-verified competitors (002/003/007; `PRODUCT008_RECHECK_PENDING`)
-Consequence of #2: with no human in frame, there's no face, no reaction, no relatable moment. Every one of our openings is emotionally neutral (a product photograph). The top QA-verified competitor's opening in each of 002/003/007 is a real person in a real moment — a chip-bag unboxing on a living-room floor (003, 133.1K likes), a car-mount install mid-drive (002, 19.4K likes), a full backseat reveal with real bags and water bottles (007, 110.5K likes) — inherently relatable before a single word of copy is read. Product 008's earlier, unverified sample showed the same pattern (a child in a real bedtime moment, 78.3K likes).
+| Cause | Meaning | LIKELY in |
+|---|---|---|
+| **a** | weak/static opening visual, no motion cue | **16/16 (100%)** |
+| **c** | AliExpress/marketplace catalog feel | **16/16 (100%)** |
+| e | hook text promises something the frame doesn't show | 5/16 (31%) |
+| d | generic hook text | 6/16 (38%) |
+| b | unclear product in first second | **0/16 (0%)** — a real strength, not a defect |
+| h | non-native Hebrew phrasing | **0/16 (0%)** — a real strength, not a defect |
 
-### 6. Hook text frequently promises a before/after or reveal that the static image never pays off — recurring across 7 of 16 variants
-This is distinct from #1–5: it's not that the visual is weak in isolation, it's that the *copy actively sets up an expectation the frame contradicts*. Confirmed instances (cause e rated LIKELY or POSSIBLE):
-- 003A/003C/003D: hook implies a transformation/solution; frame shows a static, undemonstrated product.
-- 007C: hook explicitly promises a "before" (total mess); frame shows only the already-organized "after," with no before shown at all.
-- 008B: hook says "transformed my desk"; frame shows the product simply sitting still.
-- 008C: hook is about physical back pain from phone use; frame shows an empty stand with no phone in it.
-- 008D: hook promises an unresolved mystery/reveal; frame shows nothing being revealed within the hook window.
+Causes **a** and **c** are unanimous across every single variant in the portfolio, in all four product categories. This is the strongest, most direct fact in this document.
 
-This means: whenever a hook writer reaches for a before/after, mystery, or transformation angle, the current visual pipeline cannot currently deliver on it, because the opening is a single static shot. Hooks that stick to a plain price-question or plain product-naming (e.g. 007A, 007D, 008A) don't trigger this mismatch — but that's a narrower, lower-ceiling hook style.
+**Retention (Layer 7), statistically-meaningful variants only (views ≥ 10 — 12 of 16 qualify):** first-2-second retention ranges **0.25–0.45** (avg 0.38) across all four products. **Zero of the 12 statistically meaningful variants reach `STRONG`.** Every `STRONG` classification in the portfolio (003C at 0.84, 008A at 0.75) comes from a variant with **1 and 4 total views respectively** — the only "good-looking" numbers in the entire 16-variant dataset are both statistically meaningless. This is a new, cross-product finding in its own right (see below) — it is not a creative-content pattern, so it is not proposed as a fifth Creative Rule, but it materially affects how confidently anything in this document can be read against actual performance.
 
-### 7. Product reveal timing is comparable to the *slowest* competitor, not the norm
-Where measured (008B vs. its 4 competitors): 3 of 4 competitors reveal the product near-instantly (~0s); one is slower (~2–5s). Our clean, unobstructed product view arrives at ~3s — in the range of the single slowest competitor in the sample, not the norm.
+**Competitor side:** all 20 verified competitors (5 per product) carry real, fetched `like_count` values ranging from 176 to 133,100 — every one is a genuinely successful video in its narrow category, not a random sample.
 
-### 8. A distinct second creative beat correlates with the top performer in every product benchmarked — new finding, sessions 22-23
-This is about competitors relative to each other, not just competitors vs. us. In products 002, 003, and 007 alike, the single highest-like-count competitor did not just demonstrate the product — it added one more beat: a direct comparison against a worse alternative ("ditch these dumb chip clips that only seal one point," 003's top performer, 133.1K likes), a multi-product/multi-bag showcase in one continuous take (002 and 003's top performers), or a "fully loaded reveal" ending shot across both rear seats (007's top performer, 110.5K likes). The lower-performing competitors in each product's benchmark were plain single-take demos only. Our own videos have neither the plain demo nor the second beat — but if/when the plain-demo gap above is fixed, this is the next lever worth testing, not yet acted on.
+---
+
+## The final Creative Rules
+
+Each rule below is classified as **`PERMANENT CREATIVE RULE`** (unanimous across all 4 products, no counter-example on either side), **`MODIFIED RULE`** (the underlying pattern holds everywhere, but the originally-stated mechanism was too narrow and one product's evidence forced a broader wording), or **`INSUFFICIENT EVIDENCE`** (gap noted, not filled in). No rule was `REJECTED` — all four held up under four-product scrutiny.
+
+### Rule 1 — Open on real human/hand engagement, not an untouched product render
+**Classification: `PERMANENT CREATIVE RULE`**
+
+**Evidence:** 0/16 of our variants open on a hand or person already engaging with the product — every opening frame across all 16 is a motionless product photograph or render, confirmed directly via fresh sub-second frame extraction. 20/20 verified competitors show a real hand or person engaging with the product within their opening seconds (18/20 immediately at t≈0; 2/20 — `@toptech.mx` and `@digitalnexus1`, both product 008, both also the two lowest-performing competitors in that benchmark — have a briefly ambiguous ~1–2s open before the hand becomes legible, but no competitor across any product opens on an untouched, human-absent render the way all 16 of our variants do).
+
+**Per-product support:** 002 (5/5 competitors), 003 (5/5), 007 (5/5), 008 (5/5). Unanimous, zero exceptions.
+
+**Product 008's contribution:** confirms and extends Rule 1 unchanged — no modification needed. (The two "slower reveal" competitors above are the closest thing to a counter-example, and even they show human engagement well before ours ever does.)
+
+### Rule 2 — Avoid marketplace/catalog-style presentation; use native, real-world demonstration
+**Classification: `MODIFIED RULE`** (broadened from the original "never show an AliExpress screenshot")
+
+**Original wording tested:** "Do not show AliExpress/marketplace-style content inside the video." **Evidence for the original, narrow wording:** true for 12/16 of our variants (002, 003, 007) — personally re-confirmed this session by directly viewing `002B`, `003A`, and `007A`'s cut frames: all three show literal scraped AliExpress listing pages, with real UI chrome ("Express Choice" badge, delivery-date text, discount banners with struck-through prices, "אבטחה ופרטיות" security badges, "החזרות חינם" free-returns text). **But false for the remaining 4/16 (008):** 008's variants cut between two different static CGI product renders — no literal screenshot, no marketplace UI chrome, confirmed by direct visual inspection this session and last.
+
+**Why this is `MODIFIED`, not `REJECTED` or left as-is:** cause **c** (catalog/marketplace feel) is rated LIKELY in **16/16 of our variants — including all 4 of 008's**, even though 008 has no literal screenshot. The literal "no screenshot" rule would incorrectly mark 008 as compliant when it exhibits the exact same underlying defect by a different mechanism. **0/20 verified competitors, across all four products, show ANY marketplace/catalog content in any form** — no screenshots, no plain studio product renders, no infographic-style compositing — anywhere in their full videos.
+
+**Revised permanent wording:** *"Avoid any marketplace/catalog-style product presentation — a literal scraped listing screenshot, product-page UI chrome, OR a static studio/CGI product render — in favor of native, real-world, camera-captured demonstration."*
+
+**Per-product support:** literal-screenshot version of the defect: 002 (4/4 variants), 003 (4/4), 007 (4/4), 008 (0/4). Broader catalog/render-feel defect (cause c): 002 (4/4), 003 (4/4), 007 (4/4), 008 (4/4) — unanimous. 0/20 competitors show either form, in any of the 4 products.
+
+**Product 008's contribution:** this is the one rule Product 008 materially changed. Without 008, the rule would have stayed narrowly scoped to "no screenshots" — technically true but under-general, and would have let a future product "comply" by switching to a glossy render instead of fixing the underlying problem.
+
+### Rule 3 — Show the actual mechanism/action, not merely the product on display
+**Classification: `PERMANENT CREATIVE RULE`**
+
+**Evidence:** 0/16 of our variants demonstrate the product's actual function within the measured window — every opening (and, per the video-configs, every full video) shows the product sitting still, never performing its function on camera. 20/20 verified competitors show the product's real mechanism/action in use — mounting, sealing, organizing, or rotating, by a real hand.
+
+**Sharpest instance found (session 24):** Product 008's core marketed feature is "360° rotation" — variant 008D's hook explicitly promises a wordless visual reveal of that rotation ("מסתובב 360° — מסביר בלי מילים" / "rotates 360° — explains itself without words"), but the frame shown for the entire hook window is a static product photo with a superimposed **orange arrow graphic** standing in for the rotation — the product's own headline feature is depicted by an icon, never actually demonstrated on camera. This is corroborated by cause **e** (hook-product mismatch, LIKELY/POSSIBLE in 5/16 variants) — several of those 5 instances are exactly this failure mode (a hook promises an action/transformation/reveal the frame never shows).
+
+**Per-product support:** 002 (5/5 competitors demonstrate real use vs. 0/4 our variants), 003 (5/5 vs. 0/4), 007 (5/5 vs. 0/4), 008 (5/5 vs. 0/4). Unanimous.
+
+**Product 008's contribution:** strengthens the rule with its single most concrete example across the whole portfolio (the rotation-as-arrow-icon case) — no change to the rule's wording, just its strongest piece of evidence.
+
+### Rule 4 — The top-performing competitor shows a meaningful progression beyond the plain demo
+**Classification: `MODIFIED RULE`** (broadened per Product 008's evidence; confirmed in 3 of 4 products — see evidence gap note)
+
+**Original wording tested:** "Include a distinct second beat beyond the plain demo (comparison, multi-product showcase, or a reveal ending)." **Evidence, by product:**
+- **003:** top performer (`@dustyshops`, 133.1K likes) adds a direct comparison against a worse alternative ("ditch these dumb chip clips"); the two highest performers include a multi-bag showcase. Lower performers are plain single-take demos.
+- **007:** the two highest performers (`@phoebeyuee` 110.5K, `@tidytravelshop` 63.7K) both end on a "fully loaded reveal" shot across both rear seats; lower performers lack it.
+- **008:** the top performer (`@yeuunnt.22`, 78.3K likes) is **35.4 seconds** — roughly 2–3× the other four competitors' length (10.2–16.4s) — driven by sustained real human interaction over that whole runtime, not a discrete added segment. The second-highest (`@xyxzq1sfe1`, 7,027 likes) instead shows a clearer discrete structure: 2 detected hard cuts, a product-demo shot cutting to a payoff shot of the creator smiling while genuinely using it. The two lowest performers (`@toptech.mx` 1,211, `@digitalnexus1` 176) are single continuous takes with no such progression.
+- **002:** **not separately documented** — session 21's notes describe all 5 competitors similarly without isolating a top-vs-bottom structural difference. Not contrary evidence, just an unasked question.
+
+**Why this is `MODIFIED`:** 008 shows the "something more" doesn't have to be a discrete added segment (a comparison, a showcase, a reveal shot) — it can also be **sustained real engagement over a much longer runtime**. The common thread across 003/007/008 is not "a second beat" specifically, but a more general progression beyond one flat demonstration.
+
+**Revised permanent wording:** *"The single highest-performing competitor in a benchmark consistently shows a meaningful progression beyond a single flat demo — via comparison, a payoff/reveal moment, multi-item/multi-context showcase, or sustained real engagement over a longer runtime — while the lower-performing competitors in the same benchmark are plain single-take demos."*
+
+**Per-product support:** confirmed in 003, 007, 008 (3/4); not checked for 002 (evidence gap, reported per instructions rather than filled in with a new competitor review). Our own 16 variants have neither the plain demo nor any such progression.
+
+---
+
+## New cross-product finding (not a creative rule — a data-reliability finding)
+
+**Every "good-looking" retention number in the 16-variant portfolio is a statistical artifact of a tiny sample.** Lining up all 16 variants side by side (only visible once all four products are in the same table) shows: of the 4 variants with fewer than 10 total views (003C n=1, 003D n=2, 008A n=4, 008D n=2), **all four** happen to show the portfolio's only `STRONG`/high-`MARGINAL` classifications (0.84, 0.45, 0.75, 0.60). Every variant with a statistically usable sample (≥10 views, 12 of 16) is `WEAK` or `MARGINAL` (0.25–0.45), and **none** reach `STRONG`. This is not a creative-content pattern, so it is not proposed as a fifth Creative Rule — but it means: **do not read any single "STRONG" result in this dataset as evidence the creative pipeline is working in some cases** — every one of them is a sample-size artifact, and the honest, load-bearing number for "how are we actually doing" is the 0.25–0.45 range from the 12 reliable variants.
 
 ---
 
 ## What we do NOT lack (don't over-fix these)
 
-- **Product legibility.** Cause (b) — "unclear product in first second" — was rated UNLIKELY in all 16 variants. The product is always clearly visible and identifiable immediately. This is a real strength; nothing here needs fixing.
-- **Editing/cut frequency.** The one benchmark we have shows 0 detected hard cuts in either 008B's opening *or* any of its 4 competitors' openings. Editing pace is not the differentiator — sustained motion *intensity* is. Don't chase "add more cuts" as a fix.
-- **Text overlay timing.** Verified correct/on-schedule where checked (008B). Not a pattern that emerged as a defect anywhere in Layer 3's 16-variant pass.
-- **Hebrew phrasing quality.** Cause (h) was mostly UNLIKELY, with occasional POSSIBLE flags (a few machine-translation-style calques in price phrasing, one missing personal-voice framing). Real but minor — not in the same tier as #1–7.
+- **Product legibility.** Cause (b) — unclear product in the first second — 0/16. The product is always clearly visible immediately.
+- **Editing/cut frequency.** Where measured (008B and its competitors, and 008's session-24 competitor set), 0 detected hard cuts in most openings; the one competitor with detected cuts (`@xyxzq1sfe1`) uses them for a payoff structure, not rapid editing. Cut frequency is not the differentiator — motion intensity and real engagement are.
+- **Hebrew phrasing quality.** Cause (h) — 0/16 LIKELY, only occasional POSSIBLE flags (minor machine-translation-style calques). Real but minor, not in the same tier as the rules above.
 
 ---
 
-## The core pattern, stated once
+## Combined Layer 3 + Layer 5 + Layer 7 diagnosis
 
-Across every product we've launched, the opening is built as a **static product photograph with copy layered on top**, in a category where the demonstrated successful format is a **person actively using the product in a real, relatable moment, captured with continuous camera/subject motion**. Every dimension the competitors share and we lack — human presence, organic motion, real use, emotional context, native feel — is downstream of that one structural choice. Cause (c) (catalog feel) at 16/16 is not one defect among several; it's the name for this same root pattern viewed from the "does it look native" angle, while causes (a) and the competitor motion-percentile data are the same pattern viewed from the "does it move" angle.
+**Layer 3 = WHAT viewers see in the opening.** Direct evidence, all 16 variants: a static, catalog/render-styled product image with no human presence and no functional demonstration (causes a, c both 16/16).
 
-## What this report deliberately does not do
+**Layer 5 = HOW our execution differs from real successful competitors in the same narrow category.** Direct evidence, all 20 competitors across 4 products: real hand/human engagement from the opening seconds, real functional demonstration throughout, and — in 3 of 4 products checked — some added progression beyond a flat demo in the top performer specifically.
 
-It does not propose pipeline changes yet — that's the next step, and the user asked to hold this as a foundation first.
+**Layer 7 = WHEN viewers leave.** Direct evidence, 12 statistically-meaningful variants: retention is already down to 0.25–0.45 by the 2-second mark — i.e., most of the loss happens inside the exact window Layer 3 characterizes as static/catalog and Layer 5 shows real competitors are not.
 
-**Superseded by sessions 21-23:** this section previously noted that products 002/003/007 lacked a real competitor benchmark and their findings were inferred from our own footage only. That gap is closed — all three now have real, visually-verified, QA-passed competitor benchmarks (5 competitors each), confirming the same pattern independently rather than by inference. See `PROJECT_STATUS.md` sessions 21-23 for the full run-by-run evidence (exact URLs, like counts, and per-candidate frame-identity verification) behind the findings above. **Product 008 is not part of this closed gap — its benchmark predates the current methodology and remains `PRODUCT008_RECHECK_PENDING` (see correction near the top of this document).**
+**Combined diagnosis:** these three layers converge on one coherent, repeated story across all four independent product categories: a static, catalog-feeling opening (Layer 3) is shown during precisely the window where viewers are already leaving fastest (Layer 7), while genuinely successful videos in the identical narrow categories do not open this way and do not decline this fast (Layer 5's counterfactual). This convergence is a **strong, repeated correlation** across four independent samples — meaningfully stronger than a single anecdote — but it is **not a proven causal chain**. No variant of ours has ever been produced that opens on real human/hand use, avoids catalog/marketplace framing, demonstrates the actual mechanism, and includes a meaningful second beat, so there is no before/after measurement showing that fixing these things would actually raise retention. The correlation is consistent and repeated; the causal claim is a hypothesis for the next creative test to validate, not a demonstrated fact.
 
-Two things this report still does not do, as of this update:
-- **Does not yet reflect in `learning_report.json`** — still deliberately held per standing instruction, now with 002/003/007's QA-verified evidence available for that review. Product 008 must be re-checked under the current methodology before it can be included in that review.
-- **Does not yet fold finding #8 (the "second beat" pattern) into a concrete pipeline recommendation** — it's recorded as an observed correlation across three products, not yet tested as a causal fix.
+---
+
+## What remains unproven until future creative testing
+
+- That opening on real human/hand engagement (Rule 1), avoiding marketplace/catalog presentation (Rule 2), demonstrating the real mechanism (Rule 3), or adding a meaningful second beat (Rule 4) will actually **increase** retention or performance for our own videos. This is a hypothesis grounded in a strong, repeated four-product correlation — not a causal fact.
+- Whether the "second beat" pattern (Rule 4) holds for product 002's specific competitor set (evidence gap, not contrary evidence).
+- Whether any of these findings are specific to the Israeli market — most of the 20 competitors' market origin is unconfirmed (see evidence base gaps above).
+
+**Not done in this synthesis, deliberately:** `learning_report.json` is untouched, the creative pipeline is unmodified, and Product 009 has not been generated — this document is the input to that review, not the review's conclusion. `ANALYZER_V3_SPEC.md` has been separately updated (same session) to make the per-product Layer 5 methodology and this cross-product synthesis pipeline a permanent architecture requirement, not a one-off procedure.
